@@ -130,26 +130,27 @@ $tasks_list = [$first_task, $second_task, $third_task, $fourth_task, $fifth_task
 
                     <table class="tasks">
 
-                        <?php foreach ($tasks_list as $key => $value) : ?>
-                            <?php if (!$show_complete_tasks && $value['status_task']) : continue; ?>
-                            <?php else : ?>
+                        <?php foreach ($tasks_list as $value) : ?>
 
-                                <tr class="tasks__item task <?= $value['status_task'] ? 'task--completed' : '' ?>">
-                                    <td class="task__select">
-                                        <label class="checkbox task__checkbox">
-                                            <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?= $value['status_task'] ? 'checked' : '' ?>>
-                                            <span class="checkbox__text"><?= $value['title_task'] ?></span>
-                                        </label>
-                                    </td>
+                            <?php if (!$show_complete_tasks && $value['status_task']) {
+                                continue;
+                            }  ?>
 
-                                    <td class="task__file">
-                                        <a class="download-link" href="#">Home.psd</a>
-                                    </td>
+                            <tr class="tasks__item task <?= $value['status_task'] ? 'task--completed' : '' ?>">
+                                <td class="task__select">
+                                    <label class="checkbox task__checkbox">
+                                        <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?= $value['status_task'] ? 'checked' : '' ?>>
+                                        <span class="checkbox__text"><?= $value['title_task'] ?></span>
+                                    </label>
+                                </td>
 
-                                    <td class="task__date"><?= $value['date_task'] ?></td>
-                                </tr>
+                                <td class="task__file">
+                                    <a class="download-link" href="#">Home.psd</a>
+                                </td>
 
-                            <?php endif; ?>
+                                <td class="task__date"><?= $value['date_task'] ?></td>
+                            </tr>
+
                         <?php endforeach; ?>
 
                     </table>
