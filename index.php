@@ -130,9 +130,8 @@ $tasks_list = [$first_task, $second_task, $third_task, $fourth_task, $fifth_task
 
                     <table class="tasks">
 
-                        <?php foreach ($tasks_list as $value) : ?>
-
-                            <?php if (!$show_complete_tasks && $value['status_task']) {
+                        <?php foreach ($tasks_list as $value) :
+                            if (!$show_complete_tasks && $value['status_task']) {
                                 continue;
                             }  ?>
 
