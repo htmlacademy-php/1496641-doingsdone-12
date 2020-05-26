@@ -54,9 +54,11 @@ $tasks_list = [$first_task, $second_task, $third_task, $fourth_task, $fifth_task
 function counTasksInCat($arr_tasks_list, $str_cat) {
     $i = 0;
     foreach ($arr_tasks_list as $val) {
-        if ($val['cat_task'] == $str_cat) $i+=1;
+        if ($val['cat_task'] === $str_cat) {
+            $i+=1;
+        }
     } 
-    echo $i; 
+   return $i;
 }
 
 ?>
