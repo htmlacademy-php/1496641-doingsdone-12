@@ -35,4 +35,22 @@ function include_template($name, array $data = []) {
 	return $result;
 }
 
-?>
+/**
+* Подсчет количества дней до выполнения задачи
+* @param string $task_end дата выполнения задачи
+* @return string итоговый результат - количество дней до выполнения задачи
+*/
+
+function dataTask($task_end) {
+
+	date_default_timezone_set("Europe/Moscow"); // Устанавливаем time зону по умолчанию
+	$secs_in_day = 86400; // 24 часа = 86400 секунд
+
+	$now_ts = strtotime(date('d.m.Y H:i:s')); //текущая дата и время
+	$end_ts = strtotime($task_end); // дата выполнения задачи
+
+	$ts_diff = floor( ($end_ts - $now_ts) / $secs_in_day ); // количество оставшихся дней до выполнения задачи
+
+	return $ts_diff;
+}
+
