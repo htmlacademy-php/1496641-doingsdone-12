@@ -35,7 +35,6 @@
 			</nav>
 
 			<label class="checkbox">
-				<!--добавить сюда атрибут "checked", если переменная $show_complete_tasks равна единице-->
 				<input class="checkbox__input visually-hidden show_completed <?= $show_complete_tasks ? 'checked' : '' ?>" type="checkbox">
 				<span class="checkbox__text">Показывать выполненные</span>
 			</label>
@@ -48,15 +47,23 @@
 					continue;
 				} 
 				
-				elseif ($value['status_task']) {
-					$task_completed = 'task--completed';
+				$task_class = '';
+
+				if ($value['status_task']) {
+					$task_class = 'task--completed';
 				}
 
-				elseif (dataTask($value['date_task'])) {
-					$task_important = 'task--important';
+				$task_end_ts = strtotime($value['date_task']); // дата задачи
+				$now_day_ts = time(); // timestamp сейчас
+				$secs_in_day = 86400; // секунд в сутках
+
+				$ts_diff = floor(($task_end_ts - $now_day_ts)/$secs_in_day);
+
+				if ($ts_diff) {
+					$task_class .= 'task--important';
 				} ?>
 
-				<tr class="tasks__item task <?= $task_completed . $task_important; ?>">
+				<tr class="tasks__item task <?= $task_class; ?>">
 					<td class="task__select">
 						<label class="checkbox task__checkbox">
 							<input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?= $value['status_task'] ? 'checked' : '' ?>>
