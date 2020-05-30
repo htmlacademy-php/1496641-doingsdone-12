@@ -46,17 +46,17 @@
 			<?php foreach ($tasks_list as $value) :
 				if (!$show_complete_tasks && $value['status_task']) {
 					continue;
-				} 
-				
-				elseif ($value['status_task']) {
-					$task_completed = 'task--completed';
 				}
 
-				elseif (dataTask($value['date_task'])) {
-					$task_important = 'task--important';
+				if ($value['status_task']) {
+					$task_class_completed = 'task--completed';
+				}
+
+				if (dataTask($value['date_task'])) {
+					$task_class_important = 'task--important';
 				} ?>
 
-				<tr class="tasks__item task <?= $task_completed . $task_important; ?>">
+				<tr class="tasks__item task <?= $task_class_completed . $task_class_important; ?>">
 					<td class="task__select">
 						<label class="checkbox task__checkbox">
 							<input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?= $value['status_task'] ? 'checked' : '' ?>>
