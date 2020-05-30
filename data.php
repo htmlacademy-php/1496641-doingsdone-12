@@ -1,12 +1,15 @@
 <?php
 
+// показывать или нет выполненные задачи
+$show_complete_tasks = rand(0, 1);
+
 // массив категорий
-	$categories = ['Входящие', 'Учеба', 'Работа', 'Домашние дела', 'Авто'];
+$categories = ['Входящие', 'Учеба', 'Работа', 'Домашние дела', 'Авто'];
 
 //массивы с задачами
 $first_task = [
 	'title_task'    => 'Собеседование в IT компании',
-	'date_task'     => '01.12.2019',
+	'date_task'     => '31.05.2020',
 	'cat_task'      => 'Работа',
 	'status_task'   => false,
 ];
@@ -48,4 +51,4 @@ $sixth_task = [
 
 $tasks_list = [$first_task, $second_task, $third_task, $fourth_task, $fifth_task, $sixth_task];
 
-?>
+date_default_timezone_set("Europe/Moscow"); // Устанавливаем time зону по умолчанию
