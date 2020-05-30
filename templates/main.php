@@ -48,15 +48,17 @@
 					continue;
 				}
 
+				$task_class = '';
+
 				if ($value['status_task']) {
-					$task_class_completed = 'task--completed';
+					$task_class = 'task--completed';
 				}
 
 				if (dataTask($value['date_task'])) {
-					$task_class_important = 'task--important';
+					$task_class .= ' task--important';
 				} ?>
 
-				<tr class="tasks__item task <?= $task_class_completed . $task_class_important; ?>">
+				<tr class="tasks__item task <?= $task_class; ?>">
 					<td class="task__select">
 						<label class="checkbox task__checkbox">
 							<input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?= $value['status_task'] ? 'checked' : '' ?>>
