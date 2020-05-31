@@ -45,22 +45,16 @@
 			<?php foreach ($tasks_list as $value) :
 				if (!$show_complete_tasks && $value['status_task']) {
 					continue;
-				} 
-				
+				}
+
 				$task_class = '';
 
 				if ($value['status_task']) {
 					$task_class = 'task--completed';
 				}
 
-				$task_end_ts = strtotime($value['date_task']); // дата задачи
-				$now_day_ts = time(); // timestamp сейчас
-				$secs_in_day = 86400; // секунд в сутках
-
-				$ts_diff = floor(($task_end_ts - $now_day_ts)/$secs_in_day);
-
-				if ($ts_diff) {
-					$task_class .= 'task--important';
+				if (dataTask($value['date_task'])) {
+					$task_class .= ' task--important';
 				} ?>
 
 				<tr class="tasks__item task <?= $task_class; ?>">
