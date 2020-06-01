@@ -1,6 +1,9 @@
 -- Создаем БД
-CREATE DATABASE doingsdone DEFAULT CHARACTER
-SET utf8 DEFAULT COLLATE utf8_general_ci -- Делаем ее активной для работы
+CREATE DATABASE doingsdone 
+DEFAULT CHARACTER SET utf8 
+DEFAULT COLLATE utf8_general_ci 
+
+-- Делаем ее активной для работы
 USE doingsdone -- Создаем табллицу для сущности Пользователь
 CREATE TABLE user_reg (
       user_id INT(11) UNSIGNED AUTO_INCREMENT NOT NULL,
@@ -10,6 +13,7 @@ CREATE TABLE user_reg (
       pass CHAR (64) NOT NULL,
       PRIMARY KEY (user_id)
 ) ENGINE = InnoDB;
+
 -- Создаем табллицу для сущности Проект
 CREATE TABLE project (
       proj_id INT(11) UNSIGNED AUTO_INCREMENT NOT NULL,
@@ -21,7 +25,8 @@ CREATE TABLE project (
             DELETE CASCADE ON
             UPDATE CASCADE
 ) ENGINE = InnoDB;
--- Создаем табллицу для сущности Задача
+
+-- Создаем табллицу для сущности Задача // проблемма CHECK (status_task <= 1) не знаю как решить!
 CREATE TABLE task (
       task_id INT(11) UNSIGNED AUTO_INCREMENT NOT NULL,
       proj_id INT (11) UNSIGNED NOT NULL,
@@ -35,7 +40,7 @@ CREATE TABLE task (
       PRIMARY KEY (task_id),
       INDEX idxTaskProject (proj_id),
       INDEX idxTaskUser (user_id),
-      CONSTRAINT project_task FOREIGN KEY (proj_id) REFERENCES project (proj_id) ON
+      CONSTRAINT project_task FOREIGN KEY (proj_id) REFERENCES project (proj_id) ON 
                   DELETE CASCADE ON
                   UPDATE CASCADE,
       CONSTRAINT user_task FOREIGN KEY (user_id) REFERENCES user_reg (user_id) ON
