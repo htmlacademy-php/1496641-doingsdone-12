@@ -6,6 +6,7 @@ DEFAULT COLLATE utf8_general_ci;
 -- Делаем ее активной для работы
 USE doingsdone;
 
+-- Создаем табллицу для сущности Пользователь
 CREATE TABLE user_reg (
   user_id INT(11) UNSIGNED AUTO_INCREMENT NOT NULL,
   date_reg TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
