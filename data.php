@@ -51,4 +51,5 @@ $sixth_task = [
 
 $tasks_list = [$first_task, $second_task, $third_task, $fourth_task, $fifth_task, $sixth_task];
 
+// Устанавливаем time зону по умолчанию
 date_default_timezone_set("Europe/Moscow"); // Устанавливаем time зону по умолчанию
