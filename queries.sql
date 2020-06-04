@@ -23,7 +23,7 @@ INSERT INTO task VALUES (DEFAULT, 4, 4, DEFAULT, DEFAULT, 'Встреча с д�
 SELECT us_name, proj_name  FROM user_reg u, project p WHERE u.user_id = p.user_id  AND u.user_id = 1;
 
 -- query #2. Получить список из всех задач для одного проекта
-SELECT proj_id, proj_name, title_task FROM project p, task t WHERE p.proj_id = t.proj_id AND proj_name = 'Учеба';
+SELECT proj_name, title_task FROM project p, task t WHERE p.proj_id = t.proj_id AND proj_name = 'Учеба';
 
 -- query #3. Пометить задачу как выполненную
 UPDATE task SET status_task = 1 WHERE user_id = 1;
