@@ -3,12 +3,11 @@
 		<h2 class="content__side-heading">Проекты</h2>
 
 		<nav class="main-navigation">
-
 			<?php foreach ($categories as $cat) : ?>
 				<ul class="main-navigation__list">
 					<li class="main-navigation__list-item">
-						<a class="main-navigation__list-item-link" href="#"><?= htmlspecialchars($cat) ?></a>
-						<span class="main-navigation__list-item-count"><?= counTasksInCat($tasks_list, $cat); ?></span>
+						<a class="main-navigation__list-item-link" href="#"><?= htmlspecialchars($cat['proj_name']) ?></a>
+						<span class="main-navigation__list-item-count"><?= counTasksInCat($tasks_list, $cat['proj_name']); ?></span>
 					</li>
 				</ul>
 			<?php endforeach; ?>
@@ -66,10 +65,14 @@
 					</td>
 
 					<td class="task__file">
-						<a class="download-link" href="#">Home.psd</a>
+						<?php if (isset($value['link_file'])) : ?>
+							<a class="download-link" href="#">Home.psd</a>
+						<?php endif; ?>
 					</td>
 
-					<td class="task__date"><?= $value['date_task'] ?></td>
+					<td class="task__date">
+						<?= date('d.m.Y', strtotime($value['date_task_end'])) ?>
+					</td>
 				</tr>
 
 			<?php endforeach; ?>
