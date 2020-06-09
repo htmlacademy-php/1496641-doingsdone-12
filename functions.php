@@ -1,17 +1,22 @@
 <?php
 
-// Счетчик задач в блоке категорий
+/**
+ * Счетчик задач в проекте
+ * @param array $arr_tasks_list массив задачи с данными
+ * @param string $str_cat название задачи
+ * @return string количество задач в проекте
+ */
+
 function counTasksInCat($arr_tasks_list, $str_cat)
 {
 	$i = 0;
 	foreach ($arr_tasks_list as $val) {
-		if ($val['cat_task'] === $str_cat) {
+		if ($val['proj_name'] === $str_cat) {
 			$i += 1;
 		}
 	}
 	return $i;
 }
-
 
 /**
  * Подключает шаблон, передает туда данные и возвращает итоговый HTML контент
@@ -50,4 +55,25 @@ function dataTask($task_end)
 	$end_ts = strtotime($task_end); // дата выполнения задачи timestamp
 	$ts_diff = floor(($end_ts - $now_ts) / $secs_in_day); // количество оставшихся дней до выполнения задачи
 	return $ts_diff;
+}
+
+/**
+ * Выводит результат запроса sql из указанной таблицы в виде массива
+ * @param string $sql запрос к БД
+ * @param string $sql_table таблица в БД к которой формируется запрос
+ * @param array $connect ассоциативный массив с параметрами для подключения к БД
+ * @return array массив значений сформированный на основании запроса $sql
+ */
+
+function resQuerySQL($sql, $sql_table, $connect)
+{
+	// получаем ресурс результата
+	$result = mysqli_query($connect, $sql);
+
+	// проверим результат извлечения данных
+	if ($result) {
+		$sql_table = mysqli_fetch_all($result, MYSQLI_ASSOC);
+	}
+	// возвращаем результат запроса в виде массива
+	return $sql_table;
 }
