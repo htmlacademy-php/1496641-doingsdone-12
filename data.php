@@ -26,7 +26,7 @@ if (!$db) {
 };
 
 // Выборка всех проектов из БД
-$sql_proj = 'SELECT `proj_id`, `proj_name` FROM project';
+$sql_proj = 'SELECT `user_id`, `proj_id`, `proj_name` FROM project';
 
 // Получаем результат запроса всех проектов в виде массива
 $categories = resQuerySQL($sql_proj, $project, $connect);
