@@ -7,15 +7,25 @@
  * @return string количество задач в проекте
  */
 
-function countTasksInCat($arr_tasks_list, $str_cat)
+// function countTasksInCat($arr_tasks_list, $str_cat)
+// {
+// 	$i = 0;
+// 	foreach ($arr_tasks_list as $val) {
+// 		if ($val['proj_name'] === $str_cat) {
+// 			$i += 1;
+// 		}
+// 	}
+// 	return $i;
+// }
+
+
+function countTask($arr_count_task, $str_cat)
 {
-	$i = 0;
-	foreach ($arr_tasks_list as $val) {
-		if ($val['proj_name'] === $str_cat) {
-			$i += 1;
+	foreach ($arr_count_task as $key => $value) {
+		if ($value['proj_name'] === $str_cat) {
+			return $value['count_task'];
 		}
 	}
-	return $i;
 }
 
 /**

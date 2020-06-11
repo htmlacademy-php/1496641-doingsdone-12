@@ -33,15 +33,24 @@ $categories = resQuerySQL($sql_proj, $project, $connect);
 
 // Выборка задач из БД только активного проекта по значению $_GET['id']
 $sql_task = 'SELECT `proj_name`, `status_task`, `title_task`, `link_file`, `date_task_end` 
-FROM user_reg u, project p, task t 
-WHERE p.proj_id = t.proj_id 
-AND u.user_id = t.user_id ';
+					FROM user_reg u, project p, task t 
+						WHERE p.proj_id = t.proj_id 
+							AND u.user_id = t.user_id ';
 
-// Выборка всех задач из БД для счетчика задач в проектах
-$sql_tasks = 'SELECT `proj_name`, `status_task`, `title_task`, `link_file`, `date_task_end` 
-FROM user_reg u, project p, task t 
-WHERE p.proj_id = t.proj_id 
-AND u.user_id = t.user_id ';
+// получаем количество задач в проектах
+$count = 'SELECT COUNT(`task_id`) AS count_task, `proj_name` 
+				FROM user_reg u, project p, task t 
+					WHERE p.proj_id = t.proj_id 
+						AND u.user_id = t.user_id 
+							GROUP BY `proj_name`';
+
+$count_task = resQuerySQL($count, $task, $connect);
+
+// echo '<pre>';
+// var_dump($count_task);
+// echo '</pre>';
+
+
 
 // условие для выборки задач из БД по значению $_GET['id']
 if (!empty($_GET['id'])) {
@@ -52,11 +61,4 @@ if (!empty($_GET['id'])) {
 $task_list = resQuerySQL($sql_task, $task, $connect);
 
 // Получим результат запоса всех задач из БД в виде массива для счетчика задач во всех проектах
-$tasks_list = resQuerySQL($sql_tasks, $task, $connect);
-
-
-
-
-
-
-
+// $tasks_list = resQuerySQL($sql_tasks, $task, $connect);
