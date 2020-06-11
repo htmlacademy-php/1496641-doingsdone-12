@@ -7,7 +7,7 @@
  * @return string количество задач в проекте
  */
 
-function counTasksInCat($arr_tasks_list, $str_cat)
+function countTasksInCat($arr_tasks_list, $str_cat)
 {
 	$i = 0;
 	foreach ($arr_tasks_list as $val) {

@@ -7,7 +7,7 @@
 				<ul class="main-navigation__list">
 					<li class="main-navigation__list-item <?= $_GET['id'] == $cat['proj_id'] ? 'main-navigation__list-item--active' : ''?>">
 						<a class="main-navigation__list-item-link" href="<?= 'index.php?id=' . $cat['proj_id'] ?>"><?= htmlspecialchars($cat['proj_name']) ?></a>
-						<span class="main-navigation__list-item-count"><?= counTasksInCat($tasks_list, $cat['proj_name']); ?></span>
+						<span class="main-navigation__list-item-count"><?= countTasksInCat($tasks_list, $cat['proj_name']) ?></span>
 					</li>
 				</ul>
 			<?php endforeach; ?>
@@ -41,7 +41,7 @@
 
 		<table class="tasks">
 
-			<?php foreach ($tasks_list as $value) :
+			<?php foreach ($task_list as $value) :
 				if (!$show_complete_tasks && $value['status_task']) {
 					continue;
 				}
