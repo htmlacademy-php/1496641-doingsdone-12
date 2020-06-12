@@ -26,6 +26,7 @@ function countTask($arr_count_task, $str_cat)
 			return $value['count_task'];
 		}
 	}
+	return 0;
 }
 
 /**
@@ -51,6 +52,7 @@ function include_template($name, array $data = [])
 
 	return $result;
 }
+
 
 /**
  * Подсчет количества дней до выполнения задачи
