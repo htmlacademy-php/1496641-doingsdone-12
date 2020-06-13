@@ -12,6 +12,9 @@ $page_content = include_template('main.php', [
 	'show_complete_tasks' 	=> $show_complete_tasks,
 	'page404' 				=> $page_404,
 	'tasks_id' 				=> $tasks_id,
+	'projname_not_task'		=> $projname_not_task,
+	'projname_from_tasks'  => $projname_from_tasks,
+	'proj_task' => $proj_task
 ]);
 
 $layout_content = include_template('layout.php', [

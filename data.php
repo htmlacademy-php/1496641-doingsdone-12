@@ -3,6 +3,8 @@
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
 
+//  TODO ПОДКЛЮЧЕНИЕ К БАЗЕ ДАННЫХ MySQLi
+
 // Устанавливаем time зону по умолчанию
 date_default_timezone_set("Europe/Moscow");
 
@@ -25,23 +27,30 @@ if (!$db) {
 	print('Ошибка подключения к БД: ' . mysqli_connect_error());
 };
 
+// TODO ФОРМИРУЕМ ДАННЫЕ ДЛЯ ВЫВОДА ПРОЕКТОВ
+
 // Выборка всех проектов из БД
 $sql_proj = 'SELECT `user_id`, `proj_id`, `proj_name` 
 					FROM project';
 
 // Получаем результат запроса всех проектов в виде массива
-$categories = resQuerySQL($sql_proj, $project, $connect);
+$categories = resQuerySQL($sql_proj, $connect);
+
+// TODO ФОРМИРУЕМ ДАННЫЕ ДЛЯ СЧЕТЧИКА ЗАДАЧ В ПРОЕКТАХ
 
 // получаем количество задач в каждом проекте (где есть задачи)
-$count = 'SELECT COUNT(`task_id`) AS count_task, `proj_name` 
+$sql_count = 'SELECT COUNT(`task_id`) AS count_task, `proj_name` 
 				FROM user_reg u, project p, task t 
 					WHERE p.proj_id = t.proj_id 
 						AND u.user_id = t.user_id 
 							GROUP BY `proj_name`';
 
-$count_task = resQuerySQL($count, $task, $connect);
+// Результат запроса в виде массива
+$count_task = resQuerySQL($sql_count, $connect);
 
-// условие для выборки задач из БД по значению $_GET['id']
+// TODO ДЕЛАЕМ ИНТЕРАКТИВ - КЛИКАБЕЛЬНОЕ МЕНЮ ИЗ ПРОЕКТОВ (ПРОЕКТ - ЗАДАЧИ)
+
+// условие для выборки задач из БД по значению $_GET['id'],
 if (!empty($_GET['id'])) {
 	$proj_id = $_GET['id'];
 	settype($proj_id, 'integer'); // устонавливаем тип integer для $_GET
@@ -56,23 +65,44 @@ $sql_task = "SELECT `proj_name`, `status_task`, `title_task`, `link_file`, `date
 							AND u.user_id = t.user_id
 								AND p.proj_id = {$proj_id}";
 
-// Получим результат запроса задач из БД для одного проекта в виде массива
-$task_list = resQuerySQL($sql_task, $task, $connect);
+// Результат запроса в виде массива
+$task_list = resQuerySQL($sql_task, $connect);
 
-// Выборка всех id из БД
-$sql_tasks_id = "SELECT `proj_name` FROM project p, user_reg u, task t WHERE p.proj_id = t.proj_id 
-AND u.user_id = t.user_id AND t.user_id = p.user_id ";
+// Выборка всех задач из БД если нет GET запросов
+$sql_tasks_id = "SELECT `task_id` FROM task";
 
-// Получим результат запроса всех id задач из БД в виде массива
-$tasks_id = resQuerySQL($sql_tasks_id, $task, $connect);
+// Результат запроса в виде массива
+$tasks_id = resQuerySQL($sql_tasks_id, $connect);
 
-// Валидация id
-function valTaskID($tasks_id)
-{
-	foreach ($tasks_id as $key => $value) {
-		if ($_GET['id'] == $value['task_id']) {
-			return true;
-		}
-	}
-	return false;
+// TODO ВЫБОРКА ВСЕХ ПРОЕКТОВ У КОТОРЫХ НЕТ ЗАДАЧ
+
+// 1. Работаем с данными таблицы задачи (task)
+
+// Выборка всех id рубрик из таблицы задач
+$sql_projname_from_tasks = "SELECT p.`proj_id` FROM project p, task t WHERE p.proj_id = t.proj_id";
+
+// Результат запишем в массив
+$projname_from_tasks = resQuerySQL($sql_projname_from_tasks, $connect);
+
+// Переберем двумерный массив в новый одномерный
+foreach ($projname_from_tasks as $key => $value) {
+	$proj_task[] = $value['proj_id'];
 }
+
+// 2. Работаем с данными из таблицы проекты (project)
+
+// Выборка всех id рубрик из таблицы проекты
+$sql_projname_project = "SELECT `proj_id` FROM project";
+
+// Результата запишем в массив
+$projname_project = resQuerySQL($sql_projname_project, $connect);
+
+// Переберем двумерный массив в новый одномерный
+foreach ($projname_project as $key => $value) {
+	$proj_project[] = $value['proj_id'];
+}
+
+// 3. Сравним два массива $proj_task и $proj_project и получаем id рубрик без задач
+$projname_not_task = array_diff($proj_project, $proj_task);
+
+// TODO КОНЕЦ

@@ -77,7 +77,7 @@ function dataTask($task_end)
  * @return array массив значений сформированный на основании запроса $sql
  */
 
-function resQuerySQL($sql, $sql_table, $connect)
+function resQuerySQL($sql, $connect)
 {
 	// получаем ресурс результата
 	$result = mysqli_query($connect, $sql);
