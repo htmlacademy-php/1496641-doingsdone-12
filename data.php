@@ -36,6 +36,10 @@ $sql_proj = 'SELECT `user_id`, `proj_id`, `proj_name`
 // Получаем результат запроса всех проектов в виде массива
 $categories = resQuerySQL($sql_proj, $connect);
 
+echo '<pre>';
+var_dump($categories);
+echo '</pre>';
+
 // TODO ФОРМИРУЕМ ДАННЫЕ ДЛЯ СЧЕТЧИКА ЗАДАЧ В ПРОЕКТАХ
 
 // получаем количество задач в каждом проекте (где есть задачи)
@@ -76,7 +80,7 @@ $tasks_id = resQuerySQL($sql_tasks_id, $connect);
 
 // TODO ВЫБОРКА ВСЕХ ПРОЕКТОВ У КОТОРЫХ НЕТ ЗАДАЧ
 
-// 1. Работаем с данными таблицы задачи (task)
+//### 1. Работаем с данными таблицы задачи (task)
 
 // Выборка всех id рубрик из таблицы задач
 $sql_projname_from_tasks = "SELECT p.`proj_id` FROM project p, task t WHERE p.proj_id = t.proj_id";
@@ -89,7 +93,7 @@ foreach ($projname_from_tasks as $key => $value) {
 	$proj_task[] = $value['proj_id'];
 }
 
-// 2. Работаем с данными из таблицы проекты (project)
+//### 2. Работаем с данными из таблицы проекты (project)
 
 // Выборка всех id рубрик из таблицы проекты
 $sql_projname_project = "SELECT `proj_id` FROM project";
@@ -102,7 +106,33 @@ foreach ($projname_project as $key => $value) {
 	$proj_project[] = $value['proj_id'];
 }
 
-// 3. Сравним два массива $proj_task и $proj_project и получаем id рубрик без задач
+//### 3. Сравним два массива $proj_task и $proj_project и получаем id рубрик без задач
 $projname_not_task = array_diff($proj_project, $proj_task);
 
 // TODO КОНЕЦ
+
+// TODO ИНТЕРАКТИВ
+// Выборка всех проектов и количество задач в них
+$sql_count_task = "SELECT `project`.`proj_id`, `project`.`proj_name`, COUNT(`task`.`task_id`) as `count` 
+						FROM `project` LEFT JOIN `task` ON `project`.`proj_id` = `task`.`proj_id`
+							GROUP BY `project`.`proj_id`";
+
+// Результат запишем в массив
+$count_tasks = resQuerySQL($sql_count_task, $connect);
+
+// Проверяем $_GET['id'] на существование
+$valid_id = array_key_exists($_GET['id'], $count_tasks);
+
+
+
+
+
+// echo $_GET['id'];
+
+// echo '<pre>';
+// var_dump($valid_id);
+// echo '</pre>';
+
+// echo '<pre>';
+// var_dump($count_tasks);
+// echo '</pre>';

@@ -42,21 +42,20 @@
 
 		<table class="tasks">
 
-			<!-- Если запрос отсуствует в БД или не существует то ошибка 404 -->
-			<?php foreach ($projname_from_tasks as $key => $value) {
-				$proj_id[] = $value['proj_id'];
-			}
+
+			<?php
 
 			// Выводим сообщение если нет задач в проекте 
-			foreach ($projname_not_task as $key => $value) {
-				if ($value == $_GET['id']) {
+			foreach ($count_tasks as $key => $value) {
+				if (($_GET['id'] == $value['proj_id']) && !$value['count']) {
 					echo '<span style="font-size: 16px; font-weight: bold;">Нет задач для этого проекта</span>';
 				}
 			}
 
-			if (!array_key_exists($_GET['id'], $proj_id) && (!empty($_GET['id']))) {
+			// Валидация $_GET[id] 
+			if ($valid_id != $_GET['id']) {
 				echo $page404;
-			}
+			};
 
 			?>
 
