@@ -42,7 +42,6 @@
 
 		<table class="tasks">
 
-
 			<?php
 
 			// Выводим сообщение если нет задач в проекте 
@@ -52,15 +51,19 @@
 				}
 			}
 
-			// Валидация $_GET[id] 
-			if ($valid_id != $_GET['id']) {
-				echo $page404;
+			// Переберем массив выборки из БД и соберем одномерный масив по значение proj_id
+			foreach ($count_tasks as $key => $value) {
+				$valid_id[] = $value['proj_id'];
+			}
+
+			// Валидация id на существование, отправка заголовка 404
+			if (!in_array($_GET['id'], $valid_id) && !empty($_GET['id']))  {
+				header("HTTP/1.1 404 Not Found");
+				print($page404);
 			};
 
-			?>
-
-
-			<?php foreach ($task_list as $value) :
+			// Вывод задач
+			foreach ($task_list as $value) : var_dump ($task_list);
 				if (!$show_complete_tasks && $value['status_task']) {
 					continue;
 				}
