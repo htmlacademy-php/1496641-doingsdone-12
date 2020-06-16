@@ -3,12 +3,11 @@
 		<h2 class="content__side-heading">Проекты</h2>
 
 		<nav class="main-navigation">
-			<?php foreach ($categories as $cat) : ?>
+			<?php foreach ($projects as $project) : ?>
 				<ul class="main-navigation__list">
-					<li class="main-navigation__list-item <?= $_GET['id'] == $cat['proj_id'] ? 'main-navigation__list-item--active' : '' ?>">
-						<a class="main-navigation__list-item-link" href="<?= 'index.php?id=' . $cat['proj_id'] ?>"><?= htmlspecialchars($cat['proj_name']) ?></a>
-						<span class="main-navigation__list-item-count"><?= countTask($count_task, $cat['proj_name']); ?></span>
-
+					<li class="main-navigation__list-item <?= $_GET['id'] == $project['proj_id'] ? 'main-navigation__list-item--active' : '' ?>">
+						<a class="main-navigation__list-item-link" href="<?= 'index.php?id=' . $project['proj_id'] ?>"><?= htmlspecialchars($project['proj_name']) ?></a>
+						<span class="main-navigation__list-item-count"><?= countTask($count_tasks, $project['proj_name']); ?></span>
 					</li>
 				</ul>
 			<?php endforeach; ?>
@@ -45,25 +44,25 @@
 			<?php
 
 			// Выводим сообщение если нет задач в проекте 
-			foreach ($count_tasks as $key => $value) {
+			foreach ($projects_and_count_tasks as $key => $value) {
 				if (($_GET['id'] == $value['proj_id']) && !$value['count']) {
 					echo '<span style="font-size: 16px; font-weight: bold;">Нет задач для этого проекта</span>';
 				}
 			}
 
-			// Переберем массив выборки из БД и соберем одномерный масив по значение proj_id
-			foreach ($count_tasks as $key => $value) {
+			// Соберем новый одномерный масив со значением proj_id
+			foreach ($projects_and_count_tasks as $key => $value) {
 				$valid_id[] = $value['proj_id'];
 			}
 
-			// Валидация id на существование, отправка заголовка 404
+			// Валидация proj_id, отправка заголовка 404 если proj_id = false
 			if (!in_array($_GET['id'], $valid_id) && !empty($_GET['id']))  {
 				header("HTTP/1.1 404 Not Found");
 				print($page404);
 			};
 
-			// Вывод задач
-			foreach ($task_list as $value) : var_dump ($task_list);
+			// Вывод всех задач
+			foreach ($tasks_list as $value) :	
 				if (!$show_complete_tasks && $value['status_task']) {
 					continue;
 				}
@@ -74,7 +73,7 @@
 					$task_class = 'task--completed';
 				}
 
-				if (dataTask($value['date_task'])) {
+				if (dateTask($value['date_task_end']) <= 1) {
 					$task_class .= ' task--important';
 				} ?>
 
