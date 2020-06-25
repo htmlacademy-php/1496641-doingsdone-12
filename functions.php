@@ -2,20 +2,19 @@
 
 /**
  * Счетчик задач в проекте
- * @param array $arr_tasks_list массив задачи с данными
+ * @param array $arr_count_task массив задач в каждом проекте
  * @param string $str_cat название задачи
- * @return string количество задач в проекте
+ * @return string количество задач в проекте, где нет задач возвращаем 0
  */
 
-function counTasksInCat($arr_tasks_list, $str_cat)
+function countTask($arr_count_task, $str_cat)
 {
-	$i = 0;
-	foreach ($arr_tasks_list as $val) {
-		if ($val['proj_name'] === $str_cat) {
-			$i += 1;
+	foreach ($arr_count_task as $key => $value) {
+		if ($value['proj_name'] === $str_cat) {
+			return $value['count_task'];
 		}
 	}
-	return $i;
+	return 0;
 }
 
 /**
@@ -42,13 +41,14 @@ function include_template($name, array $data = [])
 	return $result;
 }
 
+
 /**
  * Подсчет количества дней до выполнения задачи
  * @param string $task_end дата выполнения задачи
  * @return string итоговый результат - количество дней до выполнения задачи
  */
 
-function dataTask($task_end)
+function dateTask($task_end)
 {
 	$secs_in_day = 86400; // 24 часа = 86400 секунд
 	$now_ts = time(); //текущая метка timestamp
@@ -56,6 +56,7 @@ function dataTask($task_end)
 	$ts_diff = floor(($end_ts - $now_ts) / $secs_in_day); // количество оставшихся дней до выполнения задачи
 	return $ts_diff;
 }
+
 
 /**
  * Выводит результат запроса sql из указанной таблицы в виде массива
@@ -65,7 +66,7 @@ function dataTask($task_end)
  * @return array массив значений сформированный на основании запроса $sql
  */
 
-function resQuerySQL($sql, $sql_table, $connect)
+function resQuerySQL($sql, $connect)
 {
 	// получаем ресурс результата
 	$result = mysqli_query($connect, $sql);
