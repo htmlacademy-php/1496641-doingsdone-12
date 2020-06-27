@@ -70,7 +70,7 @@ if (isset($_POST['submit'])) {
             $httpHttps = !empty($_SERVER['HTTPS']) ? "https://" : "http://";
 
             // Формируем ссылку на файл (протокол + домен + директория + файл.расширение)
-            $linkFile = $httpHttps . $_SERVER['SERVER_NAME'] . '/' . $dir . $newFileName;
+            $linkFile = $httpHttps . $_SERVER['SERVER_NAME'] . ':8080/' . $dir . $newFileName;
         } elseif ($fileSize > 0) {
             $errors['file'] = 'Фокус не пройдет :-) файл не разрешен';
         }
@@ -116,7 +116,7 @@ if (!empty($_POST) && empty($errors)) {
     mysqli_stmt_bind_param($stmt, "iisss", $proj_id, $user_id, $title_task, $link_file, $date_task_end);
 
     $proj_id = $_POST['project'];
-    $user_id = 1; // изменить в дальнейшем на id пользователя после авторизации
+    $user_id = $user_id;
     $title_task = $_POST['name'];
     $link_file = (!empty($_FILES['file'])) ? $linkFile : NULL;
     $date_task_end = (!empty($_POST['date'])) ? $_POST['date'] : NULL;

@@ -70,7 +70,9 @@ AND p.proj_id = {$proj_id}";
 
 // Результат запроса в виде массива
 $tasks_list = resQuerySQL($sql_task, $connect);
-var_dump($tasks_list);
+
+// Сортируем задачи в обратном порядке
+$tasks_list = array_reverse($tasks_list);
 
 // Выборка всех проектов и количество задач в них для всех пользователей
 $sql_projects_and_count_tasks = "SELECT p.proj_id, p.proj_name, COUNT(t.task_id) as count 

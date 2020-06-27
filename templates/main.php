@@ -75,7 +75,11 @@
 
 				if (dateTask($value['date_task_end']) <= 1) {
 					$task_class .= ' task--important';
-				} ?>
+				}
+				// исправить функцию времени
+				var_dump(dateTask($value['date_task_end']));
+
+			?>
 
 				<tr class="tasks__item task <?= $task_class; ?>">
 					<td class="task__select">
@@ -87,12 +91,14 @@
 
 					<td class="task__file">
 						<?php if (isset($value['link_file'])) : ?>
-							<a class="download-link" href="<?= $linkFile ?>"><?= $newFileName ?></a>
+							<a class="download-link" href="<?= $value['link_file'] ?>" download=""><?= end(explode('/', $value['link_file'])) ?></a>
 						<?php endif; ?>
 					</td>
 
 					<td class="task__date">
-						<?= date('d.m.Y', strtotime($value['date_task_end'])) ?>
+						<?php if (isset($value['date_task_end']))
+							echo date('d.m.Y', strtotime($value['date_task_end']))
+						?>
 					</td>
 				</tr>
 

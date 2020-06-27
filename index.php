@@ -2,7 +2,6 @@
 
 require_once('functions.php');
 require_once('data.php');
-// require_once('add.php');
 
 // Ошибка 404
 $page_404 = include_template('404.php', []);
