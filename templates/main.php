@@ -56,13 +56,13 @@
 			}
 
 			// Валидация proj_id, отправка заголовка 404 если proj_id = false
-			if (!in_array($_GET['id'], $valid_id) && !empty($_GET['id']))  {
+			if (!in_array($_GET['id'], $valid_id) && !empty($_GET['id'])) {
 				header("HTTP/1.1 404 Not Found");
 				print($page404);
 			};
 
 			// Вывод всех задач
-			foreach ($tasks_list as $value) :	
+			foreach ($tasks_list as $value) :
 				if (!$show_complete_tasks && $value['status_task']) {
 					continue;
 				}
@@ -87,7 +87,7 @@
 
 					<td class="task__file">
 						<?php if (isset($value['link_file'])) : ?>
-							<a class="download-link" href="#">Home.psd</a>
+							<a class="download-link" href="<?= $linkFile ?>"><?= $newFileName ?></a>
 						<?php endif; ?>
 					</td>
 
