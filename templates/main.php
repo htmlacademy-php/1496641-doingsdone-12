@@ -73,12 +73,9 @@
 					$task_class = 'task--completed';
 				}
 
-				if (dateTask($value['date_task_end']) <= 1) {
+				if (dateTask($value['date_task_end']) <= 0) {
 					$task_class .= ' task--important';
 				}
-				// исправить функцию времени
-				var_dump(dateTask($value['date_task_end']));
-
 			?>
 
 				<tr class="tasks__item task <?= $task_class; ?>">

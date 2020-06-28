@@ -70,7 +70,7 @@ if (isset($_POST['submit'])) {
             $httpHttps = !empty($_SERVER['HTTPS']) ? "https://" : "http://";
 
             // Формируем ссылку на файл (протокол + домен + директория + файл.расширение)
-            $linkFile = $httpHttps . $_SERVER['SERVER_NAME'] . ':8080/' . $dir . $newFileName;
+            $linkFile = $httpHttps . $_SERVER['SERVER_NAME'] . '/' . $dir . $newFileName;
         } elseif ($fileSize > 0) {
             $errors['file'] = 'Фокус не пройдет :-) файл не разрешен';
         }
@@ -99,7 +99,7 @@ if (isset($_POST['submit'])) {
     }
 }
 
-// TODO РАБОТА С БД (подготавливаем и выполняем запрос)
+// TODO РАБОТА С MySQL query (подготавливаем и выполняем запрос)
 
 if (!empty($_POST) && empty($errors)) {
 
@@ -135,13 +135,13 @@ if (!empty($_POST) && empty($errors)) {
     header('location: index.php');
 }
 
-// TODO СОБИРАЕМ ШАБЛОН ДОБАВЛЕНИЕ ЗАДАЧИ
+// TODO СОБИРАЕМ ШАБЛОН - ДОБАВЛЕНИЕ ЗАДАЧИ
 
 // Контентная часть
 $page_content = include_template('add.php', [
     'projects'      => $projects,
     'count_tasks'   => $count_tasks,
-    'errors' => $errors,
+    'errors'        => $errors,
 ]);
 
 // Шаблон страницы

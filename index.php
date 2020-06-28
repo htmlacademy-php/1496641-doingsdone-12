@@ -15,8 +15,6 @@ $page_content = include_template('main.php', [
 	'valid_id'					=> $valid_id,
 	'show_complete_tasks' 		=> $show_complete_tasks,
 	'page404' 					=> $page_404,
-	'linkFile' 					=> $linkFile,
-	'newFileName' 				=> $newFileName,
 ]);
 
 // Шаблон страницы
