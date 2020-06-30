@@ -46,7 +46,7 @@ if (isset($_POST['submit'])) {
         $fileErr = $_FILES['file']['error'];
 
         // Зададим диапазон значений для генерации нового имени файла
-        $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        // $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
         // Определим допустимые типы файлов
         $fileTypes = array('png', 'xlsx', 'xls', 'doc', 'docx', 'pdf', 'jpg', 'csv', 'txt');
@@ -60,8 +60,8 @@ if (isset($_POST['submit'])) {
             // Директория для загрузки файла
             $dir = 'uploads/';
 
-            // Формируем рандомно имя файла
-            $newFileName = substr(str_shuffle($permitted_chars), 0, 10);
+            // Формируем имя файла
+            $newFileName = time() . '_' . $user_id;
 
             // Формируем имя файла + расширение
             $newFileName .= '.' . $fileExt;
@@ -110,16 +110,21 @@ if (!empty($_POST) && empty($errors)) {
     $sql_add_task = "INSERT INTO task(proj_id, user_id, title_task, link_file, date_task_end) 
     VALUES (?, ?, ?, ?, ?)";
 
-    $stmt = mysqli_prepare($connect,  $sql_add_task);
+    // $stmt = mysqli_prepare($connect,  $sql_add_task);
 
     // Передача значений в подготовленный запрос
-    mysqli_stmt_bind_param($stmt, "iisss", $proj_id, $user_id, $title_task, $link_file, $date_task_end);
+    // mysqli_stmt_bind_param($stmt, "iisss", $proj_id, $user_id, $title_task, $link_file, $date_task_end);
 
-    $proj_id = $_POST['project'];
-    $user_id = $user_id;
-    $title_task = $_POST['name'];
-    $link_file = (!empty($_FILES['file'])) ? $linkFile : NULL;
-    $date_task_end = (!empty($_POST['date'])) ? $_POST['date'] : NULL;
+    $data = [
+                'proj_id'       => $_POST['project'],
+                'user_id'       => $user_id,
+                'title_task'    => $_POST['name'],
+                'link_file'     => (!empty($_FILES['file'])) ? $linkFile : NULL,
+                'date_task_end' => (!empty($_POST['date'])) ? $_POST['date'] : NULL,
+            ];
+
+    // Создаем подготовленное выражение
+    $stmt = db_get_prepare_stmt($connect, $sql_add_task, $data);
 
     // Выполнение подготовленного запроса 
     mysqli_stmt_execute($stmt);
@@ -141,7 +146,6 @@ if (!empty($_POST) && empty($errors)) {
 $page_content = include_template('add.php', [
     'projects'      => $projects,
     'count_tasks'   => $count_tasks,
-    'errors'        => $errors,
 ]);
 
 // Шаблон страницы
