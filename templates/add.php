@@ -35,7 +35,7 @@
 
                     <option value="none" selected disabled hidden>Выбрать проект</option>
                     <?php foreach ($projects as $project) : ?>
-                        <option value="<?= $project['proj_id']; ?>"><?= $project['proj_name']; ?></option>
+                        <option <?= ($project_id === $project['proj_id']) ? 'selected' : '' ?> value="<?= $project['proj_id']; ?>"><?= $project['proj_name']; ?></option>
                     <?php endforeach; ?>
 
                 </select>

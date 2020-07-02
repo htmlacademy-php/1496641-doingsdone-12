@@ -24,6 +24,8 @@ if (isset($_POST['submit'])) {
     // Проверим id проекта от пользователя с данными в БД
     if (!in_array($_POST['project'], $projId)) {
         $errors['project'] = 'Опа! У нас хакер :-) нет такого проекта';
+    } else {
+        $project_id = $_POST['project']; // запишем выбранный пользовтаелем проект в переменную 
     }
 
     // Проверяем дату задачи с учетом текущей даты
@@ -146,6 +148,7 @@ $page_content = include_template('add.php', [
     'projects'      => $projects,
     'count_tasks'   => $count_tasks,
     'errors'        => $errors,
+    'project_id'    => $project_id,
 ]);
 
 // Шаблон страницы
