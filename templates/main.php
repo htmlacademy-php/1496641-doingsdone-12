@@ -73,7 +73,7 @@
 					$task_class = 'task--completed';
 				}
 
-				if (dateTask($value['date_task_end']) <= 0) {
+				if (dateTask($value['date_task_end']) <= -1) {
 					$task_class .= ' task--important';
 				}
 			?>

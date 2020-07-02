@@ -63,11 +63,6 @@
 
                     <?= $errors['file'] ? '<p class="form__message">' . $errors['file'] . '</p>' : ''  ?>
 
-                    <div class="castom" style="margin-top: 20px;">
-                        <span class="form__label">Имя файла: <?= $_FILES['file']['name'] ?></span><br>
-                        <span class=" form__label">Размер файла: <?= $_FILES['file']['size'] ?></span><br>
-                        <span class="form__label">Тип файла: <?= $_FILES['file']['type'] ?></span><br>
-                    </div>
                 </div>
             </div>
 

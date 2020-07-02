@@ -136,7 +136,6 @@ if (!empty($_POST) && empty($errors)) {
     mysqli_close($connect);
 
     // Редирект пользователя на главную
-    sleep(1); // пауза 1 сек
     header('location: index.php');
 }
 
@@ -146,6 +145,7 @@ if (!empty($_POST) && empty($errors)) {
 $page_content = include_template('add.php', [
     'projects'      => $projects,
     'count_tasks'   => $count_tasks,
+    'errors'        => $errors,
 ]);
 
 // Шаблон страницы
