@@ -24,8 +24,13 @@ if (isset($_POST['submit'])) {
     // Проверим id проекта от пользователя с данными в БД
     if (!in_array($_POST['project'], $projId)) {
         $errors['project'] = 'Опа! У нас хакер :-) нет такого проекта';
+    }
+
+    // Запишем выбранный пользовтаелем проект в переменную
+    if (isset($_POST['project'])) {
+        $project_id = $_POST['project'];
     } else {
-        $project_id = $_POST['project']; // запишем выбранный пользовтаелем проект в переменную 
+        $project_id = '';
     }
 
     // Проверяем дату задачи с учетом текущей даты
@@ -118,12 +123,12 @@ if (!empty($_POST) && empty($errors)) {
     // mysqli_stmt_bind_param($stmt, "iisss", $proj_id, $user_id, $title_task, $link_file, $date_task_end);
 
     $data = [
-                'proj_id'       => $_POST['project'],
-                'user_id'       => $user_id,
-                'title_task'    => $_POST['name'],
-                'link_file'     => (!empty($_FILES['file'])) ? $linkFile : NULL,
-                'date_task_end' => (!empty($_POST['date'])) ? $_POST['date'] : NULL,
-            ];
+        'proj_id'       => $_POST['project'],
+        'user_id'       => $user_id,
+        'title_task'    => $_POST['name'],
+        'link_file'     => (!empty($_FILES['file'])) ? $linkFile : NULL,
+        'date_task_end' => (!empty($_POST['date'])) ? $_POST['date'] : NULL,
+    ];
 
     // Создаем подготовленное выражение
     $stmt = db_get_prepare_stmt($connect, $sql_add_task, $data);
