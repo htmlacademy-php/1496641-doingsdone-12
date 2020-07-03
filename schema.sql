@@ -1,11 +1,7 @@
 -- Создаем БД
-CREATE DATABASE doingsdone
-DEFAULT CHARACTER SET utf8
-DEFAULT COLLATE utf8_general_ci;
-
+CREATE DATABASE doingsdone DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
 -- Делаем ее активной для работы
 USE doingsdone;
-
 -- Создаем табллицу для сущности Пользователь
 CREATE TABLE user_reg (
   user_id INT(11) UNSIGNED AUTO_INCREMENT NOT NULL,
@@ -15,7 +11,6 @@ CREATE TABLE user_reg (
   pass CHAR (64) NOT NULL,
   PRIMARY KEY (user_id)
 ) ENGINE = InnoDB;
-
 -- Создаем табллицу для сущности Проект
 CREATE TABLE project (
   proj_id INT(11) UNSIGNED AUTO_INCREMENT NOT NULL,
@@ -25,7 +20,6 @@ CREATE TABLE project (
   INDEX idxProject (user_id),
   CONSTRAINT user_project FOREIGN KEY (user_id) REFERENCES user_reg (user_id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB;
-
 -- Создаем табллицу для сущности Задача
 CREATE TABLE task (
   task_id INT(11) UNSIGNED AUTO_INCREMENT NOT NULL,
@@ -35,7 +29,7 @@ CREATE TABLE task (
   status_task BIT(1) NOT NULL DEFAULT 0,
   title_task VARCHAR (255) NOT NULL,
   link_file VARCHAR (255) NULL,
-  date_task_end TIMESTAMP NOT NULL,
+  date_task_end TIMESTAMP NULL,
   PRIMARY KEY (task_id),
   INDEX idxTaskProject (proj_id),
   INDEX idxTaskUser (user_id),

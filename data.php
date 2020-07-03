@@ -29,8 +29,12 @@ if (!$db) {
 
 // TODO ФОРМИРУЕМ ДАННЫЕ ДЛЯ ВЫВОДА ПРОЕКТОВ
 
+// Удалить после того как появиться форма регистрации на сайте
+$user_id = 1;
+
 // Выборка всех проектов из БД
-$sql_proj = "SELECT user_id, proj_id, proj_name FROM project";
+$sql_proj = "SELECT user_id, proj_id, proj_name
+				FROM project WHERE user_id = {$user_id}";
 
 // Результат запроса в виде массива
 $projects = resQuerySQL($sql_proj, $connect);
@@ -67,6 +71,9 @@ AND p.proj_id = {$proj_id}";
 // Результат запроса в виде массива
 $tasks_list = resQuerySQL($sql_task, $connect);
 
+// Сортируем задачи в обратном порядке
+$tasks_list = array_reverse($tasks_list);
+
 // Выборка всех проектов и количество задач в них для всех пользователей
 $sql_projects_and_count_tasks = "SELECT p.proj_id, p.proj_name, COUNT(t.task_id) as count 
 FROM project p LEFT JOIN task t ON p.proj_id = t.proj_id GROUP BY p.proj_id";
@@ -78,8 +85,3 @@ FROM project p LEFT JOIN task t ON p.proj_id = t.proj_id GROUP BY p.proj_id";
 
 // Результат запроса в виде массива
 $projects_and_count_tasks = resQuerySQL($sql_projects_and_count_tasks, $connect);
-
-
-
-
-
