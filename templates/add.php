@@ -25,7 +25,7 @@
 
                 <input class="form__input <?= $errors['name'] ? 'form__input--error' : '' ?>" type="text" name="name" id="name" value="<?= postValue($_POST['name']); ?>" placeholder="Введите название">
 
-                <?= $errors['name'] ? '<p class="form__message">' . $errors['name'] . '</pre>' : ''  ?>
+                <?= $errors['name'] ? '<p class="form__message">' . $errors['name'] . '</p>' : ''  ?>
             </div>
 
             <div class="form__row">
