@@ -27,6 +27,8 @@ if (isset($_POST['submit'])) {
     // Проверим id проекта от пользователя с данными в БД
     if (!in_array($_POST['project'], $projId)) {
         $errors['project'] = 'Опа! У нас хакер :-) нет такого проекта';
+    } else {
+        $project_id = $_POST['project'];
     }
 
     // Проверяем дату задачи с учетом текущей даты
