@@ -31,6 +31,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Результат в виде массива
         $user = resQuerySQL($sql, $connect);
 
+        // Массив для данных сессии 
+        $us_data = [];
+
+        // Получим одномерный ассоциативный массив
+        foreach ($user as $key => $value) {
+            foreach ($value as $key => $value) {
+                $us_data[$key] = $value;
+            }
+        }
+
         // Извлекаем из массива пароль
         foreach ($user as $key => $value) {
             $us_pass = $value['pass'];
@@ -43,22 +53,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Верефикация пароля
         $pass = password_verify($form['password'], $us_pass);
 
-        // Обьявим пустой массив данных о пользователе для передачи в сессию
-        $us_data = [];
-
         // Проверим хэш пароля и откроемм сессию если совпадение
         if ($pass) {
-
-            // Соберем одномерный (из двумерного) ассоциативный массив с данными о пользователе
-            foreach ($user as $key => $value) {
-                foreach ($value as $key => $value) {
-                    $us_data[$key] = $value;
-                }
-            }
-
-            // Передадим все данные о пользователе в сессию
             $_SESSION['user'] = $us_data;
-            header("Location: /index.php");
+            header("Location: /");
             exit();
         } else {
             $errors['password'] = 'Неверный пароль';
@@ -67,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 } else {
 
     // Если форма не была отправлена проверяем существование сессии
-    if (isset($_SESSION['user'])) {
+    if (isset($_SESSION['user']['user_id'])) {
         header("Location: /index.php");
         exit();
     }
@@ -79,6 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $auth_data = [
     'form'      => $form,
     'errors'    => $errors,
+    'us_data'   => $us_data,
 ];
 
 // Контентная часть

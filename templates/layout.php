@@ -9,11 +9,11 @@
 	<link rel="stylesheet" href="css/flatpickr.min.css">
 </head>
 
-<body <?= !$_SESSION['user_id'] ? 'class="body-background"' : '' ?>>
+<body <?= !$us_data['user_id'] ? 'class="body-background"' : '' ?>>
 	<h1 class="visually-hidden">Дела в порядке</h1>
 
 	<div class="page-wrapper">
-		<div class="container <?= $_SESSION['user_id'] ? 'container--with-sidebar' : '' ?>">
+		<div class="container <?= $us_data['user_id'] ? 'container--with-sidebar' : '' ?>">
 			<header class="main-header">
 				<a href="/">
 					<img src="img/logo.png" width="153" height="42" alt="Логотип Дела в порядке">
@@ -21,12 +21,12 @@
 
 				<div class="main-header__side">
 
-					<?php if ($_SESSION['user_id']) : ?>
+					<?php if ($us_data['user_id']) : ?>
 
 						<a class="main-header__side-item button button--plus open-modal" href="/add.php">Добавить задачу</a>
 						<div class="main-header__side-item user-menu">
 							<div class="user-menu__data">
-								<p><?= htmlspecialchars($user_name) ?></p>
+								<p><?= htmlspecialchars($us_data['us_name']) ?></p>
 								<a href="/logout.php">Выйти</a>
 							</div>
 						</div>
@@ -56,7 +56,7 @@
 				<p>Веб-приложение для удобного ведения списка дел.</p>
 			</div>
 
-			<?php if ($_SESSION['user_id']) : ?>
+			<?php if ($us_data['user_id']) : ?>
 				<a class="main-footer__button button button--plus" href="/add.php">Добавить задачу</a>
 			<?php endif; ?>
 

@@ -6,11 +6,11 @@ require_once('data.php');
 // Ошибка 404
 $page_404 = include_template('404.php', []);
 
-// Шаблон для гостя
+// Контентн для гостя
 $guest = include_template('guest.php', []);
 
-// Контентная часть
-$page_content = include_template('main.php', [
+// Контентн для авторизированного пользователя
+$user_content = include_template('main.php', [
 	'projects'					=> $projects,
 	'tasks_list'				=> $tasks_list,
 	'count_tasks'				=> $count_tasks,
@@ -20,17 +20,18 @@ $page_content = include_template('main.php', [
 	'page404' 					=> $page_404,
 ]);
 
-$data = [
-	'content'   =>  $guest,
-	'title'     => 'Дела в порядке',
-	'user_name' => 'Константин'
-];
-
-if ($_SESSION) {
-	$data = ['content' =>  $page_content];
+// Проверим авторизацию на сайте (наличие данных в сессии)
+if ($us_data['user_id']) {
+	$content = $user_content;
+} else {
+	$content = $guest;
 }
 
-// Шаблон страницы
-$layout_content = include_template('layout.php', $data);
+// Шаблон главной страницы
+$layout_content = include_template('layout.php', [
+	'content'   =>  $content,
+	'title'     => 'Дела в порядке',
+	'us_data' 	=> $us_data,
+]);
 
 print($layout_content);

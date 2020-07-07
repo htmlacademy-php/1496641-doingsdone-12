@@ -141,24 +141,31 @@ if (!empty($_POST) && empty($errors)) {
     mysqli_close($connect);
 
     // Редирект пользователя на главную
-    header('location: index.php');
+    header('location: /');
 }
 
 // TODO СОБИРАЕМ ШАБЛОН - ДОБАВЛЕНИЕ ЗАДАЧИ
 
-// Контентная часть
-$page_content = include_template('add.php', [
-    'projects'      => $projects,
-    'count_tasks'   => $count_tasks,
-    'errors'        => $errors,
-    'project_id'    => $project_id,
-]);
+// Проверим авторизацию на сайте (наличие данных в сессии)
+if ($us_data['user_id']) {
 
-// Шаблон страницы
-$layout_content = include_template('layout.php', [
-    'content'   =>  $page_content,
-    'title'     => 'Дела в порядке',
-    'user_name' => 'Константин'
-]);
+    // Контентная часть
+    $page_content = include_template('add.php', [
+        'projects'      => $projects,
+        'count_tasks'   => $count_tasks,
+        'errors'        => $errors,
+        'project_id'    => $project_id,
+    ]);
 
-print($layout_content);
+    // Шаблон страницы
+    $layout_content = include_template('layout.php', [
+        'content'   =>  $page_content,
+        'title'     => 'Дела в порядке',
+        'us_data'     => $us_data,
+    ]);
+
+    print($layout_content);
+} else {
+    // Редирект пользователя на главную для регистрации
+    header('location: /');
+}

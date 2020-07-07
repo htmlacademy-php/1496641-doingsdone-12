@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	}
 
 	// Валидация email
-	if(!empty($form['email']) && !filter_var($form['email'], FILTER_VALIDATE_EMAIL)) {
+	if (!empty($form['email']) && !filter_var($form['email'], FILTER_VALIDATE_EMAIL)) {
 		$errors['email'] = 'Некорректный email адрес';
 	}
 
@@ -38,20 +38,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$res = resQuerySQL($sql, $connect);
 
 		// Если id > 0 значит email существует
-		if (((int)$res) > 0) {
+		if (((int) $res) > 0) {
 
 			$errors['email'] = 'Email уже зарегистрирован';
+		} else {
 
-		} else { 
-
-		// Добавим нового пользователя в БД
+			// Добавим нового пользователя в БД
 			$password = password_hash($form['password'], PASSWORD_DEFAULT);
 
-		// Запрос на добавление данных в БД
+			// Запрос на добавление данных в БД
 			$sql = 'INSERT INTO user_reg (date_reg, email, us_name, pass) VALUES (NOW(), ?, ?, ?)';
 
 			$data = [
-				'email' 		=> $form['email'],
+				'email' 	=> $form['email'],
 				'us_name' 	=> $form['name'],
 				'pass' 		=> $password,
 			];
@@ -59,6 +58,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$stmt = db_get_prepare_stmt($connect, $sql, $data);
 
 			$res = mysqli_stmt_execute($stmt);
+
+			// Добавим проект Входящие для нового пользователя
+			// $sql_add_proj = 'INSERT INTO project (proj_id, user_id, proj_name) VALUES (38, Входящие)';
 		}
 
 		// Редирект на главную если пользователь успешно добавлен в БД
@@ -66,7 +68,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			header("Location: /index.php");
 			exit();
 		}
-
 	}
 }
 
