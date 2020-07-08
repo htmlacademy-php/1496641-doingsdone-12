@@ -1,5 +1,6 @@
 <div class="content">
 	<section class="content__side">
+
 		<h2 class="content__side-heading">Проекты</h2>
 
 		<nav class="main-navigation">
@@ -14,6 +15,10 @@
 		</nav>
 
 		<a class="button button--transparent button--plus content__side-button" href="pages/form-project.html" target="project_add">Добавить проект</a>
+
+
+
+
 	</section>
 
 	<main class="content__main">
@@ -63,6 +68,7 @@
 
 			// Вывод всех задач
 			foreach ($tasks_list as $value) :
+
 				if (!$show_complete_tasks && $value['status_task']) {
 					continue;
 				}

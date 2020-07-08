@@ -31,20 +31,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Результат в виде массива
         $user = resQuerySQL($sql, $connect);
 
-        // Массив для данных сессии 
+        // Массив данных для сессии 
         $us_data = [];
 
         // Получим одномерный ассоциативный массив
         foreach ($user as $key => $value) {
-            foreach ($value as $key => $value) {
-                $us_data[$key] = $value;
+            foreach ($value as $k => $v) {
+                $us_data[$k] = $v;
             }
         }
 
-        // Извлекаем из массива пароль
-        foreach ($user as $key => $value) {
-            $us_pass = $value['pass'];
-        }
+        // Запишем пароль в переменную для дальнейшей работы
+        $us_pass = $us_data['pass'];
     }
 
     // Валидация поля password
@@ -56,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Проверим хэш пароля и откроемм сессию если совпадение
         if ($pass) {
             $_SESSION['user'] = $us_data;
-            header("Location: /");
+            header("Location: index.php");
             exit();
         } else {
             $errors['password'] = 'Неверный пароль';
@@ -66,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Если форма не была отправлена проверяем существование сессии
     if (isset($_SESSION['user']['user_id'])) {
-        header("Location: /index.php");
+        header("Location: index.php");
         exit();
     }
 }
@@ -80,13 +78,13 @@ $auth_data = [
     'us_data'   => $us_data,
 ];
 
-// Контентная часть
-$content_reg = include_template('auth.php', $auth_data);
+// Контент страницы авторизации на сайте
+$content_auth = include_template('auth.php', $auth_data);
 
-// Шаблон страницы
-$layout_reg = include_template('layout-reg.php', [
-    'content'   =>  $content_reg,
+// Шаблон страницы авторизации на сайте
+$layout_guest = include_template('layout-guest.php', [
+    'content'   =>  $content_auth,
     'title'     => 'Document',
 ]);
 
-print($layout_reg);
+print($layout_guest);

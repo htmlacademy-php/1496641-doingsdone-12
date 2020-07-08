@@ -59,13 +59,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 			$res = mysqli_stmt_execute($stmt);
 
-			// Добавим проект Входящие для нового пользователя
-			// $sql_add_proj = 'INSERT INTO project (proj_id, user_id, proj_name) VALUES (38, Входящие)';
+			// Запишем последний id пользователя в переменную
+			$us_last_id = mysqli_insert_id($connect);
+
+			// Добавим проект "Входящие" для нового пользователя
+			$sql_add_proj = mysqli_query($connect, "INSERT INTO project (user_id, proj_name) VALUES ('$us_last_id', 'Входящие')");
+
+			// Выберем все данные нового ползователя
+			$sql = "SELECT * FROM user_reg WHERE user_id = '$us_last_id'";
+
+			// Результат в виде массива
+			$user = resQuerySQL($sql, $connect);
+
+			// Массив данных для сессии 
+			$us_data = [];
+
+			// Получим одномерный ассоциативный массив
+			foreach ($user as $key => $value) {
+				foreach ($value as $k => $v) {
+					$us_data[$k] = $v;
+				}
+			}
 		}
 
 		// Редирект на главную если пользователь успешно добавлен в БД
 		if ($res && empty($errors)) {
-			header("Location: /index.php");
+			$_SESSION['user'] = $us_data;
+			header("Location: index.php");
 			exit();
 		}
 	}
@@ -74,20 +94,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 // TODO СОБИРАЕМ ШАБЛОН - РЕГИСТРАЦИЯ НА САЙТЕ
 
 // Данные для передачи в шаблон
-$tpl_data = [
+$reg_data = [
 	'errors' => $errors,
 	'warning' => $warning,
 	'req_fields' => $req_fields,
 	'form' => $form,
 ];
 
-// Контентная часть
-$content_reg = include_template('reg.php', $tpl_data);
+// Контентная часть, форма регистрации на сайте
+$content_reg = include_template('reg.php', $reg_data);
 
-// Шаблон страницы
-$layout_reg = include_template('layout-reg.php', [
+// Шаблон страницы регистрации на сайте
+$layout_guest = include_template('layout-guest.php', [
 	'content'   =>  $content_reg,
 	'title'     => 'Document',
 ]);
 
-print($layout_reg);
+print($layout_guest);

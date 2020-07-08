@@ -10,7 +10,7 @@ $page_404 = include_template('404.php', []);
 $guest = include_template('guest.php', []);
 
 // Контентн для авторизированного пользователя
-$user_content = include_template('main.php', [
+$user = include_template('main.php', [
 	'projects'					=> $projects,
 	'tasks_list'				=> $tasks_list,
 	'count_tasks'				=> $count_tasks,
@@ -20,18 +20,18 @@ $user_content = include_template('main.php', [
 	'page404' 					=> $page_404,
 ]);
 
-// Проверим авторизацию на сайте (наличие данных в сессии)
+// Проверим гость или авторизированный пользователь (наличие данных в сессии)
 if ($us_data['user_id']) {
-	$content = $user_content;
+	$content = $user;
 } else {
 	$content = $guest;
 }
 
 // Шаблон главной страницы
-$layout_content = include_template('layout.php', [
-	'content'   =>  $content,
+$layout = include_template('layout.php', [
+	'content'   =>  $content, // Контент зависит от регистрации
 	'title'     => 'Дела в порядке',
-	'us_data' 	=> $us_data,
+	'us_data' 	=> $us_data, // Данные о пользователе в сессии
 ]);
 
-print($layout_content);
+print($layout);

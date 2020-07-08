@@ -111,15 +111,13 @@ if (!empty($_POST) && empty($errors)) {
     // Перемещение файла в директорию uploads если нет ошибок
     move_uploaded_file($fileTmp, $dir . $newFileName);
 
+    // $user_id = $_SESSION['user']['user_id'];
+
     // Сформируем подготовленный SQL запрос на добавление новой задачи
     $sql_add_task = "INSERT INTO task(proj_id, user_id, title_task, link_file, date_task_end) 
     VALUES (?, ?, ?, ?, ?)";
 
-    // $stmt = mysqli_prepare($connect,  $sql_add_task);
-
-    // Передача значений в подготовленный запрос
-    // mysqli_stmt_bind_param($stmt, "iisss", $proj_id, $user_id, $title_task, $link_file, $date_task_end);
-
+    // Данные для запроса
     $data = [
         'proj_id'       => $_POST['project'],
         'user_id'       => $user_id,
@@ -141,7 +139,7 @@ if (!empty($_POST) && empty($errors)) {
     mysqli_close($connect);
 
     // Редирект пользователя на главную
-    header('location: /');
+    header('location: index.php');
 }
 
 // TODO СОБИРАЕМ ШАБЛОН - ДОБАВЛЕНИЕ ЗАДАЧИ
