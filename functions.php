@@ -9,9 +9,11 @@
 
 function countTask($arr_count_task, $str_cat)
 {
-	foreach ($arr_count_task as $key => $value) {
-		if ($value['proj_name'] === $str_cat) {
-			return $value['count_task'];
+	if ($arr_count_task) {
+		foreach ($arr_count_task as $key => $value) {
+			if ($value['proj_name'] === $str_cat) {
+				return $value['count_task'];
+			}
 		}
 	}
 	return 0;
@@ -118,7 +120,8 @@ function is_date_valid(string $date): bool
  *
  * @return mysqli_stmt Подготовленное выражение
  */
-function db_get_prepare_stmt($link, $sql, $data = []) {
+function db_get_prepare_stmt($link, $sql, $data = [])
+{
 	$stmt = mysqli_prepare($link, $sql);
 
 	if ($stmt === false) {
@@ -135,11 +138,9 @@ function db_get_prepare_stmt($link, $sql, $data = []) {
 
 			if (is_int($value)) {
 				$type = 'i';
-			}
-			else if (is_string($value)) {
+			} else if (is_string($value)) {
 				$type = 's';
-			}
-			else if (is_double($value)) {
+			} else if (is_double($value)) {
 				$type = 'd';
 			}
 
