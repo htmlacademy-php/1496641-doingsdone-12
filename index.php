@@ -14,21 +14,23 @@ $user = include_template('main.php', [
 	'projects'					=> $projects,
 	'tasks_list'				=> $tasks_list,
 	'count_tasks'				=> $count_tasks,
-	'projects_and_count_tasks'	=> $projects_and_count_tasks,
 	'valid_id'					=> $valid_id,
 	'show_complete_tasks' 		=> $show_complete_tasks,
 	'page404' 					=> $page_404,
+	// 'us_data' 	=> $us_data, // Данные о пользователе в сессии
 ]);
 
-// Проверим гость или авторизированный пользователь (наличие данных в сессии)
+// Проверим гость или авторизованный пользователь
 if ($us_data['user_id']) {
+	$layout_template = 'layout.php';
 	$content = $user;
 } else {
+	$layout_template = 'layout-guest.php';
 	$content = $guest;
 }
 
 // Шаблон главной страницы
-$layout = include_template('layout.php', [
+$layout = include_template($layout_template, [
 	'content'   =>  $content, // Контент зависит от регистрации
 	'title'     => 'Дела в порядке',
 	'us_data' 	=> $us_data, // Данные о пользователе в сессии

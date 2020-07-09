@@ -8,11 +8,19 @@
 	<link rel="stylesheet" href="css/style.css">
 </head>
 
-<body>
+<?php if (($_SERVER['REQUEST_URI'] == "/") || ($_SERVER['REQUEST_URI'] == "/index.php")) {
+	$home = 'class="body-background"';
+} else {
+	$sidebar = ' container--with-sidebar';
+}
+?>
+
+<body <?= $home; ?>>
 	<h1 class="visually-hidden">Дела в порядке</h1>
 
 	<div class="page-wrapper">
-		<div class="container container--with-sidebar">
+		<!-- <div class="container"> -->
+		<div class="container <?= $sidebar; ?>">
 			<header class="main-header">
 				<a href="/">
 					<img src="../img/logo.png" width="153" height="42" alt="Логитип Дела в порядке">
@@ -23,24 +31,15 @@
 				</div>
 			</header>
 
-			<div class="content">
-				<section class="content__side">
-					<p class="content__side-info">Если у вас уже есть аккаунт, авторизуйтесь на сайте</p>
+			<?= $content ?>
 
-					<a class="button button--transparent content__side-button" href="auth.php">Войти</a>
-				</section>
-
-				<?= $content ?>
-
-			</div>
 		</div>
 	</div>
 
 	<footer class="main-footer">
 		<div class="container">
 			<div class="main-footer__copyright">
-				<p>© 2019, «Дела в порядке»</p>
-
+				<p>© <?= date('Y') ?>, «Дела в порядке»</p>
 				<p>Веб-приложение для удобного ведения списка дел.</p>
 			</div>
 

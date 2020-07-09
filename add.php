@@ -149,10 +149,10 @@ if ($us_data['user_id']) {
 
     // Контентная часть
     $page_content = include_template('add.php', [
-        'projects'      => $projects,
-        'count_tasks'   => $count_tasks,
-        'errors'        => $errors,
-        'project_id'    => $project_id,
+        'projects'                      => $projects,
+        'count_tasks'                   => $count_tasks,
+        'errors'                        => $errors,
+        'project_id'                    => $project_id,
     ]);
 
     // Шаблон страницы

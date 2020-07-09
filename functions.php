@@ -2,17 +2,19 @@
 
 /**
  * Счетчик задач в проекте
- * @param array $arr_count_task массив задач в каждом проекте
+ * @param array $count_task массив задач в каждом проекте
  * @param string $str_cat название задачи
  * @return string количество задач в проекте, где нет задач возвращаем 0
  */
 
-function countTask($arr_count_task, $str_cat)
+function countTask($count_task, $str_cat)
 {
-	if ($arr_count_task) {
-		foreach ($arr_count_task as $key => $value) {
-			if ($value['proj_name'] === $str_cat) {
-				return $value['count_task'];
+	if ($count_task) {
+		foreach ($count_task as $key => $value) {
+			foreach ($value as $k => $v) {
+				if ($value['proj_name'] === $str_cat) {
+					return $value['count'];
+				}
 			}
 		}
 	}

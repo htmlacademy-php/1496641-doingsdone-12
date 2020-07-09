@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $auth_data = [
     'form'      => $form,
     'errors'    => $errors,
-    'us_data'   => $us_data,
+    // 'us_data'   => $us_data,
 ];
 
 // Контент страницы авторизации на сайте

@@ -9,7 +9,8 @@
 	<link rel="stylesheet" href="css/flatpickr.min.css">
 </head>
 
-<body <?= !$us_data['user_id'] ? 'class="body-background"' : '' ?>>
+<body>
+
 	<h1 class="visually-hidden">Дела в порядке</h1>
 
 	<div class="page-wrapper">
@@ -20,25 +21,13 @@
 				</a>
 
 				<div class="main-header__side">
-
-					<?php if ($us_data['user_id']) : ?>
-
-						<a class="main-header__side-item button button--plus open-modal" href="/add.php">Добавить задачу</a>
-						<div class="main-header__side-item user-menu">
-							<div class="user-menu__data">
-								<p><?= htmlspecialchars($us_data['us_name']) ?></p>
-								<a href="/logout.php">Выйти</a>
-							</div>
+					<a class="main-header__side-item button button--plus open-modal" href="/add.php">Добавить задачу</a>
+					<div class="main-header__side-item user-menu">
+						<div class="user-menu__data">
+							<p><?= htmlspecialchars($us_data['us_name']) ?></p>
+							<a href="/logout.php">Выйти</a>
 						</div>
-
-					<?php else : ?>
-
-						<div class="main-header__side">
-							<a class="main-header__side-item button button--transparent" href="/auth.php">Войти</a>
-						</div>
-
-					<?php endif; ?>
-
+					</div>
 				</div>
 
 			</header>
@@ -51,8 +40,7 @@
 	<footer class="main-footer">
 		<div class="container">
 			<div class="main-footer__copyright">
-				<p>© 2019, «Дела в порядке»</p>
-
+				<p>© <?= date('Y') ?>, «Дела в порядке»</p>
 				<p>Веб-приложение для удобного ведения списка дел.</p>
 			</div>
 

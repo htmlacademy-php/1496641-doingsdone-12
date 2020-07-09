@@ -45,25 +45,7 @@ $sql_proj = "SELECT user_id, proj_id, proj_name
 // Результат запроса в виде массива
 $projects = resQuerySQL($sql_proj, $connect);
 
-// TODO ФОРМИРУЕМ ДАННЫЕ ДЛЯ СЧЕТЧИКА ЗАДАЧ В ПРОЕКТАХ
-
-// Количество задач в каждом проекте по id пользователя
-$sql_count = "SELECT COUNT(task_id) AS count_task, proj_name 
-					FROM user_reg u, project p, task t 
-						WHERE p.proj_id = t.proj_id 
-							AND u.user_id = t.user_id 
-								AND u.user_id = $user_id
-									GROUP BY proj_name";
-
-// Результат запроса в виде массива
-$count_tasks = resQuerySQL($sql_count, $connect);
-
-echo '<pre>';
-var_dump($count_tasks);
-echo '</pre>';
-
-
-// TODO ДЕЛАЕМ ИНТЕРАКТИВ - КЛИКАБЕЛЬНОЕ МЕНЮ ИЗ ПРОЕКТОВ (ПРОЕКТ - ЗАДАЧИ)
+// TODO КЛИКАБЕЛЬНОЕ МЕНЮ ИЗ ПРОЕКТОВ (ПРОЕКТ - ЗАДАЧИ)
 
 // условие для выборки задач из БД по значению $_GET['id'],
 if (!empty($_GET['id'])) {
@@ -89,15 +71,13 @@ if ($tasks_list) {
 	$tasks_list = array_reverse($tasks_list);
 }
 
-// Выборка всех проектов и количество задач в них для одного пользователя
-$sql_projects_and_count_tasks = "SELECT p.proj_id, p.proj_name, COUNT(t.task_id) as count 
-										FROM project p LEFT JOIN task t ON p.proj_id = t.proj_id 
-											WHERE p.user_id ='$user_id' 
-												GROUP BY p.proj_id";
+// TODO ФОРМИРУЕМ ДАННЫЕ ДЛЯ СЧЕТЧИКА ЗАДАЧ В ПРОЕКТАХ
+
+// Выборка всех проектов и количество задач в них
+$sql_count_tasks = "SELECT p.proj_id, p.proj_name, COUNT(t.task_id) as count 
+						FROM project p LEFT JOIN task t ON p.proj_id = t.proj_id 
+							WHERE p.user_id ='$user_id' 
+								GROUP BY p.proj_id";
 
 // Результат запроса в виде массива
-$projects_and_count_tasks = resQuerySQL($sql_projects_and_count_tasks, $connect);
-
-echo '<pre>';
-var_dump($projects_and_count_tasks);
-echo '</pre>';
+$count_tasks = resQuerySQL($sql_count_tasks, $connect);

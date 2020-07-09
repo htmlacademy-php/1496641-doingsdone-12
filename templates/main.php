@@ -46,14 +46,14 @@
 			<?php
 
 			// Выводим сообщение если нет задач в проекте 
-			foreach ($projects_and_count_tasks as $key => $value) {
+			foreach ($count_tasks as $key => $value) {
 				if (($_GET['id'] == $value['proj_id']) && !$value['count']) {
 					echo '<span style="font-size: 16px; font-weight: bold;">Нет задач для этого проекта</span>';
 				}
 			}
 
 			// Соберем новый одномерный масив со значением proj_id
-			foreach ($projects_and_count_tasks as $key => $value) {
+			foreach ($count_tasks as $key => $value) {
 				$valid_id[] = $value['proj_id'];
 			}
 
