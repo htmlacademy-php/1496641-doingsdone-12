@@ -3,111 +3,120 @@
 require_once('functions.php');
 require_once('data.php');
 
+// Если пользователь зарегестрирован то редирект на главную
+if ($us_data) {
+    header("Location: index.php");
+    exit();
+}
+
 // TODO ВАЛИДАЦИЯ ФОРМЫ РЕГИСТРАЦИИ
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-	$form = $_POST;
-	$errors = [];
-	$warning = 'Пожалуйста, исправьте ошибки в форме';
+    $form = $_POST;
+    $errors = [];
+    $warning = 'Пожалуйста, исправьте ошибки в форме';
 
-	// Обязательные поля для заполнения
-	$req_fields = ['email', 'password', 'name'];
+    // Обязательные поля для заполнения
+    $req_fields = ['email', 'password', 'name'];
 
-	foreach ($req_fields as $field) {
-		if (empty($form[$field])) {
-			$errors[$field] = "Не заполнено поле " . $field;
-		}
-	}
+    foreach ($req_fields as $field) {
+        if (empty($form[$field])) {
+            $errors[$field] = "Не заполнено поле " . $field;
+        }
+    }
 
-	// Валидация email
-	if (!empty($form['email']) && !filter_var($form['email'], FILTER_VALIDATE_EMAIL)) {
-		$errors['email'] = 'Некорректный email адрес';
-	}
+    // Валидация email
+    if (!empty($form['email']) && !filter_var($form['email'], FILTER_VALIDATE_EMAIL)) {
+        $errors['email'] = 'Некорректный email адрес';
+    }
 
-	// Проверим существование email в БД
-	if (empty($errors)) {
+    // Проверим существование email в БД
+    if (empty($errors)) {
 
-		// Экранируем спец символы в email от пользователя
-		$email = mysqli_real_escape_string($connect, $form['email']);
+        // Экранируем спец символы в email от пользователя
+        $email = mysqli_real_escape_string($connect, $form['email']);
 
-		// Выборка id пользователя из БД по полю email полученного от пользователя
-		$sql = "SELECT user_id FROM user_reg WHERE email = '$email'";
+        // Выборка id пользователя из БД по полю email полученного от пользователя
+        $sql = "SELECT user_id FROM user_reg WHERE email = '$email'";
 
-		// Результат в виде массива
-		$res = resQuerySQL($sql, $connect);
+        // Результат в виде массива
+        $res = resQueryUser($sql, $connect);
 
-		// Если id > 0 значит email существует
-		if (((int) $res) > 0) {
+        // Если id > 0 значит email существует
+        if (((int) $res) > 0) {
 
-			$errors['email'] = 'Email уже зарегистрирован';
-		} else {
+            $errors['email'] = 'Email уже зарегистрирован';
+        } else {
 
-			// Добавим нового пользователя в БД
-			$password = password_hash($form['password'], PASSWORD_DEFAULT);
+            // Добавим нового пользователя в БД
+            $password = password_hash($form['password'], PASSWORD_DEFAULT);
 
-			// Запрос на добавление данных в БД
-			$sql = 'INSERT INTO user_reg (date_reg, email, us_name, pass) VALUES (NOW(), ?, ?, ?)';
+            // Запрос на добавление данных в БД
+            $sql = 'INSERT INTO user_reg (date_reg, email, us_name, pass) VALUES (NOW(), ?, ?, ?)';
 
-			$data = [
-				'email' 	=> $form['email'],
-				'us_name' 	=> $form['name'],
-				'pass' 		=> $password,
-			];
+            $data = [
+                'email'     => $form['email'],
+                'us_name'     => $form['name'],
+                'pass'         => $password,
+            ];
 
-			$stmt = db_get_prepare_stmt($connect, $sql, $data);
+            $stmt = db_get_prepare_stmt($connect, $sql, $data);
 
-			$res = mysqli_stmt_execute($stmt);
+            $res = mysqli_stmt_execute($stmt);
 
-			// Запишем последний id пользователя в переменную
-			$us_last_id = mysqli_insert_id($connect);
+            // Запишем последний добавленный id пользователя в переменную
+            $us_last_id = mysqli_insert_id($connect);
 
-			// Добавим проект "Входящие" для нового пользователя
-			$sql_add_proj = mysqli_query($connect, "INSERT INTO project (user_id, proj_name) VALUES ('$us_last_id', 'Входящие')");
+            // Добавим проект "Входящие" для нового пользователя
+            $sql_add_proj = mysqli_query($connect, "INSERT INTO project (user_id, proj_name) VALUES ('$us_last_id', 'Входящие')");
 
-			// Выберем все данные нового ползователя
-			$sql = "SELECT * FROM user_reg WHERE user_id = '$us_last_id'";
+            // Выберем все данные нового ползователя
+            $sql = "SELECT * FROM user_reg WHERE user_id = '$us_last_id'";
 
-			// Результат в виде массива
-			$user = resQuerySQL($sql, $connect);
+            // Результат в виде массива
+            $user = resQueryUser($sql, $connect);
 
-			// Массив данных для сессии 
-			$us_data = [];
+            // Закрываем запрос
+            mysqli_stmt_close($stmt);
 
-			// Получим одномерный ассоциативный массив
-			foreach ($user as $key => $value) {
-				foreach ($value as $k => $v) {
-					$us_data[$k] = $v;
-				}
-			}
-		}
+            // Закрываем подключение
+            mysqli_close($connect);
 
-		// Редирект на главную если пользователь успешно добавлен в БД
-		if ($res && empty($errors)) {
-			$_SESSION['user'] = $us_data;
-			header("Location: index.php");
-			exit();
-		}
-	}
+            // Запишем в сесию данные о пользователе
+            $us_data = $user;
+        }
+
+        // Редирект на главную если пользователь успешно добавлен в БД
+        if ($res && empty($errors)) {
+            $_SESSION['user'] = $us_data;
+            header("Location: index.php");
+            exit();
+        }
+    }
 }
 
 // TODO СОБИРАЕМ ШАБЛОН - РЕГИСТРАЦИЯ НА САЙТЕ
 
 // Данные для передачи в шаблон
 $reg_data = [
-	'errors' => $errors,
-	'warning' => $warning,
-	'req_fields' => $req_fields,
-	'form' => $form,
+    'errors' => $errors,
+    'warning' => $warning,
+    'req_fields' => $req_fields,
+    'form' => $form,
 ];
 
 // Контентная часть, форма регистрации на сайте
 $content_reg = include_template('reg.php', $reg_data);
 
+// Подключаем sidebar для страниц регестрации
+$sidebar = ' container--with-sidebar';
+
 // Шаблон страницы регистрации на сайте
 $layout_guest = include_template('layout-guest.php', [
-	'content'   =>  $content_reg,
-	'title'     => 'Document',
+    'content'   =>  $content_reg,
+    'title'     => 'Document',
+    'sidebar'     => $sidebar,
 ]);
 
 print($layout_guest);

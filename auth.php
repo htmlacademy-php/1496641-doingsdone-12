@@ -3,6 +3,12 @@
 require_once('functions.php');
 require_once('data.php');
 
+// Если пользователь зарегестрирован то редирект на главную
+if ($us_data) {
+    header("Location: index.php");
+    exit();
+}
+
 // TODO ВАЛИДАЦИЯ ФОРМЫ АВТОРИЗАЦИИ
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -18,10 +24,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    // Валидация email
-    if (!empty($form['email']) && !filter_var($form['email'], FILTER_VALIDATE_EMAIL)) {
+    // Валидация email - из чего должен состоять email
+    $email_filter = filter_var($form['email'], FILTER_VALIDATE_EMAIL);
+
+    if (!empty($form['email']) && !$email_filter) {
         $errors['email'] = 'Некорректный email адрес';
     } else {
+
         //Экранируем спец символы в email от пользователя
         $email = mysqli_real_escape_string($connect, $form['email']);
 
@@ -29,24 +38,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $sql = "SELECT * FROM user_reg WHERE email = '$email'";
 
         // Результат в виде массива
-        $user = resQuerySQL($sql, $connect);
+        $user = resQueryUser($sql, $connect);
 
-        // Массив данных для сессии 
-        $us_data = [];
+        // Запишем в сесию данные о пользователе
+        $us_data = $user;
 
-        // Получим одномерный ассоциативный массив
-        foreach ($user as $key => $value) {
-            foreach ($value as $k => $v) {
-                $us_data[$k] = $v;
-            }
+        // Валидация поля email - проверка есть или нет в БД
+        $cnt_email = sqlNumRows($sql, $connect);
+        if (!empty($form['email']) && !$cnt_email) {
+            $errors['email'] = 'Такой email не зарегистрирован';
         }
-
-        // Запишем пароль в переменную для дальнейшей работы
-        $us_pass = $us_data['pass'];
     }
 
     // Валидация поля password
     if (!count($errors) && !empty($form['password'])) {
+
+        // Запишем пароль в переменную
+        $us_pass = $us_data['pass'];
 
         // Верефикация пароля
         $pass = password_verify($form['password'], $us_pass);
@@ -59,13 +67,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             $errors['password'] = 'Неверный пароль';
         }
-    }
-} else {
+    } else {
 
-    // Если форма не была отправлена проверяем существование сессии
-    if (isset($_SESSION['user']['user_id'])) {
-        header("Location: index.php");
-        exit();
+        // Если форма не была отправлена проверим существование сессии
+        if (isset($_SESSION['user']['user_id'])) {
+            header("Location: index.php");
+            exit();
+        }
     }
 }
 
@@ -75,16 +83,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $auth_data = [
     'form'      => $form,
     'errors'    => $errors,
-    // 'us_data'   => $us_data,
 ];
 
 // Контент страницы авторизации на сайте
 $content_auth = include_template('auth.php', $auth_data);
 
+// Подключаем sidebar для страниц регестрации
+$sidebar = ' container--with-sidebar';
+
 // Шаблон страницы авторизации на сайте
 $layout_guest = include_template('layout-guest.php', [
     'content'   =>  $content_auth,
     'title'     => 'Document',
+    'sidebar'   => $sidebar,
 ]);
 
 print($layout_guest);

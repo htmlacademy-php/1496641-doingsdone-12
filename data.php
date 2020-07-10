@@ -5,7 +5,7 @@ session_start();
 // Передадим все данные о пользователе из сессии в переменную $us_data
 $us_data = $_SESSION['user'];
 
-// показывать или нет выполненные задачи
+// Показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
 
 //  TODO ПОДКЛЮЧЕНИЕ К БАЗЕ ДАННЫХ MySQLi
@@ -15,10 +15,10 @@ date_default_timezone_set("Europe/Moscow");
 
 // Данные для подключения к БД
 $db = [
-	'host' 		=> 'localhost',
-	'user' 		=> 'root',
-	'password' 	=> '',
-	'database' 	=> 'doingsdone',
+    'host'         => 'localhost',
+    'user'         => 'root',
+    'password'     => '',
+    'database'     => 'doingsdone',
 ];
 
 // Соединимсяс БД
@@ -29,7 +29,7 @@ mysqli_set_charset($connect, "utf8");
 
 // Проверка соединения с БД
 if (!$db) {
-	print('Ошибка подключения к БД: ' . mysqli_connect_error());
+    print('Ошибка подключения к БД: ' . mysqli_connect_error());
 };
 
 // TODO ФОРМИРУЕМ ДАННЫЕ ДЛЯ ВЫВОДА ПРОЕКТОВ
@@ -39,7 +39,7 @@ $user_id = $us_data['user_id'];
 
 // Выборка всех проектов из БД
 $sql_proj = "SELECT user_id, proj_id, proj_name
-				FROM project 
+				FROM project
 					WHERE user_id = {$user_id}";
 
 // Результат запроса в виде массива
@@ -47,18 +47,18 @@ $projects = resQuerySQL($sql_proj, $connect);
 
 // TODO КЛИКАБЕЛЬНОЕ МЕНЮ ИЗ ПРОЕКТОВ (ПРОЕКТ - ЗАДАЧИ)
 
-// условие для выборки задач из БД по значению $_GET['id'],
+// Выборка задач из БД по значению $_GET['id'],
 if (!empty($_GET['id'])) {
-	$proj_id = $_GET['id'];
-	settype($proj_id, 'integer'); // устонавливаем тип integer для $_GET
+    $proj_id = $_GET['id'];
+    settype($proj_id, 'integer'); // Устонавливаем тип integer для $_GET
 } else {
-	$proj_id = 'p.proj_id';
+    $proj_id = 'p.proj_id';
 };
 
 // Выборка задач из БД только активного проекта по значению $_GET['id']
-$sql_task = "SELECT proj_name, status_task, title_task, link_file, date_task_end 
-					FROM user_reg u, project p, task t 
-						WHERE p.proj_id = t.proj_id 
+$sql_task = "SELECT proj_name, status_task, title_task, link_file, date_task_end
+					FROM user_reg u, project p, task t
+						WHERE p.proj_id = t.proj_id
 							AND u.user_id = t.user_id
 								AND p.proj_id = $proj_id
 									AND u.user_id = $user_id";
@@ -68,15 +68,15 @@ $tasks_list = resQuerySQL($sql_task, $connect);
 
 // Сортируем задачи в обратном порядке
 if ($tasks_list) {
-	$tasks_list = array_reverse($tasks_list);
+    $tasks_list = array_reverse($tasks_list);
 }
 
 // TODO ФОРМИРУЕМ ДАННЫЕ ДЛЯ СЧЕТЧИКА ЗАДАЧ В ПРОЕКТАХ
 
 // Выборка всех проектов и количество задач в них
-$sql_count_tasks = "SELECT p.proj_id, p.proj_name, COUNT(t.task_id) as count 
-						FROM project p LEFT JOIN task t ON p.proj_id = t.proj_id 
-							WHERE p.user_id ='$user_id' 
+$sql_count_tasks = "SELECT p.proj_id, p.proj_name, COUNT(t.task_id) as count
+						FROM project p LEFT JOIN task t ON p.proj_id = t.proj_id
+							WHERE p.user_id ='$user_id'
 								GROUP BY p.proj_id";
 
 // Результат запроса в виде массива
