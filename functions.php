@@ -67,11 +67,11 @@ function dateTask($task_end)
 
 
 /**
- * Выводит результат запроса sql из указанной таблицы в виде массива
+ * Выводит результат запроса sql из указанной таблицы в виде массива для всех рядов выборки
  * @param string $sql запрос к БД
  * @param string $sql_table таблица в БД к которой формируется запрос
  * @param array $connect ассоциативный массив с параметрами для подключения к БД
- * @return array массив значений сформированный на основании запроса $sql
+ * @return array двумерный ассоциативный массив сформированный на основании запроса $sql
  */
 
 function resQuerySQL($sql, $connect)
@@ -88,6 +88,14 @@ function resQuerySQL($sql, $connect)
     return $sql_table;
 }
 
+/**
+ * Выводит результат запроса sql из указанной таблицы в виде массива для одного ряда выборки
+ * @param string $sql запрос к БД
+ * @param string $sql_table таблица в БД к которой формируется запрос
+ * @param array $connect ассоциативный массив с параметрами для подключения к БД
+ * @return array одномерный ассоциативный массив сформированный на основании запроса $sql
+ */
+
 function resQueryUser($sql, $connect)
 {
     // Получаем ресурс результата
@@ -101,19 +109,27 @@ function resQueryUser($sql, $connect)
     return $sql_table;
 }
 
-// Количество выбранных полей для запроса SELECT
+/**
+ * Выводит количество выбранных рядов для sql запроса SELECT
+ * @param string $sql запрос к БД
+ * @param array $connect ассоциативный массив с параметрами для подключения к БД
+ * @return int $num_rows количест рядов выборки сформированный на основании запроса $sql
+ */
+
 function sqlNumRows($sql, $connect)
 {
-    // Получаем ресурс результата
     $result = mysqli_query($connect, $sql);
-
-    // Проверим количество выбранных полей если запрос SELECT
     $num_rows = mysqli_num_rows($result);
-
     return $num_rows;
 }
 
-// Сохраняем заполненные поля формы при наличии ошибок
+/**
+ * Запоминаем заполненные поля формы при наличии ошибок в полях
+ * @param string $data значение полей в форме, передаются методом $_POST
+ * @param array $connect ассоциативный массив с параметрами для подключения к БД
+ * @return string $data значение полей в форме
+ */
+
 function postValue($data)
 {
     if (isset($data) && strlen(trim($data)) > 0) {
