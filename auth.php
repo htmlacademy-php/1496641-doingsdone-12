@@ -31,20 +31,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors['email'] = 'Некорректный email адрес';
     } else {
 
-        //Экранируем спец символы в email от пользователя
-        $email = mysqli_real_escape_string($connect, $form['email']);
-
         //Найдем в таблице user_reg пользователя с переданным email
-        $sql = "SELECT * FROM user_reg WHERE email = '$email'";
+        $sql_email = "SELECT * FROM user_reg WHERE email = ?";
 
-        // Результат в виде массива
-        $user = resQueryUser($sql, $connect);
+        // Данные для запроса
+        $data = ['email' => $form['email'],];
+
+        // Создаем подготовленное выражение
+        $stmt = db_get_prepare_stmt($connect, $sql_email, $data);
+
+        // Выполнение подготовленного запроса
+        mysqli_stmt_execute($stmt);
+
+        // Получим результат из подготовленного запроса
+        $res = mysqli_stmt_get_result($stmt);
+
+        // Получим количество рядов в выборке по полю email
+        $cnt_email = mysqli_num_rows($res);
+
+        // Результат подготовленного запроса в массив
+        $user = resPreparedQuerySQL($connect, $stmt);
 
         // Запишем в сесию данные о пользователе
         $us_data = $user;
 
-        // Валидация поля email - проверка есть или нет в БД
-        $cnt_email = sqlNumRows($sql, $connect);
+        // Если нет результата выборки по указанному email значит ошибка
         if (!empty($form['email']) && !$cnt_email) {
             $errors['email'] = 'Такой email не зарегистрирован';
         }

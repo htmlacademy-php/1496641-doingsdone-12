@@ -38,14 +38,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $email = mysqli_real_escape_string($connect, $form['email']);
 
         // Выборка id пользователя из БД по полю email полученного от пользователя
-        $sql = "SELECT user_id FROM user_reg WHERE email = '$email'";
+        $sql_reg = "SELECT user_id FROM user_reg WHERE email = ?";
 
-        // Результат в виде массива
-        $res = resQueryUser($sql, $connect);
+        // Данные для запроса
+        $data = ['email' => $form['email'],];
+
+        // Создаем подготовленное выражение
+        $stmt = db_get_prepare_stmt($connect, $sql_reg, $data);
+
+        // Результат подготовленного запроса в массив
+        $res = resPreparedQuerySQL($connect, $stmt);
 
         // Если id > 0 значит email существует
         if (((int) $res) > 0) {
-
             $errors['email'] = 'Email уже зарегистрирован';
         } else {
 
@@ -55,14 +60,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Запрос на добавление данных в БД
             $sql = 'INSERT INTO user_reg (date_reg, email, us_name, pass) VALUES (NOW(), ?, ?, ?)';
 
+            // Данные для подготовленного запроса
             $data = [
                 'email'     => $form['email'],
-                'us_name'     => $form['name'],
-                'pass'         => $password,
+                'us_name'   => $form['name'],
+                'pass'      => $password,
             ];
 
+            // Создает подготовленное выражение на основе готового SQL запроса и переданных данных
             $stmt = db_get_prepare_stmt($connect, $sql, $data);
 
+            // Выполнение подготовленного запроса
             $res = mysqli_stmt_execute($stmt);
 
             // Запишем последний добавленный id пользователя в переменную

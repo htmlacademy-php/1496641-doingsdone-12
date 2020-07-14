@@ -67,11 +67,11 @@ function dateTask($task_end)
 
 
 /**
- * Выводит результат запроса sql из указанной таблицы в виде массива для всех рядов выборки
+ * Выводит результат запроса sql в виде массива
  * @param string $sql запрос к БД
  * @param string $sql_table таблица в БД к которой формируется запрос
  * @param array $connect ассоциативный массив с параметрами для подключения к БД
- * @return array двумерный ассоциативный массив сформированный на основании запроса $sql
+ * @return array двумерный ассоциативный массив, результат запроса sql
  */
 
 function resQuerySQL($sql, $connect)
@@ -86,6 +86,29 @@ function resQuerySQL($sql, $connect)
     }
     // Возвращаем результат запроса в виде массива
     return $sql_table;
+}
+
+/**
+ * Выводит результат подготовленного запроса sql в виде массива
+ * @param string $smt подготовленное выражение
+ * @return array двумерный ассоциативный массив, результат подготовленного запроса sql
+ */
+
+function resPreparedQuerySQL($connect, $stmt)
+{
+    // Выполнение подготовленного запроса
+    mysqli_stmt_execute($stmt);
+
+    // Получим результат из подготовленного запроса
+    $res = mysqli_stmt_get_result($stmt);
+
+    // Двумерный ассоциативный массив
+    // $res = mysqli_fetch_all($res, MYSQLI_ASSOC);
+
+    // Одномерный ассоциативный массив
+    $res = mysqli_fetch_array($res, MYSQLI_ASSOC);
+
+    return $res;
 }
 
 /**
