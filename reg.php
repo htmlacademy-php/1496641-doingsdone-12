@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $sql_reg = "SELECT user_id FROM user_reg WHERE email = ?";
 
         // Данные для запроса
-        $data = ['email' => $form['email'],];
+        $data = ['email' =>  $email,];
 
         // Создаем подготовленное выражение
         $stmt = db_get_prepare_stmt($connect, $sql_reg, $data);

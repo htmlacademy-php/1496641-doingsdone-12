@@ -81,3 +81,39 @@ $sql_count_tasks = "SELECT p.proj_id, p.proj_name, COUNT(t.task_id) as count
 
 // Результат запроса в виде массива
 $count_tasks = resQuerySQL($sql_count_tasks, $connect);
+
+// TODO ФОРМА ПОИСКА
+
+$search = trim($_GET['q']) ?? '';
+
+// Результат поиска
+$search_tpl = include_template('search.php', []);
+
+if ($search) {
+
+    $sql_q = "SELECT * FROM task WHERE (user_id = {$us_data['user_id']})
+                    AND MATCH (title_task) AGAINST(? IN BOOLEAN MODE)";
+
+    // Данные для запроса
+    $data = ['search' => $search . '*',];
+
+    // Создаем подготовленное выражение
+    $stmt = db_get_prepare_stmt($connect, $sql_q, $data);
+
+    // Выполнение подготовленного запроса
+    mysqli_stmt_execute($stmt);
+
+    $res = mysqli_stmt_get_result($stmt);
+
+    // Количество рядов выборки из БД по запросу пользователя
+    $num_rows = mysqli_num_rows($res);
+
+    // Результат поиска в массив если есть совпадение в БД
+    $res_search = mysqli_fetch_all($res, MYSQLI_ASSOC);
+
+    // Закрываем запрос
+    mysqli_stmt_close($stmt);
+
+    // Закрываем подключение
+    mysqli_close($connect);
+}

@@ -19,10 +19,14 @@
     </section>
 
     <main class="content__main">
-        <h2 class="content__main-heading">Список задач</h2>
+        <?php if (!$search) : ?>
+            <h2 class="content__main-heading">Список задач</h2>
+        <?php else : ?>
+            <h2 class="content__main-heading">Результат поиска</h2>
+        <?php endif; ?>
 
-        <form class="search-form" action="index.php" method="post" autocomplete="off">
-            <input class="search-form__input" type="text" name="" value="" placeholder="Поиск по задачам">
+        <form class="search-form" action="index.php" method="get" autocomplete="off">
+            <input class="search-form__input" type="text" name="q" value="" placeholder="Поиск по задачам">
 
             <input class="search-form__submit" type="submit" name="" value="Искать">
         </form>
@@ -41,10 +45,11 @@
             </label>
         </div>
 
+        <?= $not_found; ?>
+
         <table class="tasks">
 
             <?php
-
             // Выводим сообщение если нет задач в проекте
             foreach ($count_tasks as $key => $value) {
                 if (($_GET['id'] == $value['proj_id']) && !$value['count']) {
@@ -62,6 +67,11 @@
                 header("HTTP/1.1 404 Not Found");
                 print($page404);
             };
+
+            // Если запрос присутсвует в форме поиска, то выводим данные поиска
+            if (!empty($search)) {
+                $tasks_list = $res_search;
+            }
 
             // Вывод всех задач
             foreach ($tasks_list as $value) :
