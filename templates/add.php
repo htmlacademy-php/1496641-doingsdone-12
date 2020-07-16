@@ -13,7 +13,7 @@
             <?php endforeach; ?>
         </nav>
 
-        <a class="button button--transparent button--plus content__side-button" href="pages/form-project.html" target="project_add">Добавить проект</a>
+        <a class="button button--transparent button--plus content__side-button" href="/proj.php" target="project_add">Добавить проект</a>
     </section>
 
     <main class="content__main">

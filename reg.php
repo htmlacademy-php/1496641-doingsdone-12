@@ -112,6 +112,7 @@ $reg_data = [
     'warning' => $warning,
     'req_fields' => $req_fields,
     'form' => $form,
+    // '$project' => $project,
 ];
 
 // Контентная часть, форма регистрации на сайте

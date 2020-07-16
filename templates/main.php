@@ -11,10 +11,11 @@
                         <span class="main-navigation__list-item-count"><?= countTask($count_tasks, $project['proj_name']); ?></span>
                     </li>
                 </ul>
-            <?php endforeach; ?>
+            <?php endforeach;
+            var_dump($project['proj_name']); ?>
         </nav>
 
-        <a class="button button--transparent button--plus content__side-button" href="pages/form-project.html" target="project_add">Добавить проект</a>
+        <a class="button button--transparent button--plus content__side-button" href="/proj.php" target="project_add">Добавить проект</a>
 
     </section>
 
