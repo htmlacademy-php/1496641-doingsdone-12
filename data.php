@@ -15,10 +15,10 @@ date_default_timezone_set("Europe/Moscow");
 
 // Данные для подключения к БД
 $db = [
-	'host'         => 'localhost',
-	'user'         => 'root',
-	'password'     => '',
-	'database'     => 'doingsdone',
+    'host'         => 'localhost',
+    'user'         => 'root',
+    'password'     => '',
+    'database'     => 'doingsdone',
 ];
 
 // Соединимсяс БД
@@ -29,17 +29,28 @@ mysqli_set_charset($connect, "utf8");
 
 // Проверка соединения с БД
 if (!$db) {
-	print('Ошибка подключения к БД: ' . mysqli_connect_error());
+    print('Ошибка подключения к БД: ' . mysqli_connect_error());
 };
+
+// TODO ВЫБОРКА ПРОЕКТОВ
+
+// Получим id пользователя из данных сессии
+$user_id = $us_data['user_id'];
+
+// Выборка всех проектов из БД
+$sql_proj = "SELECT proj_id, proj_name FROM project WHERE user_id = $user_id";
+
+// Результат запроса в массив
+$projects = resQuerySQL($sql_proj, $connect);
 
 // TODO КЛИКАБЕЛЬНОЕ МЕНЮ ИЗ ПРОЕКТОВ (ПРОЕКТ - ЗАДАЧИ)
 
 // Выборка задач из БД по значению $_GET['id'],
 if (!empty($_GET['id'])) {
-	$proj_id = $_GET['id'];
-	settype($proj_id, 'integer'); // Устонавливаем тип integer для $_GET
+    $proj_id = $_GET['id'];
+    settype($proj_id, 'integer'); // Устонавливаем тип integer для $_GET
 } else {
-	$proj_id = 'p.proj_id';
+    $proj_id = 'p.proj_id';
 };
 
 // Выборка задач из БД только активного проекта по значению $_GET['id']
@@ -55,7 +66,7 @@ $tasks_list = resQuerySQL($sql_task, $connect);
 
 // Сортируем задачи в обратном порядке
 if ($tasks_list) {
-	$tasks_list = array_reverse($tasks_list);
+    $tasks_list = array_reverse($tasks_list);
 }
 
 // TODO ФОРМИРУЕМ ДАННЫЕ ДЛЯ СЧЕТЧИКА ЗАДАЧ В ПРОЕКТАХ
@@ -76,29 +87,29 @@ $search = trim($_GET['q']) ?? '';
 // Результат поиска
 if ($search) {
 
-	$sql_q = "SELECT * FROM task WHERE (user_id = {$us_data['user_id']})
+    $sql_q = "SELECT * FROM task WHERE (user_id = {$us_data['user_id']})
                     AND MATCH (title_task) AGAINST(? IN BOOLEAN MODE)";
 
-	// Данные для запроса
-	$data = ['search' => $search . '*',];
+    // Данные для запроса
+    $data = ['search' => $search . '*',];
 
-	// Создаем подготовленное выражение
-	$stmt = db_get_prepare_stmt($connect, $sql_q, $data);
+    // Создаем подготовленное выражение
+    $stmt = db_get_prepare_stmt($connect, $sql_q, $data);
 
-	// Выполнение подготовленного запроса
-	mysqli_stmt_execute($stmt);
+    // Выполнение подготовленного запроса
+    mysqli_stmt_execute($stmt);
 
-	$res = mysqli_stmt_get_result($stmt);
+    $res = mysqli_stmt_get_result($stmt);
 
-	// Количество рядов выборки из БД по запросу пользователя
-	$num_rows = mysqli_num_rows($res);
+    // Количество рядов выборки из БД по запросу пользователя
+    $num_rows = mysqli_num_rows($res);
 
-	// Результат поиска в массив если есть совпадение в БД
-	$res_search = mysqli_fetch_all($res, MYSQLI_ASSOC);
+    // Результат поиска в массив если есть совпадение в БД
+    $res_search = mysqli_fetch_all($res, MYSQLI_ASSOC);
 
-	// Закрываем запрос
-	mysqli_stmt_close($stmt);
+    // Закрываем запрос
+    mysqli_stmt_close($stmt);
 
-	// Закрываем подключение
-	mysqli_close($connect);
+    // Закрываем подключение
+    mysqli_close($connect);
 }

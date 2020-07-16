@@ -11,8 +11,7 @@
                         <span class="main-navigation__list-item-count"><?= countTask($count_tasks, $project['proj_name']); ?></span>
                     </li>
                 </ul>
-            <?php endforeach;
-            var_dump($project['proj_name']); ?>
+            <?php endforeach; ?>
         </nav>
 
         <a class="button button--transparent button--plus content__side-button" href="/proj.php" target="project_add">Добавить проект</a>

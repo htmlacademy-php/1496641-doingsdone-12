@@ -3,20 +3,11 @@
 require_once('functions.php');
 require_once('data.php');
 
-// TODO ВАЛИДАЦИЯ ФОРМЫ, ДОБАВЛЕНИЕ ПРОЕКТА, ВЫВОД ВСЕХ ПРОЕКТОВ ПОЛЬЗОВАТЕЛЯ
+// TODO ВАЛИДАЦИЯ ФОРМЫ, ДОБАВЛЕНИЕ ПРОЕКТА
 
 $form = $_POST;
 $required = ['project_name',];
 $errors = [];
-
-// Получим id пользователя из данных сессии
-$user_id = $us_data['user_id'];
-
-// Выборка всех проектов из БД
-$sql_proj = "SELECT * FROM project WHERE user_id = $user_id";
-
-// Результат запроса в массив
-$projects = resQuerySQL($sql_proj, $connect);
 
 // Если форма была отправлена
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -69,6 +60,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         mysqli_stmt_execute($stmt);
     }
 }
+
+// // Получим id пользователя из данных сессии
+// $user_id = $us_data['user_id'];
+
+// // Выборка всех проектов из БД
+// $sql_proj = "SELECT proj_id, proj_name FROM project WHERE user_id = $user_id";
+
+// // Результат запроса в массив
+// $projects = resQuerySQL($sql_proj, $connect);
 
 // TODO СОБИРАЕМ ШАБЛОН - АВТОРИЗАЦИЯ НА САЙТЕ
 
