@@ -87,8 +87,6 @@ $count_tasks = resQuerySQL($sql_count_tasks, $connect);
 $search = trim($_GET['q']) ?? '';
 
 // Результат поиска
-$search_tpl = include_template('search.php', []);
-
 if ($search) {
 
     $sql_q = "SELECT * FROM task WHERE (user_id = {$us_data['user_id']})
