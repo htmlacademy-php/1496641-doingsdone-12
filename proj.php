@@ -58,17 +58,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Выполнение подготовленного запроса
         mysqli_stmt_execute($stmt);
+
+        // Добавим новую категорию в конец всех категорий
+        $projects[] = ['proj_name' => $form['project_name']];
+
+        // Редирект на главную
+        header("Location: index.php");
+        exit();
     }
 }
-
-// // Получим id пользователя из данных сессии
-// $user_id = $us_data['user_id'];
-
-// // Выборка всех проектов из БД
-// $sql_proj = "SELECT proj_id, proj_name FROM project WHERE user_id = $user_id";
-
-// // Результат запроса в массив
-// $projects = resQuerySQL($sql_proj, $connect);
 
 // TODO СОБИРАЕМ ШАБЛОН - АВТОРИЗАЦИЯ НА САЙТЕ
 
@@ -77,25 +75,27 @@ if ($us_data['user_id']) {
 
     // Данные для передачи в шаблон
     $proj_data = [
-        'projects'    => $projects,
         'count_tasks' => $count_tasks,
         'form'        => $form,
         'errors'      => $errors,
+        'projects'    => $projects,
     ];
 
     // Контент страницы авторизации на сайте
     $content_proj = include_template('proj.php', $proj_data);
 
     // Шаблон страницы авторизации на сайте
-    $layout = include_template('layout.php', [
+    $layout_data = [
         'content'  =>  $content_proj,
         'title'    => 'Document',
         'sidebar'  => $sidebar,
         'us_data'  => $us_data, // Данные о пользователе в сессии
-    ]);
+    ];
+
+    $layout = include_template('layout.php', $layout_data);
 
     print($layout);
 } else {
-    // Если пользователь не зарегестрирован то переадресуем его на главную
+    // Если не зарегестрирован редирект на главную
     header('location: /');
 }

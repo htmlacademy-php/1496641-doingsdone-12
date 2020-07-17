@@ -35,22 +35,25 @@ $user = include_template('main.php', $data_user);
 
 // Проверим гость или авторизованный пользователь
 if ($us_data['user_id']) {
-    $layout_template = 'layout.php';
+    $layout_tmp = 'layout.php';
     $content = $user;
 } else {
-    $layout_template = 'layout-guest.php';
+    $layout_tmp = 'layout-guest.php';
     $content = $guest;
 }
 
 // Для страницы главная шаблон гость
 $home = 'class="body-background"';
 
-// Шаблон главной страницы
-$layout = include_template($layout_template, [
+// Данные для передачи в шаблон layout
+$layout_data =  [
     'content'   =>  $content, // Контент зависит от регистрации
     'title'     => 'Дела в порядке',
     'us_data'   => $us_data, // Данные о пользователе в сессии
     'home'      => $home,
-]);
+];
+
+// Шаблон главной страницы
+$layout = include_template($layout_tmp, $layout_data);
 
 print($layout);
