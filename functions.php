@@ -111,6 +111,23 @@ function resPreparedQuerySQL($connect, $stmt)
     return $res;
 }
 
+function resPreparedQuerySQL1($connect, $stmt)
+{
+    // Выполнение подготовленного запроса
+    mysqli_stmt_execute($stmt);
+
+    // Получим результат из подготовленного запроса
+    $res = mysqli_stmt_get_result($stmt);
+
+    // Двумерный ассоциативный массив
+    $res = mysqli_fetch_all($res, MYSQLI_ASSOC);
+
+    // Одномерный ассоциативный массив
+    // $res = mysqli_fetch_array($res, MYSQLI_ASSOC);
+
+    return $res;
+}
+
 /**
  * Выводит результат запроса sql из указанной таблицы в виде массива для одного ряда выборки
  * @param string $sql запрос к БД

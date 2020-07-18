@@ -101,7 +101,7 @@
                     <td class="task__select">
                         <label class="checkbox task__checkbox">
                             <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?= $value['status_task'] ? 'checked' : '' ?>>
-                            <span class="checkbox__text"><?= htmlspecialchars($value['title_task']); ?></span>
+                            <a class="checkbox__text" href="index.php?task_complate=1&id_task=<?= $value['task_id'] ?>"><?= htmlspecialchars($value['title_task']); ?></a>
                         </label>
                     </td>
 
