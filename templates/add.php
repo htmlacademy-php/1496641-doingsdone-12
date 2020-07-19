@@ -23,7 +23,7 @@
             <div class="form__row">
                 <label class="form__label" for="name">Название <sup>*</sup></label>
 
-                <input class="form__input <?= $errors['name'] ? 'form__input--error' : '' ?>" type="text" name="name" id="name" value="<?= postValue($_POST['name']); ?>" placeholder="Введите название">
+                <input class="form__input <?= $errors['name'] ? 'form__input--error' : '' ?>" type="text" name="name" id="name" value="<?= postValue($form['name']); ?>" placeholder="Введите название">
 
                 <?= $errors['name'] ? '<p class="form__message">' . $errors['name'] . '</p>' : ''  ?>
             </div>
@@ -46,7 +46,7 @@
             <div class="form__row">
                 <label class="form__label" for="date">Дата выполнения</label>
 
-                <input class="form__input form__input--date <?= $errors['date'] ? 'form__input--error' : '' ?>" type="text" name="date" id="date" value="<?= postValue($_POST['date']); ?>" placeholder="Введите дату в формате ГГГГ-ММ-ДД">
+                <input class="form__input form__input--date <?= $errors['date'] ? 'form__input--error' : '' ?>" type="text" name="date" id="date" value="<?= postValue($form['date']); ?>" placeholder="Введите дату в формате ГГГГ-ММ-ДД">
 
                 <?= $errors['date'] ? '<p class="form__message">' . $errors['date'] . '</p>' : ''  ?>
             </div>
