@@ -82,10 +82,6 @@
 
                 $task_class = '';
 
-                if ($value['status_task']) {
-                    $task_class = 'task--completed';
-                }
-
                 // Запишем количество дней в переменную
                 $date = dateTask($value['date_task_end']);
 
@@ -97,11 +93,11 @@
                 }
             ?>
 
-                <tr class="tasks__item task <?= $task_class; ?>">
+                <tr class="tasks__item task <?= $value['status_task'] ? 'task--completed' : $task_class;  ?>">
                     <td class="task__select">
                         <label class="checkbox task__checkbox">
-                            <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?= $value['status_task'] ? 'checked' : '' ?>>
-                            <a class="checkbox__text" href="index.php?task_complate=1&id_task=<?= $value['task_id'] ?>"><?= htmlspecialchars($value['title_task']); ?></a>
+                            <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?= $value['status_task'] ? 'checked' : ''; ?>>
+                            <a class="checkbox__text" href="index.php?task_complate=<?= $value['status_task'] ? 0 : 1; ?>&id_task=<?= $value['task_id'] ?>"><?= htmlspecialchars($value['title_task']); ?></a>
                         </label>
                     </td>
 
@@ -112,8 +108,9 @@
                     </td>
 
                     <td class="task__date">
-                        <?php if (isset($value['date_task_end']))
-                            echo date('d.m.Y', strtotime($value['date_task_end']))
+                        <?php if (isset($value['date_task_end'])) {
+                            echo date('d.m.Y', strtotime($value['date_task_end']));
+                        }
                         ?>
                     </td>
                 </tr>

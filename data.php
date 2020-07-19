@@ -15,10 +15,10 @@ date_default_timezone_set("Europe/Moscow");
 
 // Данные для подключения к БД
 $db = [
-    'host'         => 'localhost',
-    'user'         => 'root',
-    'password'     => '',
-    'database'     => 'doingsdone',
+    'host' => 'localhost',
+    'user' => 'root',
+    'password' => '',
+    'database' => 'doingsdone',
 ];
 
 // Соединимсяс БД
@@ -30,7 +30,8 @@ mysqli_set_charset($connect, "utf8");
 // Проверка соединения с БД
 if (!$db) {
     print('Ошибка подключения к БД: ' . mysqli_connect_error());
-};
+}
+;
 
 // TODO ВЫБОРКА ПРОЕКТОВ
 
@@ -51,7 +52,8 @@ if (!empty($_GET['id'])) {
     settype($proj_id, 'integer'); // Устонавливаем тип integer для $_GET
 } else {
     $proj_id = 'p.proj_id';
-};
+}
+;
 
 // Выборка задач из БД только активного проекта по значению $_GET['id']
 $sql_task = "SELECT proj_name, task_id, status_task, title_task, link_file, date_task_end
@@ -91,7 +93,7 @@ if ($search) {
                     AND MATCH (title_task) AGAINST(? IN BOOLEAN MODE)";
 
     // Данные для запроса
-    $data = ['search' => $search . '*',];
+    $data = ['search' => $search . '*'];
 
     // Создаем подготовленное выражение
     $stmt = db_get_prepare_stmt($connect, $sql_q, $data);

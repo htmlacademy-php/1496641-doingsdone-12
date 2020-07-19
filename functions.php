@@ -251,3 +251,10 @@ function db_get_prepare_stmt($link, $sql, $data = [])
 
     return $stmt;
 }
+
+function debug($var)
+{
+    echo '<pre>';
+    var_dump($var);
+    echo '</pre>';
+}
