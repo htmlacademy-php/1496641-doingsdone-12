@@ -5,9 +5,6 @@ session_start();
 // Передадим все данные о пользователе из сессии в переменную $us_data
 $us_data = $_SESSION['user'];
 
-// Показывать или нет выполненные задачи
-$show_complete_tasks = rand(0, 1);
-
 //  TODO ПОДКЛЮЧЕНИЕ К БАЗЕ ДАННЫХ MySQLi
 
 // Устанавливаем time зону по умолчанию
@@ -30,8 +27,7 @@ mysqli_set_charset($connect, "utf8");
 // Проверка соединения с БД
 if (!$db) {
     print('Ошибка подключения к БД: ' . mysqli_connect_error());
-}
-;
+};
 
 // TODO ВЫБОРКА ПРОЕКТОВ
 
@@ -52,8 +48,7 @@ if (!empty($_GET['id'])) {
     settype($proj_id, 'integer'); // Устонавливаем тип integer для $_GET
 } else {
     $proj_id = 'p.proj_id';
-}
-;
+};
 
 // Выборка задач из БД только активного проекта по значению $_GET['id']
 $sql_task = "SELECT proj_name, task_id, status_task, title_task, link_file, date_task_end

@@ -30,8 +30,8 @@ if (!empty($tasks_list)) {
 }
 
 // id задачи и статус задачи
-$get_task_id = $_GET['id_task']; // id задачи
-$get_task_complate = $_GET['task_complate']; // статус задачи 0 или 1
+$get_task_id = (int)$_GET['id_task']; // id задачи
+$get_task_complate = (int)$_GET['task_complate']; // статус задачи 0 или 1
 
 // Проверим id задачи от пользователя с БД
 $check_id_task = in_array($get_task_id, $task_id);
@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         // Выполнение подготовленного запроса
         $res = mysqli_stmt_execute($stmt);
 
-        // Если успех то рдеирект
+        // После выполнения подготовленного запроса редирект
         if ($res) {
             header("Location: index.php");
         }
