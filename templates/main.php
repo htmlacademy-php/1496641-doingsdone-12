@@ -40,7 +40,7 @@
             </nav>
 
             <label class="checkbox">
-                <input class="checkbox__input visually-hidden show_completed <?= $show_complete_tasks ? 'checked' : '' ?>" type="checkbox">
+                <input class="checkbox__input visually-hidden show_completed <?= $show_complete_tasks ? 'checked' : '' ?>" type="checkbox" <?= $show_complete_tasks ? 'checked' : '' ?>>
                 <span class="checkbox__text">Показывать выполненные</span>
             </label>
         </div>
@@ -85,7 +85,7 @@
                 // Запишем количество дней в переменную
                 $date = dateTask($value['date_task_end']);
 
-                // Проверим дату от пользователя с текущей (выводим огонь если текущая дата или прошла)
+                // Проверим дату от пользователя с текущей (огонь если текущая дата или уже прошла)
                 if ($date && $date <= -1) {
                     $task_class .= 'task--important';
                 } else {

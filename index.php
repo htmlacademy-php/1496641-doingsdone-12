@@ -36,6 +36,7 @@ $get_task_complate = (int)$_GET['task_complate']; // статус задачи 0
 // Проверим id задачи от пользователя с БД
 $check_id_task = in_array($get_task_id, $task_id);
 
+
 // Если проверка прошла то запрос к БД
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
@@ -61,8 +62,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             header("Location: index.php");
         }
     }
-}
 
+    // Показываем выполненные задачи
+    $show_complete_tasks = 0;
+
+    if ($_GET['show_completed']) {
+        $show_complete_tasks = 1;
+    }
+}
 
 // TODO ФОРМИРУЕМ ШАБЛОН
 
