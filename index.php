@@ -37,7 +37,7 @@ $get_task_complate = (int)$_GET['task_complate']; // статус задачи 0
 $check_id_task = in_array($get_task_id, $task_id);
 
 
-// Если проверка прошла то запрос к БД
+// Если проверка прошла то делаем запрос к БД на изменение статуса задачи
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     if ($check_id_task) {
@@ -63,9 +63,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
     }
 
-    // Показываем выполненные задачи
+    // Значение по умолчанию для задачи
     $show_complete_tasks = 0;
 
+    // Показываем выполненные задачи
     if ($_GET['show_completed']) {
         $show_complete_tasks = 1;
     }
