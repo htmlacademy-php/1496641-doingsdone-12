@@ -72,6 +72,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 }
 
+// TODO ФИЛЬТР ЗАДАЧ
+
+debug($tasks_list);
+
+// Запишем в массив значения фильтров для задач
+$task_filter = [
+    'task_all '      => $_GET['task_all'],
+    'task_today'     => $_GET['task_today'],
+    'task_tomorrow'  => $_GET['task_tomorrow'],
+    'task_old'       => $_GET['task_old'],
+];
+
+// Текущая дата
+$task_now = date("Y-m-d H:i:s");
+
+// Соберем массив с датами окончания проекта
+$task_end = [];
+
 // TODO ФОРМИРУЕМ ШАБЛОН
 
 // Данные для передачи в шаблон (для авторизированного пользователя)
@@ -88,6 +106,9 @@ $data_user = [
     'get_task_complate'     => $get_task_complate,
     'get_task_id'           => $get_task_id,
     'check_id_task'         => $check_id_task,
+    'task_end'              => $task_end,
+    'task_today'            => $task_today,
+    'today' => $today,
 ];
 
 // Контентн для авторизированного пользователя

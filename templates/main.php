@@ -33,10 +33,10 @@
 
         <div class="tasks-controls">
             <nav class="tasks-switch">
-                <a href="/" class="tasks-switch__item tasks-switch__item--active">Все задачи</a>
-                <a href="/" class="tasks-switch__item">Повестка дня</a>
-                <a href="/" class="tasks-switch__item">Завтра</a>
-                <a href="/" class="tasks-switch__item">Просроченные</a>
+                <a href="index.php?task_all=1" class="tasks-switch__item tasks-switch__item--active">Все задачи</a>
+                <a href="index.php?task_today=1" class="tasks-switch__item">Повестка дня</a>
+                <a href="index.php?task_tomorrow=1" class="tasks-switch__item">Завтра</a>
+                <a href="index.php?task_old=1" class="tasks-switch__item">Просроченные</a>
             </nav>
 
             <label class="checkbox">
