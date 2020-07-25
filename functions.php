@@ -258,3 +258,24 @@ function debug($var)
     var_dump($var);
     echo '</pre>';
 }
+
+// Выводим задачи по фильтру
+function tasksFilter($tasks_list, $today)
+{
+    // Возвращаем одномерный нумерованный массив всех дат окончания задач
+    $tasks_date_end = array_column($tasks_list, 'date_task_end');
+
+    // Все ключи
+    $tasks_list_key_all = (array_keys($tasks_date_end));
+
+    // Массив ключей только указанных дат
+    $tasks_list_key_today = (array_keys($tasks_date_end, $today));
+
+    // Массив задач для указанных ключей
+    foreach ($tasks_list_key_today as $key => $value) {
+
+        $list[$value] = $tasks_list[$value];
+    }
+
+    return $list;
+}

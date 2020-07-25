@@ -50,16 +50,23 @@ if (!empty($_GET['id'])) {
     $proj_id = 'p.proj_id';
 };
 
-// Выборка задач из БД только активного проекта по значению $_GET['id']
-$sql_task = "SELECT proj_name, task_id, status_task, title_task, link_file, date_task_end
-					FROM user_reg u, project p, task t
-						WHERE p.proj_id = t.proj_id
-							AND u.user_id = t.user_id
-								AND p.proj_id = $proj_id
-									AND u.user_id = $user_id";
+// Значение фильтра дата
+$date_task_end = 'AND t.date_task_end = "$date_task_end"';
+
+
+
+// Выборка всех задач для одного пользователя
+$sql_task = "SELECT proj_name, task_id, status_task, title_task, link_file,
+                    DATE_FORMAT(date_task_end, '%Y-%m-%e') AS date_task_end
+                        FROM user_reg u, project p, task t
+                            WHERE p.proj_id = t.proj_id
+                                AND u.user_id = t.user_id
+                                    AND p.proj_id = $proj_id
+                                        AND u.user_id = $user_id";
 
 // Результат запроса в виде массива
 $tasks_list = resQuerySQL($sql_task, $connect);
+
 
 // Сортируем задачи в обратном порядке
 if ($tasks_list) {

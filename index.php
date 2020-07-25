@@ -36,7 +36,6 @@ $get_task_complate = (int)$_GET['task_complate']; // статус задачи 0
 // Проверим id задачи от пользователя с БД
 $check_id_task = in_array($get_task_id, $task_id);
 
-
 // Если проверка прошла то делаем запрос к БД на изменение статуса задачи
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
@@ -74,21 +73,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 // TODO ФИЛЬТР ЗАДАЧ
 
-debug($tasks_list);
-
 // Запишем в массив значения фильтров для задач
-$task_filter = [
+$tasks_filter = [
     'task_all '      => $_GET['task_all'],
     'task_today'     => $_GET['task_today'],
     'task_tomorrow'  => $_GET['task_tomorrow'],
     'task_old'       => $_GET['task_old'],
 ];
 
-// Текущая дата
-$task_now = date("Y-m-d H:i:s");
+// debug($tasks_list);
 
-// Соберем массив с датами окончания проекта
-$task_end = [];
+// Фильтр повестка дня
+if ($tasks_filter['task_today']) {
+
+    // Текущая дата
+    // $today = date("Y-m-d");
+    $today = "2020-07-25";
+
+    // Формируем массив без задач на сегодня
+    $tasks_list = tasksFilter($tasks_list, $today);
+
+    // debug($tasks_list);
+}
+
+
+// Фильтр повестка дня
+// if ($tasks_filter['task_today']) {
+
+// Текущая дата
+// $today = date("Y-m-d");
+
+// Формируем массив без задач на сегодня
+// $tasks_list = tasksFilter($tasks_list, $today);
+// $tasks_list_del = tasksFilter($tasks_list, $today);
+
+// Получим массив только задач на сегодня (расхождение массивов)
+// $tasks_list = array_diff_assoc($tasks_list, $tasks_list_del);
+// }
+
+
 
 // TODO ФОРМИРУЕМ ШАБЛОН
 
@@ -108,7 +131,8 @@ $data_user = [
     'check_id_task'         => $check_id_task,
     'task_end'              => $task_end,
     'task_today'            => $task_today,
-    'today' => $today,
+    'today'                 => $today,
+    // 'date_task_end'         => $date_task_end,
 ];
 
 // Контентн для авторизированного пользователя
@@ -128,10 +152,10 @@ $home = 'class="body-background"';
 
 // Данные для передачи в шаблон layout
 $layout_data = [
-    'content' => $content, // Контент зависит от регистрации
-    'title' => 'Дела в порядке',
-    'us_data' => $us_data, // Данные о пользователе в сессии
-    'home' => $home,
+    'content'   => $content, // Контент зависит от регистрации
+    'title'     => 'Дела в порядке',
+    'us_data'   => $us_data, // Данные о пользователе в сессии
+    'home'      => $home,
 ];
 
 // Шаблон главной страницы

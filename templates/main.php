@@ -33,10 +33,10 @@
 
         <div class="tasks-controls">
             <nav class="tasks-switch">
-                <a href="index.php?task_all=1" class="tasks-switch__item tasks-switch__item--active">Все задачи</a>
-                <a href="index.php?task_today=1" class="tasks-switch__item">Повестка дня</a>
-                <a href="index.php?task_tomorrow=1" class="tasks-switch__item">Завтра</a>
-                <a href="index.php?task_old=1" class="tasks-switch__item">Просроченные</a>
+                <a href="index.php?task_all=1" class="tasks-switch__item <?= $_GET['task_all'] ? 'tasks-switch__item--active' : '' ?>">Все задачи</a>
+                <a href="index.php?task_today=1" class="tasks-switch__item <?= $_GET['task_today'] ? 'tasks-switch__item--active' : '' ?>">Повестка дня</a>
+                <a href="index.php?task_tomorrow=1" class="tasks-switch__item <?= $_GET['task_tomorrow'] ? 'tasks-switch__item--active' : '' ?>">Завтра</a>
+                <a href="index.php?task_old=1" class="tasks-switch__item <?= $_GET['task_old'] ? 'tasks-switch__item--active' : '' ?>">Просроченные</a>
             </nav>
 
             <label class="checkbox">
@@ -109,7 +109,7 @@
 
                     <td class="task__date">
                         <?php if (isset($value['date_task_end'])) {
-                            echo date('d.m.Y', strtotime($value['date_task_end']));
+                            echo $value['date_task_end'];
                         }
                         ?>
                     </td>
