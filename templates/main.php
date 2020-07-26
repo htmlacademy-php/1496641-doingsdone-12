@@ -33,10 +33,10 @@
 
         <div class="tasks-controls">
             <nav class="tasks-switch">
-                <a href="index.php?task_all=1" class="tasks-switch__item <?= $_GET['task_all'] ? 'tasks-switch__item--active' : '' ?>">Все задачи</a>
-                <a href="index.php?task_today=1" class="tasks-switch__item <?= $_GET['task_today'] ? 'tasks-switch__item--active' : '' ?>">Повестка дня</a>
-                <a href="index.php?task_tomorrow=1" class="tasks-switch__item <?= $_GET['task_tomorrow'] ? 'tasks-switch__item--active' : '' ?>">Завтра</a>
-                <a href="index.php?task_old=1" class="tasks-switch__item <?= $_GET['task_old'] ? 'tasks-switch__item--active' : '' ?>">Просроченные</a>
+                <a href="/" class="tasks-switch__item <?= $url_domen ? 'tasks-switch__item--active' : '' ?>">Все задачи</a>
+                <a href="index.php?tasks_today=1" class="tasks-switch__item <?= $_GET['tasks_today'] ? 'tasks-switch__item--active' : '' ?>">Повестка дня</a>
+                <a href="index.php?tasks_tomorrow=1" class="tasks-switch__item <?= $_GET['tasks_tomorrow'] ? 'tasks-switch__item--active' : '' ?>">Завтра</a>
+                <a href="index.php?tasks_old=1" class="tasks-switch__item <?= $_GET['tasks_old'] ? 'tasks-switch__item--active' : '' ?>">Просроченные</a>
             </nav>
 
             <label class="checkbox">
@@ -74,48 +74,50 @@
             }
 
             // Вывод всех задач
-            foreach ($tasks_list as $value) :
+            if ($tasks_list) :
+                foreach ($tasks_list as $value) :
 
-                if (!$show_complete_tasks && $value['status_task']) {
-                    continue;
-                }
+                    if (!$show_complete_tasks && $value['status_task']) {
+                        continue;
+                    }
 
-                $task_class = '';
-
-                // Запишем количество дней в переменную
-                $date = dateTask($value['date_task_end']);
-
-                // Проверим дату от пользователя с текущей (огонь если текущая дата или уже прошла)
-                if ($date && $date <= -1) {
-                    $task_class .= 'task--important';
-                } else {
                     $task_class = '';
-                }
+
+                    // Запишем количество дней в переменную
+                    $date = dateTask($value['date_task_end']);
+
+                    // Проверим дату от пользователя с текущей (огонь если текущая дата или уже прошла)
+                    if ($date && $date <= -1) {
+                        $task_class .= 'task--important';
+                    } else {
+                        $task_class = '';
+                    }
             ?>
 
-                <tr class="tasks__item task <?= $value['status_task'] ? 'task--completed' : $task_class;  ?>">
-                    <td class="task__select">
-                        <label class="checkbox task__checkbox">
-                            <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?= $value['status_task'] ? 'checked' : ''; ?>>
-                            <a class="checkbox__text" href="index.php?task_complate=<?= $value['status_task'] ? 0 : 1; ?>&id_task=<?= $value['task_id'] ?>"><?= htmlspecialchars($value['title_task']); ?></a>
-                        </label>
-                    </td>
+                    <tr class="tasks__item task <?= $value['status_task'] ? 'task--completed' : $task_class;  ?>">
+                        <td class="task__select">
+                            <label class="checkbox task__checkbox">
+                                <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?= $value['status_task'] ? 'checked' : ''; ?>>
+                                <a class="checkbox__text" href="index.php?task_complate=<?= $value['status_task'] ? 0 : 1; ?>&id_task=<?= $value['task_id'] ?>"><?= htmlspecialchars($value['title_task']); ?></a>
+                            </label>
+                        </td>
 
-                    <td class="task__file">
-                        <?php if (isset($value['link_file'])) : ?>
-                            <a class="download-link" href="<?= $value['link_file'] ?>" download=""><?= end(explode('/', $value['link_file'])) ?></a>
-                        <?php endif; ?>
-                    </td>
+                        <td class="task__file">
+                            <?php if (isset($value['link_file'])) : ?>
+                                <a class="download-link" href="<?= $value['link_file'] ?>" download=""><?= end(explode('/', $value['link_file'])) ?></a>
+                            <?php endif; ?>
+                        </td>
 
-                    <td class="task__date">
-                        <?php if (isset($value['date_task_end'])) {
-                            echo $value['date_task_end'];
-                        }
-                        ?>
-                    </td>
-                </tr>
+                        <td class="task__date">
+                            <?php if (isset($value['date_task_end'])) {
+                                echo date('Y-m-d', strtotime($value['date_task_end']));
+                            }
+                            ?>
+                        </td>
+                    </tr>
 
-            <?php endforeach; ?>
+            <?php endforeach;
+            endif; ?>
 
         </table>
     </main>

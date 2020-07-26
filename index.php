@@ -75,43 +75,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 // Запишем в массив значения фильтров для задач
 $tasks_filter = [
-    'task_all '      => $_GET['task_all'],
-    'task_today'     => $_GET['task_today'],
-    'task_tomorrow'  => $_GET['task_tomorrow'],
-    'task_old'       => $_GET['task_old'],
+    'tasks_all '      => $_GET['tasks_all'],
+    'tasks_today'     => $_GET['tasks_today'],
+    'tasks_tomorrow'  => $_GET['tasks_tomorrow'],
+    'tasks_old'       => $_GET['tasks_old'],
 ];
 
-// debug($tasks_list);
-
-// Фильтр повестка дня
-if ($tasks_filter['task_today']) {
+// Вывод фильтра для задачи "Повестка дня"
+if ($tasks_filter['tasks_today']) {
 
     // Текущая дата
-    // $today = date("Y-m-d");
-    $today = "2020-07-25";
+    $today = date("Y-m-d");
 
-    // Формируем массив без задач на сегодня
+    // Формируем массив задач на сегодня
     $tasks_list = tasksFilter($tasks_list, $today);
-
-    // debug($tasks_list);
 }
 
+// Вывод фильтра для задачи "Завтра"
+if ($tasks_filter['tasks_tomorrow']) {
 
-// Фильтр повестка дня
-// if ($tasks_filter['task_today']) {
+    // Получим завтрашний день
+    $tomorrow = date("Y-m-d", strtotime("+1 days"));
 
-// Текущая дата
-// $today = date("Y-m-d");
+    // Формируем массив задач на завтра
+    $tasks_list = tasksFilter($tasks_list, $tomorrow);
+}
 
-// Формируем массив без задач на сегодня
-// $tasks_list = tasksFilter($tasks_list, $today);
-// $tasks_list_del = tasksFilter($tasks_list, $today);
+// Вывод фильтра для задач "Просроченные"
+if ($tasks_filter['tasks_old']) {
+    $tasks_list = oldTasksFilter($tasks_list);
+}
 
-// Получим массив только задач на сегодня (расхождение массивов)
-// $tasks_list = array_diff_assoc($tasks_list, $tasks_list_del);
-// }
-
-
+// Класс для активного фильтра "Все задачи"
+$url_domen = $_SERVER['REQUEST_URI'] == "/";
 
 // TODO ФОРМИРУЕМ ШАБЛОН
 
@@ -129,10 +125,8 @@ $data_user = [
     'get_task_complate'     => $get_task_complate,
     'get_task_id'           => $get_task_id,
     'check_id_task'         => $check_id_task,
-    'task_end'              => $task_end,
-    'task_today'            => $task_today,
-    'today'                 => $today,
-    // 'date_task_end'         => $date_task_end,
+    'class_active'          => $class_active,
+    'url_domen'             => $url_domen,
 ];
 
 // Контентн для авторизированного пользователя

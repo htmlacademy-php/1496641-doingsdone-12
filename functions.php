@@ -111,23 +111,6 @@ function resPreparedQuerySQL($connect, $stmt)
     return $res;
 }
 
-function resPreparedQuerySQL1($connect, $stmt)
-{
-    // Выполнение подготовленного запроса
-    mysqli_stmt_execute($stmt);
-
-    // Получим результат из подготовленного запроса
-    $res = mysqli_stmt_get_result($stmt);
-
-    // Двумерный ассоциативный массив
-    $res = mysqli_fetch_all($res, MYSQLI_ASSOC);
-
-    // Одномерный ассоциативный массив
-    // $res = mysqli_fetch_array($res, MYSQLI_ASSOC);
-
-    return $res;
-}
-
 /**
  * Выводит результат запроса sql из указанной таблицы в виде массива для одного ряда выборки
  * @param string $sql запрос к БД
@@ -252,6 +235,13 @@ function db_get_prepare_stmt($link, $sql, $data = [])
     return $stmt;
 }
 
+
+/**
+ * Debug - отладка кода, форматирование массивов при выводе
+ *
+ * @param $var - массив для вывода
+ */
+
 function debug($var)
 {
     echo '<pre>';
@@ -259,23 +249,73 @@ function debug($var)
     echo '</pre>';
 }
 
-// Выводим задачи по фильтру
-function tasksFilter($tasks_list, $today)
+
+/**
+ * Выводим задачи фильтров "Повестка дня" и "Завтра"
+ *
+ * @param array $tasks_list Массив всех задач
+ * @param $day string Дата для вывода искомых задач
+ * @return array $filter_task_list Массив задач для фильтра "Повестка дня" и "Завтра"
+ */
+
+function tasksFilter($tasks_list, $day)
 {
-    // Возвращаем одномерный нумерованный массив всех дат окончания задач
+    // Возвращаем одномерный нумерованный массив, ключ -> дат окончания задач
     $tasks_date_end = array_column($tasks_list, 'date_task_end');
 
-    // Все ключи
-    $tasks_list_key_all = (array_keys($tasks_date_end));
+    /**
+     * Выберем ключи только указанных дат,
+     * Ключи те же, что и в основном массиве всех задач!!!
+     */
 
-    // Массив ключей только указанных дат
-    $tasks_list_key_today = (array_keys($tasks_date_end, $today));
+    $tasks_list_key_day = (array_keys($tasks_date_end, $day));
 
-    // Массив задач для указанных ключей
-    foreach ($tasks_list_key_today as $key => $value) {
+    // Соберем новый массив задач согласно фильтра
+    foreach ($tasks_list_key_day as $key => $value) {
+        $filter_task_list[$value] = $tasks_list[$value];
+    }
+    // Вернем массив задач согласно фильтра
+    return $filter_task_list;
+}
 
-        $list[$value] = $tasks_list[$value];
+
+/**
+ * Выводим задачи фильтра "Просроченные"
+ *
+ * @param array $tasks_list массив всех задач
+ * @return array $filter_task_list_old массив задач для фильтра "Просроченные"
+ */
+
+function oldTasksFilter($tasks_list)
+{
+    // Сегодня - юникс
+    $today = strtotime(date("Y-m-d"));
+
+    // Возвращаем одномерный нумерованный массив всех задач вида ключ -> дат окончания задачи
+    $tasks_date_end = array_column($tasks_list, 'date_task_end');
+
+    // Переберем массив всех задач и выберим просроченные
+    foreach ($tasks_date_end as $key => $value) {
+        // Проверим даты и просроченные соберем в новый массив
+        if (strtotime($value) < $today) {
+            // Соберем новый массив из ключей просроченных задач и дат окончания задач
+            $old_day[$key] = [$value];
+        }
     }
 
-    return $list;
+    /**
+     * Выберем ключи только просроченных задач,
+     * Ключи те же, что и в основном массиве всех задач!!!
+     */
+
+    $tasks_list_key_old = (array_keys($old_day));
+
+    // Переберем массив ключей просроченных задач
+    foreach ($tasks_list_key_old as $key => $value) {
+
+        // Соберем новый массив с ключами просроченных задач для вывода в шаблон
+        $filter_tasks_list_old[$value] = $tasks_list[$value];
+    }
+    // Вернем массив просроченных задач согласно фильтра
+    return  $filter_tasks_list_old;
 }
