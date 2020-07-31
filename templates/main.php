@@ -34,9 +34,9 @@
         <div class="tasks-controls">
             <nav class="tasks-switch">
                 <a href="/" class="tasks-switch__item <?= $url_domen ? 'tasks-switch__item--active' : '' ?>">Все задачи</a>
-                <a href="index.php?tasks_today=1" class="tasks-switch__item <?= $_GET['tasks_today'] ? 'tasks-switch__item--active' : '' ?>">Повестка дня</a>
-                <a href="index.php?tasks_tomorrow=1" class="tasks-switch__item <?= $_GET['tasks_tomorrow'] ? 'tasks-switch__item--active' : '' ?>">Завтра</a>
-                <a href="index.php?tasks_old=1" class="tasks-switch__item <?= $_GET['tasks_old'] ? 'tasks-switch__item--active' : '' ?>">Просроченные</a>
+                <a href="index.php?<?= $_GET['id'] ? 'id=' . $_GET['id'] . '&' : '' ?>tasks_today=1" class="tasks-switch__item <?= $_GET['tasks_today'] ? 'tasks-switch__item--active' : '' ?>">Повестка дня</a>
+                <a href="index.php?<?= $_GET['id'] ? 'id=' . $_GET['id'] . '&' : '' ?>tasks_tomorrow=1" class="tasks-switch__item <?= $_GET['tasks_tomorrow'] ? 'tasks-switch__item--active' : '' ?>">Завтра</a>
+                <a href="index.php?<?= $_GET['id'] ? 'id=' . $_GET['id'] . '&' : '' ?>tasks_old=1" class="tasks-switch__item <?= $_GET['tasks_old'] ? 'tasks-switch__item--active' : '' ?>">Просроченные</a>
             </nav>
 
             <label class="checkbox">
@@ -63,7 +63,7 @@
             }
 
             // Валидация proj_id, отправка заголовка 404 если proj_id = false
-            if (!in_array($_GET['id'], $valid_id) && !empty($_GET['id'])) {
+            if (!empty($_GET['id']) && !in_array($_GET['id'], $valid_id)) {
                 header("HTTP/1.1 404 Not Found");
                 print($page404);
             };

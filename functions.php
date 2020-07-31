@@ -274,10 +274,10 @@ function tasksFilter($tasks_list, $day)
     foreach ($tasks_list_key_day as $key => $value) {
         $filter_task_list[$value] = $tasks_list[$value];
     }
+
     // Вернем массив задач согласно фильтра
     return $filter_task_list;
 }
-
 
 /**
  * Выводим задачи фильтра "Просроченные"

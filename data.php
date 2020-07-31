@@ -5,7 +5,10 @@ session_start();
 // Передадим все данные о пользователе из сессии в переменную $us_data
 $us_data = $_SESSION['user'];
 
-//  TODO ПОДКЛЮЧЕНИЕ К БАЗЕ ДАННЫХ MySQLi
+/**
+ * 
+ * * ПОДКЛЮЧЕНИЕ К БД MySQLi
+ */
 
 // Устанавливаем time зону по умолчанию
 date_default_timezone_set("Europe/Moscow");
@@ -29,7 +32,10 @@ if (!$db) {
     print('Ошибка подключения к БД: ' . mysqli_connect_error());
 };
 
-// TODO ВЫБОРКА ПРОЕКТОВ
+/**
+ * 
+ * * ВЫБОРКА ПРОЕКТОВ
+ */
 
 // Получим id пользователя из данных сессии
 $user_id = $us_data['user_id'];
@@ -40,7 +46,10 @@ $sql_proj = "SELECT proj_id, proj_name FROM project WHERE user_id = $user_id";
 // Результат запроса в массив
 $projects = resQuerySQL($sql_proj, $connect);
 
-// TODO КЛИКАБЕЛЬНОЕ МЕНЮ ИЗ ПРОЕКТОВ (ПРОЕКТ - ЗАДАЧИ)
+/**
+ *  
+ * * ВЫВОД ЗАДАЧ СООТВЕТСВУЮЩИХ СВОЕМУ ПРОЕКТУ
+ */
 
 // Выборка задач из БД по значению $_GET['id'],
 if (!empty($_GET['id'])) {
@@ -49,11 +58,6 @@ if (!empty($_GET['id'])) {
 } else {
     $proj_id = 'p.proj_id';
 };
-
-// Значение фильтра дата
-$date_task_end = 'AND t.date_task_end = "$date_task_end"';
-
-
 
 // Выборка всех задач для одного пользователя
 $sql_task = "SELECT proj_name, task_id, status_task, title_task, link_file,
@@ -67,24 +71,29 @@ $sql_task = "SELECT proj_name, task_id, status_task, title_task, link_file,
 // Результат запроса в виде массива
 $tasks_list = resQuerySQL($sql_task, $connect);
 
-
 // Сортируем задачи в обратном порядке
 if ($tasks_list) {
     $tasks_list = array_reverse($tasks_list);
 }
 
-// TODO ФОРМИРУЕМ ДАННЫЕ ДЛЯ СЧЕТЧИКА ЗАДАЧ В ПРОЕКТАХ
+/**
+ * 
+ * * ФОРМИРУЕМ ДАННЫЕ ДЛЯ СЧЕТЧИКА ЗАДАЧ В ПРОЕКТАХ
+ */
 
 // Выборка всех проектов и количество задач в них
 $sql_count_tasks = "SELECT p.proj_id, p.proj_name, COUNT(t.task_id) as count
 						FROM project p LEFT JOIN task t ON p.proj_id = t.proj_id
-							WHERE p.user_id ='$user_id'
+							WHERE p.user_id ='$user_id' AND t.status_task = 0
 								GROUP BY p.proj_id";
 
 // Результат запроса в виде массива
 $count_tasks = resQuerySQL($sql_count_tasks, $connect);
 
-// TODO ФОРМА ПОИСКА
+/**
+ * 
+ * * ФОРМА ПОИСКА
+ */
 
 $search = trim($_GET['q']) ?? '';
 
@@ -92,7 +101,7 @@ $search = trim($_GET['q']) ?? '';
 if ($search) {
 
     $sql_q = "SELECT * FROM task WHERE (user_id = {$us_data['user_id']})
-                    AND MATCH (title_task) AGAINST(? IN BOOLEAN MODE)";
+                AND MATCH (title_task) AGAINST(? IN BOOLEAN MODE)";
 
     // Данные для запроса
     $data = ['search' => $search . '*'];

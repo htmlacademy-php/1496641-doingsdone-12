@@ -21,7 +21,6 @@ VALUES (
     DEFAULT,
     DEFAULT,
     'Собеседование в IT компании',
-    'http//download/file01.jpg',
     '2020-01-05'
   );
 -- 02
@@ -33,7 +32,6 @@ VALUES (
     DEFAULT,
     DEFAULT,
     'Выполнить тестовое задание',
-    'http//download/file02.jpg',
     '2020-02-15'
   );
 -- 03
@@ -45,7 +43,6 @@ VALUES (
     DEFAULT,
     1,
     'Сделать задание первого раздела',
-    'http//download/file03.jpg',
     '2020-03-25'
   );
 -- 04
