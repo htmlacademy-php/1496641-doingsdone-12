@@ -1,27 +1,6 @@
 <?php
 
 /**
- * Счетчик задач в проекте
- * @param array $count_task массив задач в каждом проекте
- * @param string $str_cat название задачи
- * @return string количество задач в проекте, где нет задач возвращаем 0
- */
-
-function countTask($count_task, $str_cat)
-{
-    if ($count_task) {
-        foreach ($count_task as $key => $value) {
-            foreach ($value as $k => $v) {
-                if ($value['proj_name'] === $str_cat) {
-                    return $value['count'];
-                }
-            }
-        }
-    }
-    return 0;
-}
-
-/**
  * Подключает шаблон, передает туда данные и возвращает итоговый HTML контент
  * @param string $name Путь к файлу шаблона относительно папки templates
  * @param array $data Ассоциативный массив с данными для шаблона
@@ -316,6 +295,8 @@ function oldTasksFilter($tasks_list)
         // Соберем новый массив с ключами просроченных задач для вывода в шаблон
         $filter_tasks_list_old[$value] = $tasks_list[$value];
     }
+
+
     // Вернем массив просроченных задач согласно фильтра
     return  $filter_tasks_list_old;
 }

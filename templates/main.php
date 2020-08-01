@@ -4,11 +4,11 @@
         <h2 class="content__side-heading">Проекты</h2>
 
         <nav class="main-navigation">
-            <?php foreach ($projects as $project) : ?>
+            <?php foreach ($projects as $key => $value) : ?>
                 <ul class="main-navigation__list">
-                    <li class="main-navigation__list-item <?= $_GET['id'] == $project['proj_id'] ? 'main-navigation__list-item--active' : '' ?>">
-                        <a class="main-navigation__list-item-link" href="<?= 'index.php?id=' . $project['proj_id'] ?>"><?= htmlspecialchars($project['proj_name']) ?></a>
-                        <span class="main-navigation__list-item-count"><?= countTask($count_tasks, $project['proj_name']); ?></span>
+                    <li class="main-navigation__list-item <?= $_GET['id'] == $value['proj_id'] ? 'main-navigation__list-item--active' : '' ?>">
+                        <a class="main-navigation__list-item-link" href="<?= 'index.php?id=' . $value['proj_id'] ?>"><?= htmlspecialchars($value['proj_name']) ?></a>
+                        <span class="main-navigation__list-item-count"><?= $value['count']; ?></span>
                     </li>
                 </ul>
             <?php endforeach; ?>
@@ -33,7 +33,7 @@
 
         <div class="tasks-controls">
             <nav class="tasks-switch">
-                <a href="/" class="tasks-switch__item <?= $url_domen ? 'tasks-switch__item--active' : '' ?>">Все задачи</a>
+                <a href="index.php?<?= $_GET['id'] ? 'id=' . $_GET['id'] . '&' : '' ?>tasks_all=1" class="tasks-switch__item <?= $_GET['tasks_all'] ? 'tasks-switch__item--active' : '' ?>">Все задачи</a>
                 <a href="index.php?<?= $_GET['id'] ? 'id=' . $_GET['id'] . '&' : '' ?>tasks_today=1" class="tasks-switch__item <?= $_GET['tasks_today'] ? 'tasks-switch__item--active' : '' ?>">Повестка дня</a>
                 <a href="index.php?<?= $_GET['id'] ? 'id=' . $_GET['id'] . '&' : '' ?>tasks_tomorrow=1" class="tasks-switch__item <?= $_GET['tasks_tomorrow'] ? 'tasks-switch__item--active' : '' ?>">Завтра</a>
                 <a href="index.php?<?= $_GET['id'] ? 'id=' . $_GET['id'] . '&' : '' ?>tasks_old=1" class="tasks-switch__item <?= $_GET['tasks_old'] ? 'tasks-switch__item--active' : '' ?>">Просроченные</a>
@@ -50,15 +50,16 @@
         <table class="tasks">
 
             <?php
+
             // Выводим сообщение если нет задач в проекте
-            foreach ($count_tasks as $key => $value) {
+            foreach ($projects as $key => $value) {
                 if (($_GET['id'] == $value['proj_id']) && !$value['count']) {
                     echo '<span style="font-size: 16px; font-weight: bold;">Нет задач для этого проекта</span>';
                 }
             }
 
             // Соберем новый одномерный масив со значением proj_id
-            foreach ($count_tasks as $key => $value) {
+            foreach ($projects as $key => $value) {
                 $valid_id[] = $value['proj_id'];
             }
 
@@ -68,7 +69,8 @@
                 print($page404);
             };
 
-            // Если запрос присутсвует в форме поиска, то выводим данные поиска
+
+            // TODO: Если запрос присутсвует в форме поиска, то выводим данные поиска
             if (!empty($search)) {
                 $tasks_list = $res_search;
             }

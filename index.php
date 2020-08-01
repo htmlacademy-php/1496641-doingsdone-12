@@ -18,7 +18,7 @@ if ($search && !$num_rows) {
 }
 
 /**
- * 
+ *
  * * CHECK - ЗАДАЧА ВЫПОЛНЕНА
  */
 
@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 }
 
 /**
- * 
+ *
  * * ФИЛЬТРЫ ДЛЯ ЗАДАЧ В ПРОЕКТЕ
  */
 
@@ -86,8 +86,6 @@ $tasks_filter = [
     'tasks_tomorrow'  => $_GET['tasks_tomorrow'],
     'tasks_old'       => $_GET['tasks_old'],
 ];
-
-// !debug($tasks_list);
 
 // Вывод фильтра для задачи "Повестка дня"
 if ($tasks_filter['tasks_today']) {
@@ -118,7 +116,7 @@ if ($tasks_filter['tasks_old']) {
 $url_domen = $_SERVER['REQUEST_URI'] == "/";
 
 /**
- * 
+ *
  * * ФОРМИРУЕМ ШАБЛОН
  */
 

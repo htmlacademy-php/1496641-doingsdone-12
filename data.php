@@ -6,7 +6,7 @@ session_start();
 $us_data = $_SESSION['user'];
 
 /**
- * 
+ *
  * * ПОДКЛЮЧЕНИЕ К БД MySQLi
  */
 
@@ -33,25 +33,27 @@ if (!$db) {
 };
 
 /**
- * 
+ *
  * * ВЫБОРКА ПРОЕКТОВ
  */
 
 // Получим id пользователя из данных сессии
 $user_id = $us_data['user_id'];
 
-// Выборка всех проектов из БД
-$sql_proj = "SELECT proj_id, proj_name FROM project WHERE user_id = $user_id";
+// Выборка всех проектов из БД + счетчикактивных задач
+$sql_projects = "SELECT p.proj_id, p.proj_name, t.title_task, t.status_task, COUNT(t.task_id) as count
+                    FROM project p LEFT JOIN task t ON p.proj_id = t.proj_id AND t.status_task = 0
+                    WHERE p.user_id ='$user_id' GROUP BY p.proj_id";
 
 // Результат запроса в массив
-$projects = resQuerySQL($sql_proj, $connect);
+$projects = resQuerySQL($sql_projects, $connect);
 
 /**
- *  
+ *
  * * ВЫВОД ЗАДАЧ СООТВЕТСВУЮЩИХ СВОЕМУ ПРОЕКТУ
  */
 
-// Выборка задач из БД по значению $_GET['id'],
+// Выборка задач из БД по значению $_GET['id']
 if (!empty($_GET['id'])) {
     $proj_id = $_GET['id'];
     settype($proj_id, 'integer'); // Устонавливаем тип integer для $_GET
@@ -61,12 +63,9 @@ if (!empty($_GET['id'])) {
 
 // Выборка всех задач для одного пользователя
 $sql_task = "SELECT proj_name, task_id, status_task, title_task, link_file,
-                    DATE_FORMAT(date_task_end, '%Y-%m-%e') AS date_task_end
-                        FROM user_reg u, project p, task t
-                            WHERE p.proj_id = t.proj_id
-                                AND u.user_id = t.user_id
-                                    AND p.proj_id = $proj_id
-                                        AND u.user_id = $user_id";
+            DATE_FORMAT(date_task_end, '%Y-%m-%e') AS date_task_end
+            FROM user_reg u, project p, task t WHERE p.proj_id = t.proj_id
+            AND u.user_id = t.user_id AND p.proj_id = $proj_id AND u.user_id = $user_id";
 
 // Результат запроса в виде массива
 $tasks_list = resQuerySQL($sql_task, $connect);
@@ -77,21 +76,7 @@ if ($tasks_list) {
 }
 
 /**
- * 
- * * ФОРМИРУЕМ ДАННЫЕ ДЛЯ СЧЕТЧИКА ЗАДАЧ В ПРОЕКТАХ
- */
-
-// Выборка всех проектов и количество задач в них
-$sql_count_tasks = "SELECT p.proj_id, p.proj_name, COUNT(t.task_id) as count
-						FROM project p LEFT JOIN task t ON p.proj_id = t.proj_id
-							WHERE p.user_id ='$user_id' AND t.status_task = 0
-								GROUP BY p.proj_id";
-
-// Результат запроса в виде массива
-$count_tasks = resQuerySQL($sql_count_tasks, $connect);
-
-/**
- * 
+ *
  * * ФОРМА ПОИСКА
  */
 
@@ -101,7 +86,7 @@ $search = trim($_GET['q']) ?? '';
 if ($search) {
 
     $sql_q = "SELECT * FROM task WHERE (user_id = {$us_data['user_id']})
-                AND MATCH (title_task) AGAINST(? IN BOOLEAN MODE)";
+            AND MATCH (title_task) AGAINST(? IN BOOLEAN MODE)";
 
     // Данные для запроса
     $data = ['search' => $search . '*'];

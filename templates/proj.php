@@ -2,11 +2,11 @@
     <section class="content__side">
         <h2 class="content__side-heading">Проекты</h2>
         <nav class="main-navigation">
-            <?php foreach ($projects as $project) : ?>
+            <?php foreach ($projects as $key => $value) : ?>
                 <ul class="main-navigation__list">
-                    <li class="main-navigation__list-item <?= $_GET['id'] == $project['proj_id'] ? 'main-navigation__list-item--active' : '' ?>">
-                        <a class="main-navigation__list-item-link" href="<?= 'index.php?id=' . $project['proj_id'] ?>"><?= htmlspecialchars($project['proj_name']) ?></a>
-                        <span class="main-navigation__list-item-count"><?= countTask($count_tasks, $project['proj_name']); ?></span>
+                    <li class="main-navigation__list-item <?= $_GET['id'] == $value['proj_id'] ? 'main-navigation__list-item--active' : '' ?>">
+                        <a class="main-navigation__list-item-link" href="<?= 'index.php?id=' . $value['proj_id'] ?>"><?= htmlspecialchars($value['proj_name']) ?></a>
+                        <span class="main-navigation__list-item-count"><?= $value['count']; ?></span>
                     </li>
                 </ul>
             <?php endforeach; ?>
