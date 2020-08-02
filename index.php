@@ -138,7 +138,6 @@ $data_user = [
     'check_id_task'         => $check_id_task,
     'class_active'          => $class_active,
     'url_domen'             => $url_domen,
-    // 'today' => $today,
 ];
 
 // Контентн для авторизированного пользователя

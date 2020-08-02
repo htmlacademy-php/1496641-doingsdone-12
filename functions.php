@@ -61,7 +61,6 @@ function resQuerySQL($sql, $connect)
     // Проверим результат извлечения данных
     if ($result) {
         $sql_table = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        // $sql_table = mysqli_fetch_array($result, MYSQLI_ASSOC);
     }
     // Возвращаем результат запроса в виде массива
     return $sql_table;

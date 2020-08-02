@@ -29,7 +29,7 @@ mysqli_set_charset($connect, "utf8");
 
 // Проверка соединения с БД
 if (!$db) {
-    print('Ошибка подключения к БД: ' . mysqli_connect_error());
+    die;
 };
 
 /**
@@ -42,8 +42,8 @@ $user_id = $us_data['user_id'];
 
 // Выборка всех проектов из БД + счетчикактивных задач
 $sql_projects = "SELECT p.proj_id, p.proj_name, t.title_task, t.status_task, COUNT(t.task_id) as count
-                    FROM project p LEFT JOIN task t ON p.proj_id = t.proj_id AND t.status_task = 0
-                    WHERE p.user_id ='$user_id' GROUP BY p.proj_id";
+                FROM project p LEFT JOIN task t ON p.proj_id = t.proj_id AND t.status_task = 0
+                WHERE p.user_id ='$user_id' GROUP BY p.proj_id";
 
 // Результат запроса в массив
 $projects = resQuerySQL($sql_projects, $connect);
