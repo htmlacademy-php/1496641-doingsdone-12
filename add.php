@@ -4,7 +4,7 @@ require_once('functions.php');
 require_once('data.php');
 
 /**
- * 
+ *
  * * ВАЛИДАЦИЯ ФОРМЫ ЗАДАЧА
  */
 
@@ -104,7 +104,7 @@ if (isset($form['submit'])) {
 }
 
 /**
- * 
+ *
  * * ДОБАВЛЕНИЕ ЗАДАЧИ В ПРОЕКТ
  */
 
@@ -145,7 +145,7 @@ if (!empty($form) && empty($errors)) {
 }
 
 /**
- * 
+ *
  * * ФОРМИРУЕМ ШАБЛОН
  */
 
@@ -165,6 +165,7 @@ if ($us_data['user_id']) {
     $layout_content = include_template('layout.php', [
         'content' =>  $page_content,
         'title'   => 'Дела в порядке',
+        'us_data' => $us_data,
     ]);
 
     print($layout_content);

@@ -87,6 +87,8 @@ $tasks_filter = [
     'tasks_old'       => $_GET['tasks_old'],
 ];
 
+
+
 // Вывод фильтра для задачи "Повестка дня"
 if ($tasks_filter['tasks_today']) {
 
@@ -136,6 +138,7 @@ $data_user = [
     'check_id_task'         => $check_id_task,
     'class_active'          => $class_active,
     'url_domen'             => $url_domen,
+    // 'today' => $today,
 ];
 
 // Контентн для авторизированного пользователя

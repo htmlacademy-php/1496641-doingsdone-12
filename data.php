@@ -63,7 +63,7 @@ if (!empty($_GET['id'])) {
 
 // Выборка всех задач для одного пользователя
 $sql_task = "SELECT proj_name, task_id, status_task, title_task, link_file,
-            DATE_FORMAT(date_task_end, '%Y-%m-%e') AS date_task_end
+            DATE_FORMAT(date_task_end, '%Y-%m-%d') AS date_task_end
             FROM user_reg u, project p, task t WHERE p.proj_id = t.proj_id
             AND u.user_id = t.user_id AND p.proj_id = $proj_id AND u.user_id = $user_id";
 

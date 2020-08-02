@@ -33,10 +33,10 @@
 
         <div class="tasks-controls">
             <nav class="tasks-switch">
-                <a href="index.php?<?= $_GET['id'] ? 'id=' . $_GET['id'] . '&' : '' ?>tasks_all=1" class="tasks-switch__item <?= $_GET['tasks_all'] ? 'tasks-switch__item--active' : '' ?>">Все задачи</a>
-                <a href="index.php?<?= $_GET['id'] ? 'id=' . $_GET['id'] . '&' : '' ?>tasks_today=1" class="tasks-switch__item <?= $_GET['tasks_today'] ? 'tasks-switch__item--active' : '' ?>">Повестка дня</a>
-                <a href="index.php?<?= $_GET['id'] ? 'id=' . $_GET['id'] . '&' : '' ?>tasks_tomorrow=1" class="tasks-switch__item <?= $_GET['tasks_tomorrow'] ? 'tasks-switch__item--active' : '' ?>">Завтра</a>
-                <a href="index.php?<?= $_GET['id'] ? 'id=' . $_GET['id'] . '&' : '' ?>tasks_old=1" class="tasks-switch__item <?= $_GET['tasks_old'] ? 'tasks-switch__item--active' : '' ?>">Просроченные</a>
+                <a href="index.php?<?= $_GET['id'] ? 'id=' . $_GET['id'] . '&' : '' ?>tasks_all=1<?= $show_complete_tasks ? '&show_completed=1' : '' ?>" class="tasks-switch__item <?= $_GET['tasks_all'] ? 'tasks-switch__item--active' : '' ?>">Все задачи</a>
+                <a href="index.php?<?= $_GET['id'] ? 'id=' . $_GET['id'] . '&' : '' ?>tasks_today=1<?= $show_complete_tasks ? '&show_completed=1' : '' ?>" class="tasks-switch__item <?= $_GET['tasks_today'] ? 'tasks-switch__item--active' : '' ?>">Повестка дня</a>
+                <a href="index.php?<?= $_GET['id'] ? 'id=' . $_GET['id'] . '&' : '' ?>tasks_tomorrow=1<?= $show_complete_tasks ? '&show_completed=1' : '' ?>" class="tasks-switch__item <?= $_GET['tasks_tomorrow'] ? 'tasks-switch__item--active' : '' ?>">Завтра</a>
+                <a href="index.php?<?= $_GET['id'] ? 'id=' . $_GET['id'] . '&' : '' ?>tasks_old=1<?= $show_complete_tasks ? '&show_completed=1' : '' ?>" class="tasks-switch__item <?= $_GET['tasks_old'] ? 'tasks-switch__item--active' : '' ?>">Просроченные</a>
             </nav>
 
             <label class="checkbox">
@@ -69,8 +69,7 @@
                 print($page404);
             };
 
-
-            // TODO: Если запрос присутсвует в форме поиска, то выводим данные поиска
+            // Если запрос присутсвует в форме поиска, то выводим данные поиска
             if (!empty($search)) {
                 $tasks_list = $res_search;
             }

@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     //Найдем в таблице project проект полученный от пользоватлея
-    $sql_proj = "SELECT * FROM project WHERE proj_name = ?";
+    $sql_proj = "SELECT proj_id, proj_name FROM project WHERE user_id = '$user_id'  AND proj_name = ?";
 
     // Данные для запроса
     $data = ['proj_name' => $form['project_name']];
