@@ -40,10 +40,8 @@ if (!$db) {
 // Получим id пользователя из данных сессии
 $user_id = $us_data['user_id'];
 
-// Выборка всех проектов из БД + счетчикактивных задач
-$sql_projects = "SELECT p.proj_id, p.proj_name, t.title_task, t.status_task, COUNT(t.task_id) as count
-                FROM project p LEFT JOIN task t ON p.proj_id = t.proj_id AND t.status_task = 0
-                WHERE p.user_id ='$user_id' GROUP BY p.proj_id";
+// Выборка всех проектов из БД
+$sql_projects = "SELECT p.proj_id, p.proj_name FROM project p JOIN user_reg u ON p.user_id = u.user_id AND p.user_id ='$user_id'";
 
 // Результат запроса в массив
 $projects = resQuerySQL($sql_projects, $connect);
@@ -73,6 +71,35 @@ $tasks_list = resQuerySQL($sql_task, $connect);
 // Сортируем задачи в обратном порядке
 if ($tasks_list) {
     $tasks_list = array_reverse($tasks_list);
+}
+
+/**
+ *
+ * * СЧЕТЧИК ЗАДАЧ
+ */
+
+$sql_cnt_proj = "SELECT p.proj_id, t.status_task, COUNT(t.task_id) as count 
+                FROM project p LEFT JOIN task t ON p.proj_id = t.proj_id 
+                AND t.status_task = 0 WHERE p.user_id ='$user_id' GROUP BY p.proj_id";
+
+// Получаем ресурс результата
+$result = mysqli_query($connect, $sql_cnt_proj);
+
+// Выборка из БД в виде массива
+$count_task = resQuerySQL($sql_cnt_proj, $connect);
+
+// Добавим в массив проектов поле count
+foreach ($projects as $key => $value) {
+
+    foreach ($count_task as $k => $v) {
+
+        if ($value['proj_id'] == $v['proj_id']) {
+
+            $value['count'] = $v['count'];
+        }
+        // Запишем значение count для каждого ключа
+        $projects[$key] = $value;
+    }
 }
 
 /**

@@ -286,7 +286,6 @@ function oldTasksFilter($tasks_list)
     // Сегодня - юникс
     $today = strtotime(date("Y-m-d"));
 
-
     // Возвращаем одномерный нумерованный массив, key -> date окончания задач
     $tasks_date_end = array_column($tasks_list, 'date_task_end');
 
@@ -308,28 +307,30 @@ function oldTasksFilter($tasks_list)
      * Ключи те же, что и в основном массиве всех задач $tasks_list
      */
 
-    // Соберем массив из ключи всех просроченных задач
-    $tasks_list_key_old = array_keys($old_day);
+    if ($old_day) {
+        // Соберем массив из ключи всех просроченных задач
+        $tasks_list_key_old = array_keys($old_day);
 
-    // Запишим в переменную статус "Выполнено"
-    $check = true;
+        // Запишим в переменную статус "Выполнено"
+        $check = true;
 
-    // Соберем массив всех ключей для задач со статусом "Выполнено"
-    $tasks_list_key_check = array_keys($status_task, $check);
+        // Соберем массив всех ключей для задач со статусом "Выполнено"
+        $tasks_list_key_check = array_keys($status_task, $check);
 
-    // Сольем два массива в один (key for $old day + key for $check)
-    $arr_res = array_merge($tasks_list_key_old, $tasks_list_key_check);
+        // Сольем два массива в один (key for $old day + key for $check)
+        $arr_res = array_merge($tasks_list_key_old, $tasks_list_key_check);
 
-    /**
-     * Соберем новый массив задач из ключей только для просроченных дат + статус задачи $check
-     * Запишем в новый массив все данные задачи массива $tasks_list,
-     * но только для ключей в значениях $value
-     */
+        /**
+         * Соберем новый массив задач из ключей только для просроченных дат + статус задачи $check
+         * Запишем в новый массив все данные задачи массива $tasks_list,
+         * но только для ключей в значениях $value
+         */
 
-    foreach ($arr_res as $key => $value) {
-        $filter_task_list_old[$value] = $tasks_list[$value];
+        foreach ($arr_res as $key => $value) {
+            $filter_task_list_old[$value] = $tasks_list[$value];
+        }
+
+        // Вернем массив задач согласно фильтра
+        return $filter_task_list_old;
     }
-
-    // Вернем массив задач согласно фильтра
-    return $filter_task_list_old;
 }
