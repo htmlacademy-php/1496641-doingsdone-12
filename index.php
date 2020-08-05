@@ -138,6 +138,11 @@ $data_user = [
     'check_id_task'         => $check_id_task,
     'class_active'          => $class_active,
     'url_domen'             => $url_domen,
+    'pages_count'           => $pages_count,
+    'pages'                 => $pages,
+    'cur_page'              => $cur_page,
+    'pages_prev'            => $pages_prev,
+    'pages_next'            => $pages_next,
 ];
 
 // Контентн для авторизированного пользователя

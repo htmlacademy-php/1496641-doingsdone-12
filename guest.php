@@ -15,7 +15,6 @@ $content_reg = include_template('guest.php', $guest_data);
 // Шаблон страницы
 $layout = include_template('layout.php', [
     'content'   =>  $content_reg,
-    // 'title'     => 'Document',
 ]);
 
 print($layout);

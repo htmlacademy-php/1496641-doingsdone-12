@@ -48,6 +48,37 @@ $projects = resQuerySQL($sql_projects, $connect);
 
 /**
  *
+ * * ПАГИНАЦИЯ
+ */
+
+// Определим текущую страницу
+$cur_page = $_GET['page'] ?? 1;
+
+// Количество задач на странице
+$tasks_items = 3;
+
+// Определим обшее количество задач для текущего пользователя
+$sql_cnt_tasks = "SELECT COUNT(*) as cnt FROM task t JOIN user_reg u ON u.user_id = t.user_id  WHERE u.user_id = $user_id";
+
+$result = mysqli_query($connect, $sql_cnt_tasks);
+
+// Все задачи пользователя
+$items_count = mysqli_fetch_assoc($result)['cnt'];
+
+// Сколько всего страниц (6 задач на страницу)
+$pages_count = ceil($items_count / $tasks_items);
+
+// Смещение в зависимости от текущей страницы
+$offset = ($cur_page - 1) * $tasks_items;
+
+// Заполним массив номерами всех страниц
+$pages = range(1, $pages_count);
+
+
+debug($pages);
+
+/**
+ *
  * * ВЫВОД ЗАДАЧ СООТВЕТСВУЮЩИХ СВОЕМУ ПРОЕКТУ
  */
 
@@ -60,6 +91,7 @@ if (!empty($_GET['id'])) {
 };
 
 // Выборка всех задач для одного пользователя
+
 // $sql_task = "SELECT proj_name, task_id, status_task, title_task, link_file,
 //             DATE_FORMAT(date_task_end, '%Y-%m-%d') AS date_task_end
 //             FROM user_reg u, project p, task t WHERE p.proj_id = t.proj_id
@@ -69,15 +101,16 @@ $sql_task = "SELECT p.proj_name, t.task_id, t.status_task, t.title_task, t.link_
             DATE_FORMAT(date_task_end, '%Y-%m-%d') AS date_task_end
             FROM project p LEFT JOIN task t ON p.proj_id = t.proj_id
             JOIN user_reg u ON u.user_id = t.user_id
-            WHERE u.user_id = $user_id AND p.proj_id = $proj_id";
+            WHERE u.user_id = $user_id AND p.proj_id = $proj_id
+            ORDER BY t.task_id DESC LIMIT $tasks_items OFFSET $offset";
 
 // Результат запроса в виде массива
 $tasks_list = resQuerySQL($sql_task, $connect);
 
 // Сортируем задачи в обратном порядке
-if ($tasks_list) {
-    $tasks_list = array_reverse($tasks_list);
-}
+// if ($tasks_list) {
+//     $tasks_list = array_reverse($tasks_list);
+// }
 
 /**
  *

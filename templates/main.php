@@ -7,7 +7,7 @@
             <?php foreach ($projects as $key => $value) : ?>
                 <ul class="main-navigation__list">
                     <li class="main-navigation__list-item <?= $_GET['id'] == $value['proj_id'] ? 'main-navigation__list-item--active' : '' ?>">
-                        <a class="main-navigation__list-item-link" href="<?= 'index.php?id=' . $value['proj_id'] ?>"><?= htmlspecialchars($value['proj_name']) ?></a>
+                        <a class="main-navigation__list-item-link" href="<?= 'index.php?id=' . $value['proj_id'] . '&page=' . $cur_page; ?>"><?= htmlspecialchars($value['proj_name']) ?></a>
                         <span class="main-navigation__list-item-count"><?= $value['count']; ?></span>
                     </li>
                 </ul>
@@ -33,10 +33,10 @@
 
         <div class="tasks-controls">
             <nav class="tasks-switch">
-                <a href="index.php?<?= $_GET['id'] ? 'id=' . $_GET['id'] . '&' : '' ?>tasks_all=1<?= $show_complete_tasks ? '&show_completed=1' : '' ?>" class="tasks-switch__item <?= $_GET['tasks_all'] ? 'tasks-switch__item--active' : '' ?>">Все задачи</a>
-                <a href="index.php?<?= $_GET['id'] ? 'id=' . $_GET['id'] . '&' : '' ?>tasks_today=1<?= $show_complete_tasks ? '&show_completed=1' : '' ?>" class="tasks-switch__item <?= $_GET['tasks_today'] ? 'tasks-switch__item--active' : '' ?>">Повестка дня</a>
-                <a href="index.php?<?= $_GET['id'] ? 'id=' . $_GET['id'] . '&' : '' ?>tasks_tomorrow=1<?= $show_complete_tasks ? '&show_completed=1' : '' ?>" class="tasks-switch__item <?= $_GET['tasks_tomorrow'] ? 'tasks-switch__item--active' : '' ?>">Завтра</a>
-                <a href="index.php?<?= $_GET['id'] ? 'id=' . $_GET['id'] . '&' : '' ?>tasks_old=1<?= $show_complete_tasks ? '&show_completed=1' : '' ?>" class="tasks-switch__item <?= $_GET['tasks_old'] ? 'tasks-switch__item--active' : '' ?>">Просроченные</a>
+                <a href="index.php?<?= $_GET['id'] ? 'id=' . $_GET['id'] . '&' : '' ?>tasks_all=1<?= $show_complete_tasks ? '&show_completed=1' : '' ?>&page=<?= $cur_page; ?>" class="tasks-switch__item <?= $_GET['tasks_all'] ? 'tasks-switch__item--active' : '' ?>">Все задачи</a>
+                <a href="index.php?<?= $_GET['id'] ? 'id=' . $_GET['id'] . '&' : '' ?>tasks_today=1<?= $show_complete_tasks ? '&show_completed=1' : '' ?>&page=<?= $cur_page; ?>" class="tasks-switch__item <?= $_GET['tasks_today'] ? 'tasks-switch__item--active' : '' ?>">Повестка дня</a>
+                <a href="index.php?<?= $_GET['id'] ? 'id=' . $_GET['id'] . '&' : '' ?>tasks_tomorrow=1<?= $show_complete_tasks ? '&show_completed=1' : '' ?>&page=<?= $cur_page; ?>" class="tasks-switch__item <?= $_GET['tasks_tomorrow'] ? 'tasks-switch__item--active' : '' ?>">Завтра</a>
+                <a href="index.php?<?= $_GET['id'] ? 'id=' . $_GET['id'] . '&' : '' ?>tasks_old=1<?= $show_complete_tasks ? '&show_completed=1' : '' ?>&page=<?= $cur_page; ?>" class="tasks-switch__item <?= $_GET['tasks_old'] ? 'tasks-switch__item--active' : '' ?>">Просроченные</a>
             </nav>
 
             <label class="checkbox">
@@ -121,5 +121,53 @@
             endif; ?>
 
         </table>
+
+        <?php if ($pages_count > 1) : ?>
+            <div class="tasks-pagination">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+
+                        <?php
+                        // Предыдущая страница
+                        if ($cur_page > 1) {
+                            $pages_prev = $cur_page - 1;
+                        } else {
+                            $pages_prev = 1;
+                        }
+
+                        // Следующаястраница
+                        if ($cur_page < $pages_count) {
+                            $pages_next = $cur_page + 1;
+                        } else {
+                            $pages_next = $pages_count;
+                        }
+                        ?>
+
+                        <li class="page-item">
+                            <a class="page-link" href="/?page=<?= $pages_prev ?>" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Назад</span>
+                            </a>
+                        </li>
+
+                        <?php foreach ($pages as $page) : ?>
+                            <li class="page-item <?= ($page == $cur_page) ? 'active' : '' ?>">
+                                <a class="page-link" href="/?page=<?= $page; ?>"><?= $page; ?></a>
+                            </li>
+                        <?php endforeach; ?>
+
+                        <li class="page-item">
+                            <a class="page-link" href="/?page=<?= $pages_next ?>" aria-label="Next">
+                                <span class="sr-only">Вперед</span>
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </nav>
+            </div>
+        <?php endif; ?>
+
     </main>
+
 </div>

@@ -73,9 +73,6 @@ if (isset($form['submit'])) {
             // Формируем имя файла + расширение
             $newFileName .= '.' . $fileExt;
 
-            // Определим протокол соединения
-            $httpHttps = !empty($_SERVER['HTTPS']) ? "https://" : "http://";
-
             // Формируем ссылку на файл (директория + файл.расширение)
             $linkFile = $dir . $newFileName;
         } elseif ($fileSize > 0) {
