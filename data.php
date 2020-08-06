@@ -75,7 +75,7 @@ $offset = ($cur_page - 1) * $tasks_items;
 $pages = range(1, $pages_count);
 
 
-debug($pages);
+debug($items_count);
 
 /**
  *

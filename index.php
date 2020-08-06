@@ -80,13 +80,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
  */
 
 // Запишем в массив значения фильтров для задач
+
 $tasks_filter = [
     'tasks_all '      => $_GET['tasks_all'],
     'tasks_today'     => $_GET['tasks_today'],
     'tasks_tomorrow'  => $_GET['tasks_tomorrow'],
     'tasks_old'       => $_GET['tasks_old'],
 ];
-
 
 
 // Вывод фильтра для задачи "Повестка дня"
@@ -143,6 +143,8 @@ $data_user = [
     'cur_page'              => $cur_page,
     'pages_prev'            => $pages_prev,
     'pages_next'            => $pages_next,
+    'tasks_filter'          => $tasks_filter,
+    'count_task'            => $count_task,
 ];
 
 // Контентн для авторизированного пользователя
