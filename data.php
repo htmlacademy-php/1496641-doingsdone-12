@@ -41,7 +41,9 @@ if (!$db) {
 $user_id = $us_data['user_id'];
 
 // Выборка всех проектов из БД
-$sql_projects = "SELECT p.proj_id, p.proj_name FROM project p JOIN user_reg u ON p.user_id = u.user_id AND p.user_id ='$user_id'";
+$sql_projects = "SELECT p.proj_id, p.proj_name FROM project p
+                JOIN user_reg u ON p.user_id = u.user_id
+                AND p.user_id ='$user_id'";
 
 // Результат запроса в массив
 $projects = resQuerySQL($sql_projects, $connect);
@@ -57,15 +59,40 @@ $cur_page = $_GET['page'] ?? 1;
 // Количество задач на странице
 $tasks_items = 3;
 
-// Определим обшее количество задач для текущего пользователя
-$sql_cnt_tasks = "SELECT COUNT(*) as cnt FROM task t JOIN user_reg u ON u.user_id = t.user_id  WHERE u.user_id = $user_id";
+// Количество задач для текущего пользователя с учетом статуса задачи (для расчета общего количества страниц)
+if (!isset($_GET['show_completed']) || $_GET['show_completed'] == 0) {
+    // Только актуальные задачи
+    $complate_tasks = 0;
+} else {
+    // Все задачи (актуальные и выполненные)
+    $complate_tasks = 't.status_task';
+}
+
+// Условие подсчета количества задач
+if ($_GET['id']) {
+    // Определим обшее количество задач для текущего пользователя только активного проекта
+    $sql_cnt_tasks = "SELECT COUNT(*) as cnt FROM task t
+                    RIGHT JOIN project p ON p.proj_id = t.proj_id
+                    JOIN user_reg u ON u.user_id = t.user_id
+                    WHERE p.proj_id = {$_GET['id']}
+                    AND u.user_id = $user_id
+                    AND t.status_task = $complate_tasks";
+} else {
+    // Определим обшее количество задач для текущего пользователя во всех проектах
+    $sql_cnt_tasks = "SELECT COUNT(*) as cnt FROM task t
+                    JOIN user_reg u ON u.user_id = t.user_id
+                    WHERE u.user_id = $user_id
+                    AND t.status_task = $complate_tasks";
+}
 
 $result = mysqli_query($connect, $sql_cnt_tasks);
 
-// Все задачи пользователя
-$items_count = mysqli_fetch_assoc($result)['cnt'];
+if ($result) {
+    // Все задачи пользователя
+    $items_count = mysqli_fetch_assoc($result)['cnt'];
+}
 
-// Сколько всего страниц (6 задач на страницу)
+// Сколько всего страниц (3 задач на страницу)
 $pages_count = ceil($items_count / $tasks_items);
 
 // Смещение в зависимости от текущей страницы
@@ -73,9 +100,6 @@ $offset = ($cur_page - 1) * $tasks_items;
 
 // Заполним массив номерами всех страниц
 $pages = range(1, $pages_count);
-
-
-debug($items_count);
 
 /**
  *
@@ -91,26 +115,18 @@ if (!empty($_GET['id'])) {
 };
 
 // Выборка всех задач для одного пользователя
-
-// $sql_task = "SELECT proj_name, task_id, status_task, title_task, link_file,
-//             DATE_FORMAT(date_task_end, '%Y-%m-%d') AS date_task_end
-//             FROM user_reg u, project p, task t WHERE p.proj_id = t.proj_id
-//             AND u.user_id = t.user_id AND p.proj_id = $proj_id AND u.user_id = $user_id";
-
 $sql_task = "SELECT p.proj_name, t.task_id, t.status_task, t.title_task, t.link_file,
             DATE_FORMAT(date_task_end, '%Y-%m-%d') AS date_task_end
             FROM project p LEFT JOIN task t ON p.proj_id = t.proj_id
             JOIN user_reg u ON u.user_id = t.user_id
-            WHERE u.user_id = $user_id AND p.proj_id = $proj_id
-            ORDER BY t.task_id DESC LIMIT $tasks_items OFFSET $offset";
+            WHERE u.user_id = $user_id
+            AND p.proj_id = $proj_id
+            AND t.status_task = $complate_tasks
+            ORDER BY t.task_id
+            DESC LIMIT $tasks_items OFFSET $offset";
 
 // Результат запроса в виде массива
 $tasks_list = resQuerySQL($sql_task, $connect);
-
-// Сортируем задачи в обратном порядке
-// if ($tasks_list) {
-//     $tasks_list = array_reverse($tasks_list);
-// }
 
 /**
  *
@@ -119,7 +135,9 @@ $tasks_list = resQuerySQL($sql_task, $connect);
 
 $sql_cnt_proj = "SELECT p.proj_id, t.status_task, COUNT(t.task_id) as count
                 FROM project p LEFT JOIN task t ON p.proj_id = t.proj_id
-                AND t.status_task = 0 WHERE p.user_id ='$user_id' GROUP BY p.proj_id";
+                AND t.status_task = 0
+                WHERE p.user_id ='$user_id'
+                GROUP BY p.proj_id";
 
 // Получаем ресурс результата
 $result = mysqli_query($connect, $sql_cnt_proj);
@@ -146,6 +164,7 @@ foreach ($projects as $key => $value) {
  * * ФОРМА ПОИСКА
  */
 
+// Удалим пробелы из запроса от пользователя
 $search = trim($_GET['q']) ?? '';
 
 // Результат поиска

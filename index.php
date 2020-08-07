@@ -79,18 +79,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
  * * ФИЛЬТРЫ ДЛЯ ЗАДАЧ В ПРОЕКТЕ
  */
 
-// Запишем в массив значения фильтров для задач
-
-$tasks_filter = [
-    'tasks_all '      => $_GET['tasks_all'],
-    'tasks_today'     => $_GET['tasks_today'],
-    'tasks_tomorrow'  => $_GET['tasks_tomorrow'],
-    'tasks_old'       => $_GET['tasks_old'],
-];
-
-
 // Вывод фильтра для задачи "Повестка дня"
-if ($tasks_filter['tasks_today']) {
+if ($_GET['today']) {
 
     // Текущая дата
     $today = date("Y-m-d");
@@ -100,7 +90,7 @@ if ($tasks_filter['tasks_today']) {
 }
 
 // Вывод фильтра для задачи "Завтра"
-if ($tasks_filter['tasks_tomorrow']) {
+if ($_GET['tomorrow']) {
 
     // Получим завтрашний день
     $tomorrow = date("Y-m-d", strtotime("+1 days"));
@@ -110,10 +100,10 @@ if ($tasks_filter['tasks_tomorrow']) {
 }
 
 // Вывод фильтра для задач "Просроченные"
-if ($tasks_filter['tasks_old']) {
+if ($_GET['old']) {
     $tasks_list = oldTasksFilter($tasks_list);
 }
-
+debug($tasks_list);
 // Класс для активного фильтра "Все задачи"
 $url_domen = $_SERVER['REQUEST_URI'] == "/";
 
@@ -143,8 +133,11 @@ $data_user = [
     'cur_page'              => $cur_page,
     'pages_prev'            => $pages_prev,
     'pages_next'            => $pages_next,
-    'tasks_filter'          => $tasks_filter,
     'count_task'            => $count_task,
+    'filters'               => $filters,
+    'filter'                => $filter,
+    'items_count'           => $items_count,
+    'tasks_items'           => $tasks_items,
 ];
 
 // Контентн для авторизированного пользователя
