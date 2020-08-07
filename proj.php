@@ -23,10 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     //Найдем в таблице project проект полученный от пользоватлея
-    // $sql_proj = "SELECT proj_id, proj_name FROM project WHERE user_id = '$user_id' AND proj_name = ?";
-
-    $sql_proj = "SELECT p.proj_id, p.proj_name
-                FROM project p JOIN user_reg u ON u.user_id = p.user_id
+    $sql_proj = "SELECT p.proj_id, p.proj_name FROM project p
+                JOIN user_reg u ON u.user_id = p.user_id
                 WHERE u.user_id = '$user_id' AND p.proj_name = ?";
 
     // Данные для запроса
@@ -43,8 +41,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Получим количество рядов в выборке по полю proj_name
     $cnt_proj = mysqli_num_rows($res);
-
-    // debug($cnt_proj);
 
     // Если проект существует в БД значит ошибка
     if ($cnt_proj) {

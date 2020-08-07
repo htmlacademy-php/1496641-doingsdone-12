@@ -135,8 +135,7 @@ $tasks_list = resQuerySQL($sql_task, $connect);
 
 $sql_cnt_proj = "SELECT p.proj_id, t.status_task, COUNT(t.task_id) as count
                 FROM project p LEFT JOIN task t ON p.proj_id = t.proj_id
-                AND t.status_task = 0
-                WHERE p.user_id ='$user_id'
+                AND t.status_task = 0 WHERE p.user_id ='$user_id'
                 GROUP BY p.proj_id";
 
 // Получаем ресурс результата

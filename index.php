@@ -103,7 +103,7 @@ if ($_GET['tomorrow']) {
 if ($_GET['old']) {
     $tasks_list = oldTasksFilter($tasks_list);
 }
-debug($tasks_list);
+
 // Класс для активного фильтра "Все задачи"
 $url_domen = $_SERVER['REQUEST_URI'] == "/";
 

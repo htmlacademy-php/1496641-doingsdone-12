@@ -85,10 +85,6 @@
                         continue;
                     }
 
-                    // if (!$show_complete_tasks && $value['status_task']) {
-                    //     continue;
-                    // }
-
                     $task_class = '';
 
                     // Запишем количество дней в переменную
