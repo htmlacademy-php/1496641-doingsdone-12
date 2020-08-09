@@ -61,7 +61,7 @@
                 }
             }
 
-            // Соберем новый одномерный масив со значением proj_id
+            // Соберем новый одномерный массив со значением proj_id
             foreach ($projects as $key => $value) {
                 $valid_id[] = $value['proj_id'];
             }
@@ -72,7 +72,7 @@
                 print($page404);
             };
 
-            // Если запрос присутсвует в форме поиска, то выводим данные поиска
+            // Если запрос присутствует в форме поиска, то выводим данные поиска
             if (!empty($search)) {
                 $tasks_list = $res_search;
             }
@@ -116,7 +116,13 @@
                         <td class="task__select">
                             <label class="checkbox task__checkbox">
                                 <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?= $value['status_task'] ? 'checked' : ''; ?>>
-                                <a class="checkbox__text" href="index.php?task_complate=<?= $value['status_task'] ? 0 : 1; ?>&id_task=<?= $value['task_id'] ?>"><?= htmlspecialchars($value['title_task']); ?></a>
+
+
+                                <a class="checkbox__text" href="index.php?task_completed=<?= $value['status_task'] ? 0 : 1; ?>&id_task=<?= $value['task_id'] ?>">
+
+
+                                    <?= htmlspecialchars($value['title_task']); ?>
+                                </a>
                             </label>
                         </td>
 
@@ -153,7 +159,7 @@
 
                         // Переберем массив $filters
                         foreach ($filters as $key) {
-                            // При совпадении значения массива $filters с ключем массива $_GET
+                            // При совпадении значения массива $filters с ключом массива $_GET
                             // Формируем ссылку на активный фильтр
                             if ($_GET[$key]) {
                                 $filter = '&' . $key . '=1';

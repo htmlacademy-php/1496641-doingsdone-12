@@ -149,7 +149,7 @@ if (!empty($form) && empty($errors)) {
 // Проверим авторизацию на сайте (наличие данных в сессии)
 if ($us_data['user_id']) {
 
-    // Контентная часть
+    // Данные для шаблона
     $page_content = include_template('add.php', [
         'projects'      => $projects,
         'count_tasks'   => $count_tasks,

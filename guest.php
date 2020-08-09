@@ -11,7 +11,7 @@ require_once('data.php');
 // Данные для передачи в шаблон
 $guest_data = [];
 
-// Контентная часть
+// Данные для шаблона
 $content_reg = include_template('guest.php', $guest_data);
 
 // Шаблон страницы

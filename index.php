@@ -3,10 +3,13 @@
 require_once 'functions.php';
 require_once 'data.php';
 
+// Добавлять в отчет все ошибки PHP
+error_reporting(-1);
+
 // Ошибка 404
 $page_404 = include_template('404.php', []);
 
-// Контентн для гостя
+// Контент для гостя
 $guest = include_template('guest.php', []);
 
 // Объявим переменную для формы поиска по умолчанию
@@ -34,7 +37,7 @@ if (!empty($tasks_list)) {
 
 // id задачи и статус задачи
 $get_task_id = (int)$_GET['id_task']; // id задачи
-$get_task_complate = (int)$_GET['task_complate']; // статус задачи 0 или 1
+$get_task_completed = (int)$_GET['task_completed']; // статус задачи 0 или 1
 
 // Проверим id задачи от пользователя с БД
 $check_id_task = in_array($get_task_id, $task_id);
@@ -48,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         // Данные для запроса
         $data = [
-            'status_task' => $get_task_complate,
+            'status_task' => $get_task_completed,
             'user_id'     => $user_id,
             'task_id'     => $get_task_id,
         ];
@@ -91,6 +94,9 @@ if ($_GET['today']) {
     if ($tasks_list) {
         // Количество задач, результат работы фильтра
         $filter_all_tasks = count($tasks_list);
+
+        // Перепишем общее количество задач согласно фильтра
+        $all_tasks =  $filter_all_tasks;
     }
 }
 
@@ -106,6 +112,9 @@ if ($_GET['tomorrow']) {
     if ($tasks_list) {
         // Количество задач, результат работы фильтра
         $filter_all_tasks = count($tasks_list);
+
+        // Перепишем общее количество задач согласно фильтра
+        $all_tasks =  $filter_all_tasks;
     }
 }
 
@@ -116,14 +125,38 @@ if ($_GET['old']) {
     if ($tasks_list) {
         // Количество задач, результат работы фильтра
         $filter_all_tasks = count($tasks_list);
+
+        // Перепишем общее количество задач согласно фильтра
+        $all_tasks =  $filter_all_tasks;
     }
 }
 
-echo 'задачи в фильтре <br>';
-debug($filter_all_tasks);
-
 // Класс для активного фильтра "Все задачи"
-$url_domen = $_SERVER['REQUEST_URI'] == "/";
+$url_domain = $_SERVER['REQUEST_URI'] == "/";
+
+/**
+ *
+ * * ПАГИНАЦИЯ
+ */
+
+// Определим текущую страницу
+$cur_page = $_GET['page'] ?? 1;
+
+// Количество задач на одной странице
+$task_one_page = 3;
+
+// Общее количество страниц
+if ($filter_all_tasks) {
+    // Если активен фильтр
+    $pages_count = ceil($filter_all_tasks / $task_one_page);
+} else {
+    // Количество всех задач без учета фильтров
+    $pages_count = ceil($all_tasks / $task_one_page);
+}
+
+// Заполним массив номерами всех страниц
+$pages = range(1, $pages_count);
+
 
 /**
  *
@@ -141,11 +174,11 @@ $data_user = [
     'search'                => $search,
     'res_search'            => $res_search,
     'not_found'             => $not_found,
-    'get_task_complate'     => $get_task_complate,
+    'get_task_completed'    => $get_task_completed,
     'get_task_id'           => $get_task_id,
     'check_id_task'         => $check_id_task,
     'class_active'          => $class_active,
-    'url_domen'             => $url_domen,
+    'url_domain'            => $url_domain,
     'pages_count'           => $pages_count,
     'pages'                 => $pages,
     'cur_page'              => $cur_page,
@@ -159,7 +192,7 @@ $data_user = [
     'filter_all_tasks'      => $filter_all_tasks,
 ];
 
-// Контентн для авторизированного пользователя
+// Контент для авторизированного пользователя
 $user = include_template('main.php', $data_user);
 
 // Проверим гость или авторизованный пользователь

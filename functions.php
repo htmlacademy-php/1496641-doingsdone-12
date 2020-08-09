@@ -114,7 +114,7 @@ function resQueryUser($sql, $connect)
  * Выводит количество выбранных рядов для sql запроса SELECT
  * @param string $sql запрос к БД
  * @param array $connect ассоциативный массив с параметрами для подключения к БД
- * @return int $num_rows количест рядов выборки сформированный на основании запроса $sql
+ * @return int $num_rows количество рядов выборки сформированный на основании запроса $sql
  */
 
 function sqlNumRows($sql, $connect)
@@ -164,8 +164,8 @@ function is_date_valid(string $date): bool
  * Создает подготовленное выражение на основе готового SQL запроса и переданных данных
  *
  * @param $link mysqli Ресурс соединения
- * @param $sql string SQL запрос с плейсхолдерами вместо значений
- * @param array $data Данные для вставки на место плейсхолдеров
+ * @param $sql string SQL запрос с плейсхолдер вместо значений
+ * @param array $data Данные для вставки на место плейсхолдера
  *
  * @return mysqli_stmt Подготовленное выражение
  */
@@ -251,7 +251,7 @@ function tasksFilter($tasks_list, $day)
     // Соберем ключи всех задач для даты $day
     $tasks_list_key_day = array_keys($tasks_date_end, $day);
 
-    // Запишим в переменную статус "Выполнено"
+    // Запишем в переменную статус "Выполнено"
     $check = true;
 
     // Соберем ключи всех задач со статусом "Выполнено"
@@ -311,7 +311,7 @@ function oldTasksFilter($tasks_list)
         // Соберем массив из ключи всех просроченных задач
         $tasks_list_key_old = array_keys($old_day);
 
-        // Запишим в переменную статус "Выполнено"
+        // Запишем в переменную статус "Выполнено"
         $check = true;
 
         // Соберем массив всех ключей для задач со статусом "Выполнено"
