@@ -79,7 +79,21 @@
 
             // Вывод всех задач
             if ($tasks_list) :
-                foreach ($tasks_list as $value) :
+
+                // Смещение по ключу в массиве задач
+                $offset_key = $task_one_page;
+
+                if ($_GET['page']) {
+                    // Вывод задач на странице с учетом пагинации
+                    $output_tasks_list = array_slice($tasks_list, (($_GET['page'] - 1) * 3), $offset_key, $preserve_keys = TRUE);
+                } else {
+                    // Вывод задач без пагинации
+                    $output_tasks_list = array_slice($tasks_list, ($_GET['page'] * 3), $offset_key, $preserve_keys = TRUE);
+                }
+                // Перепишем основной массив задач с учетом пагинации
+                $tasks_list = $output_tasks_list;
+
+                foreach ($tasks_list as $key => $value) :
 
                     if (!$show_complete_tasks && $value['status_task']) {
                         continue;
@@ -126,7 +140,7 @@
         </table>
 
         <!-- Pagination -->
-        <?php if ($items_count > $tasks_items) : debug($items_count); ?>
+        <?php if (($all_tasks > $task_one_page) && (!empty($tasks_list))) : ?>
 
             <div class="tasks-pagination">
                 <nav aria-label="Page navigation">
@@ -139,7 +153,8 @@
 
                         // Переберем массив $filters
                         foreach ($filters as $key) {
-                            // При совпадении значения массива $filters с ключем массива $_GET формируем ссылку на активный фильтр
+                            // При совпадении значения массива $filters с ключем массива $_GET
+                            // Формируем ссылку на активный фильтр
                             if ($_GET[$key]) {
                                 $filter = '&' . $key . '=1';
                             }

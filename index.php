@@ -87,6 +87,11 @@ if ($_GET['today']) {
 
     // Формируем массив задач на сегодня
     $tasks_list = tasksFilter($tasks_list, $today);
+
+    if ($tasks_list) {
+        // Количество задач, результат работы фильтра
+        $filter_all_tasks = count($tasks_list);
+    }
 }
 
 // Вывод фильтра для задачи "Завтра"
@@ -97,12 +102,25 @@ if ($_GET['tomorrow']) {
 
     // Формируем массив задач на завтра
     $tasks_list = tasksFilter($tasks_list, $tomorrow);
+
+    if ($tasks_list) {
+        // Количество задач, результат работы фильтра
+        $filter_all_tasks = count($tasks_list);
+    }
 }
 
 // Вывод фильтра для задач "Просроченные"
 if ($_GET['old']) {
     $tasks_list = oldTasksFilter($tasks_list);
+
+    if ($tasks_list) {
+        // Количество задач, результат работы фильтра
+        $filter_all_tasks = count($tasks_list);
+    }
 }
+
+echo 'задачи в фильтре <br>';
+debug($filter_all_tasks);
 
 // Класс для активного фильтра "Все задачи"
 $url_domen = $_SERVER['REQUEST_URI'] == "/";
@@ -136,8 +154,9 @@ $data_user = [
     'count_task'            => $count_task,
     'filters'               => $filters,
     'filter'                => $filter,
-    'items_count'           => $items_count,
-    'tasks_items'           => $tasks_items,
+    'all_tasks'             => $all_tasks,
+    'task_one_page'         => $task_one_page,
+    'filter_all_tasks'      => $filter_all_tasks,
 ];
 
 // Контентн для авторизированного пользователя

@@ -53,19 +53,13 @@ $projects = resQuerySQL($sql_projects, $connect);
  * * ПАГИНАЦИЯ
  */
 
-// Определим текущую страницу
-$cur_page = $_GET['page'] ?? 1;
-
-// Количество задач на странице
-$tasks_items = 3;
+// Все задачи (актуальные и выполненные)
+$complate_tasks = 't.status_task';
 
 // Количество задач для текущего пользователя с учетом статуса задачи (для расчета общего количества страниц)
 if (!isset($_GET['show_completed']) || $_GET['show_completed'] == 0) {
     // Только актуальные задачи
     $complate_tasks = 0;
-} else {
-    // Все задачи (актуальные и выполненные)
-    $complate_tasks = 't.status_task';
 }
 
 // Условие подсчета количества задач
@@ -78,7 +72,7 @@ if ($_GET['id']) {
                     AND u.user_id = $user_id
                     AND t.status_task = $complate_tasks";
 } else {
-    // Определим обшее количество задач для текущего пользователя во всех проектах
+    // Определим обшее количество задач для текущего пользователя для всех проектах
     $sql_cnt_tasks = "SELECT COUNT(*) as cnt FROM task t
                     JOIN user_reg u ON u.user_id = t.user_id
                     WHERE u.user_id = $user_id
@@ -89,14 +83,23 @@ $result = mysqli_query($connect, $sql_cnt_tasks);
 
 if ($result) {
     // Все задачи пользователя
-    $items_count = mysqli_fetch_assoc($result)['cnt'];
+    $all_tasks = mysqli_fetch_assoc($result)['cnt'];
 }
 
+echo 'всего задач<br>';
+debug($all_tasks);
+
+// Определим текущую страницу
+$cur_page = $_GET['page'] ?? 1;
+
+// Количество задач на странице
+$task_one_page = 3;
+
 // Сколько всего страниц (3 задач на страницу)
-$pages_count = ceil($items_count / $tasks_items);
+$pages_count = ceil($all_tasks / $task_one_page);
 
 // Смещение в зависимости от текущей страницы
-$offset = ($cur_page - 1) * $tasks_items;
+// $offset = ($cur_page - 1) * $task_one_page;
 
 // Заполним массив номерами всех страниц
 $pages = range(1, $pages_count);
@@ -122,8 +125,10 @@ $sql_task = "SELECT p.proj_name, t.task_id, t.status_task, t.title_task, t.link_
             WHERE u.user_id = $user_id
             AND p.proj_id = $proj_id
             AND t.status_task = $complate_tasks
-            ORDER BY t.task_id
-            DESC LIMIT $tasks_items OFFSET $offset";
+            ORDER BY t.task_id";
+
+// Выборка всех задач для пагинация
+// $sql_task .= " DESC LIMIT $task_one_page OFFSET $offset";
 
 // Результат запроса в виде массива
 $tasks_list = resQuerySQL($sql_task, $connect);
