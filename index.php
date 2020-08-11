@@ -44,7 +44,7 @@ $get_task_completed = (int)$_GET['task_completed'] ?? 0;
 // значение выполненных задач по умолчанию
 $show_completed_tasks = (int)$_GET['show_completed'] ?? 0;
 
-// Проверяем значение "Показывать выпонленные" на false
+// Проверяем значение "Показывать выполненные" на false
 // и назначаем противоположные для статуса задачи true
 if (!$show_completed_tasks) {
     $get_task_completed = 1;
@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
  *
  * * ФИЛЬТРЫ ДЛЯ ЗАДАЧ В ПРОЕКТЕ
  */
-
+debug($tasks_list);
 // Вывод фильтра для задачи "Повестка дня"
 if ($_GET['today']) {
 
@@ -101,7 +101,7 @@ if ($_GET['today']) {
 
     // Формируем массив задач на сегодня
     $tasks_list = tasksFilter($tasks_list, $today);
-
+    debug($tasks_list);
     if ($tasks_list) {
         // Количество задач, результат работы фильтра
         $filter_all_tasks = count($tasks_list);

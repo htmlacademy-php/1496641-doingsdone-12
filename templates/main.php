@@ -116,11 +116,7 @@
                         <td class="task__select">
                             <label class="checkbox task__checkbox">
                                 <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?= $value['status_task'] ? 'checked' : ''; ?>>
-
-                                <a class="checkbox__text" href="index.php?task_completed=<?= $get_task_completed; ?>&id_task=<?= $value['task_id'] ?><?= $show_completed_tasks ? '&show_completed=1' : '' ?>">
-
-                                    <?= htmlspecialchars($value['title_task']); ?>
-                                </a>
+                                <a class="checkbox__text" href="index.php?task_completed=<?= $get_task_completed; ?>&id_task=<?= $value['task_id'] ?><?= $show_completed_tasks ? '&show_completed=1' : '' ?>"><?= htmlspecialchars($value['title_task']); ?></a>
                             </label>
                         </td>
 

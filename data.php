@@ -17,7 +17,7 @@ date_default_timezone_set("Europe/Moscow");
 $db = [
     'host'      => 'localhost',
     'user'      => 'root',
-    'password'  => '',
+    'password'  => 'root',
     'database'  => 'doingsdone',
 ];
 
@@ -47,7 +47,7 @@ $sql_projects = "SELECT p.proj_id, p.proj_name FROM project p
 
 // Результат запроса в массив
 $projects = resQuerySQL($sql_projects, $connect);
-debug($projects);
+
 /**
  *
  * * ПАГИНАЦИЯ
