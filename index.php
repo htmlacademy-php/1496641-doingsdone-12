@@ -4,7 +4,7 @@ require_once 'functions.php';
 require_once 'data.php';
 
 // Добавлять в отчет все ошибки PHP
-error_reporting(-1);
+// error_reporting(-1);
 
 // Ошибка 404
 $page_404 = include_template('404.php', []);
@@ -37,7 +37,18 @@ if (!empty($tasks_list)) {
 
 // id задачи и статус задачи
 $get_task_id = (int)$_GET['id_task']; // id задачи
-$get_task_completed = (int)$_GET['task_completed']; // статус задачи 0 или 1
+
+// Значение статуса задачи по умолчанию (не выполнено)
+$get_task_completed = (int)$_GET['task_completed'] ?? 0;
+
+// значение выполненных задач по умолчанию
+$show_completed_tasks = (int)$_GET['show_completed'] ?? 0;
+
+// Проверяем значение "Показывать выпонленные" на false
+// и назначаем противоположные для статуса задачи true
+if (!$show_completed_tasks) {
+    $get_task_completed = 1;
+}
 
 // Проверим id задачи от пользователя с БД
 $check_id_task = in_array($get_task_id, $task_id);
@@ -69,11 +80,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 
     // Значение по умолчанию для задачи
-    $show_complete_tasks = 0;
+    $show_completed_tasks = 0;
 
     // Показываем выполненные задачи
     if ($_GET['show_completed']) {
-        $show_complete_tasks = 1;
+        $show_completed_tasks = 1;
     }
 }
 
@@ -134,6 +145,18 @@ if ($_GET['old']) {
 // Класс для активного фильтра "Все задачи"
 $url_domain = $_SERVER['REQUEST_URI'] == "/";
 
+// Запишем ключи массива $_GET для фильтров в новый массив
+$filters = ['all', 'today', 'tomorrow', 'old'];
+
+// Переберем массив $filters
+foreach ($filters as $key) {
+    // При совпадении значения массива $filters с ключом массива $_GET
+    // Формируем ссылку на активный фильтр
+    if ($_GET[$key]) {
+        $filter = '&' . $key . '=1';
+    }
+}
+
 /**
  *
  * * ПАГИНАЦИЯ
@@ -169,7 +192,7 @@ $data_user = [
     'tasks_list'            => $tasks_list,
     'count_tasks'           => $count_tasks,
     'valid_id'              => $valid_id,
-    'show_complete_tasks'   => $show_complete_tasks,
+    'show_completed_tasks'   => $show_completed_tasks,
     'page404'               => $page_404,
     'search'                => $search,
     'res_search'            => $res_search,

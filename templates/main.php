@@ -14,7 +14,7 @@
             <?php endforeach; ?>
         </nav>
 
-        <a class="button button--transparent button--plus content__side-button" href="/proj.php" target="project_add">Добавить проект</a>
+        <a class="button button--transparent button--plus content__side-button" href="/proj.php">Добавить проект</a>
 
     </section>
 
@@ -33,17 +33,17 @@
 
         <div class="tasks-controls">
             <nav class="tasks-switch">
-                <a href="index.php?<?= $_GET['id'] ? 'id=' . $_GET['id'] : '' ?>&all=1<?= $show_complete_tasks ? '&show_completed=1' : '' ?>" class="tasks-switch__item <?= $_GET['all'] ? 'tasks-switch__item--active' : '' ?>">Все задачи</a>
+                <a href="index.php?<?= $_GET['id'] ? 'id=' . $_GET['id'] : '' ?>&all=1<?= $show_completed_tasks ? '&show_completed=1' : '' ?>" class="tasks-switch__item <?= $_GET['all'] ? 'tasks-switch__item--active' : '' ?>">Все задачи</a>
 
-                <a href="index.php?<?= $_GET['id'] ? 'id=' . $_GET['id'] : '' ?>&today=1<?= $show_complete_tasks ? '&show_completed=1' : '' ?>" class="tasks-switch__item <?= $_GET['today'] ? 'tasks-switch__item--active' : '' ?>">Повестка дня</a>
+                <a href="index.php?<?= $_GET['id'] ? 'id=' . $_GET['id'] : '' ?>&today=1<?= $show_completed_tasks ? '&show_completed=1' : '' ?>" class="tasks-switch__item <?= $_GET['today'] ? 'tasks-switch__item--active' : '' ?>">Повестка дня</a>
 
-                <a href="index.php?<?= $_GET['id'] ? 'id=' . $_GET['id'] : '' ?>&tomorrow=1<?= $show_complete_tasks ? '&show_completed=1' : '' ?>" class="tasks-switch__item <?= $_GET['tomorrow'] ? 'tasks-switch__item--active' : '' ?>">Завтра</a>
+                <a href="index.php?<?= $_GET['id'] ? 'id=' . $_GET['id'] : '' ?>&tomorrow=1<?= $show_completed_tasks ? '&show_completed=1' : '' ?>" class="tasks-switch__item <?= $_GET['tomorrow'] ? 'tasks-switch__item--active' : '' ?>">Завтра</a>
 
-                <a href="index.php?<?= $_GET['id'] ? 'id=' . $_GET['id'] : '' ?>&old=1<?= $show_complete_tasks ? '&show_completed=1' : '' ?>" class="tasks-switch__item <?= $_GET['old'] ? 'tasks-switch__item--active' : '' ?>">Просроченные</a>
+                <a href="index.php?<?= $_GET['id'] ? 'id=' . $_GET['id'] : '' ?>&old=1<?= $show_completed_tasks ? '&show_completed=1' : '' ?>" class="tasks-switch__item <?= $_GET['old'] ? 'tasks-switch__item--active' : '' ?>">Просроченные</a>
             </nav>
 
             <label class="checkbox">
-                <input class="checkbox__input visually-hidden show_completed <?= $show_complete_tasks ? 'checked' : '' ?>" type="checkbox" <?= $show_complete_tasks ? 'checked' : '' ?>>
+                <input class="checkbox__input visually-hidden show_completed <?= $show_completed_tasks ? 'checked' : '' ?>" type="checkbox" <?= $show_completed_tasks ? 'checked' : '' ?>>
                 <span class="checkbox__text">Показывать выполненные</span>
             </label>
         </div>
@@ -61,7 +61,7 @@
                 }
             }
 
-            // Соберем новый одномерный массив со значением proj_id
+            // Соберем новый одномерный массив со значением id проектов
             foreach ($projects as $key => $value) {
                 $valid_id[] = $value['proj_id'];
             }
@@ -95,7 +95,7 @@
 
                 foreach ($tasks_list as $key => $value) :
 
-                    if (!$show_complete_tasks && $value['status_task']) {
+                    if (!$show_completed_tasks && $value['status_task']) {
                         continue;
                     }
 
@@ -117,9 +117,7 @@
                             <label class="checkbox task__checkbox">
                                 <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?= $value['status_task'] ? 'checked' : ''; ?>>
 
-
-                                <a class="checkbox__text" href="index.php?task_completed=<?= $value['status_task'] ? 0 : 1; ?>&id_task=<?= $value['task_id'] ?>">
-
+                                <a class="checkbox__text" href="index.php?task_completed=<?= $get_task_completed; ?>&id_task=<?= $value['task_id'] ?><?= $show_completed_tasks ? '&show_completed=1' : '' ?>">
 
                                     <?= htmlspecialchars($value['title_task']); ?>
                                 </a>
@@ -183,7 +181,7 @@
                         ?>
 
                         <li class="page-item">
-                            <a class="page-link" href="<?= $_GET['id'] ? '?id=' . $_GET['id'] . '&page=' . $pages_prev : '?page=' . $pages_prev; ?><?= $filter; ?><?= $show_complete_tasks ? '&show_completed=1' : '' ?>" aria-label="Previous">
+                            <a class="page-link" href="<?= $_GET['id'] ? '?id=' . $_GET['id'] . '&page=' . $pages_prev : '?page=' . $pages_prev; ?><?= $filter; ?><?= $show_completed_tasks ? '&show_completed=1' : '' ?>" aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                                 <span class="sr-only">Назад</span>
                             </a>
@@ -192,13 +190,13 @@
                         <?php foreach ($pages as $page) : ?>
 
                             <li class="page-item <?= ($page == $cur_page) ? 'active' : '' ?>">
-                                <a class="page-link" href="<?= $_GET['id'] ? '?id=' . $_GET['id'] . '&page=' . $page : '?page=' . $page ?><?= $filter; ?><?= $show_complete_tasks ? '&show_completed=1' : '' ?>"><?= $page; ?></a>
+                                <a class="page-link" href="<?= $_GET['id'] ? '?id=' . $_GET['id'] . '&page=' . $page : '?page=' . $page ?><?= $filter; ?><?= $show_completed_tasks ? '&show_completed=1' : '' ?>"><?= $page; ?></a>
                             </li>
 
                         <?php endforeach; ?>
 
                         <li class="page-item">
-                            <a class="page-link" href="<?= $_GET['id'] ? '?id=' . $_GET['id'] . '&page=' . $pages_next  : '?page=' . $pages_next; ?><?= $filter; ?><?= $show_complete_tasks ? '&show_completed=1' : '' ?>" aria-label="Next">
+                            <a class="page-link" href="<?= $_GET['id'] ? '?id=' . $_GET['id'] . '&page=' . $pages_next  : '?page=' . $pages_next; ?><?= $filter; ?><?= $show_completed_tasks ? '&show_completed=1' : '' ?>" aria-label="Next">
                                 <span class="sr-only">Вперед</span>
                                 <span aria-hidden="true">&raquo;</span>
                             </a>

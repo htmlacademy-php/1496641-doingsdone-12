@@ -47,7 +47,7 @@ $sql_projects = "SELECT p.proj_id, p.proj_name FROM project p
 
 // Результат запроса в массив
 $projects = resQuerySQL($sql_projects, $connect);
-
+debug($projects);
 /**
  *
  * * ПАГИНАЦИЯ
