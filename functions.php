@@ -231,7 +231,6 @@ function debug($var)
  * Выводим задачи для фильтров "Повестка дня" и "Завтра"
  *
  * @param array $tasks_list Массив всех задач
- * @param $day string Дата для вывода искомых задач
  * @return array $filter_task_list Массив задач для фильтра "Повестка дня" и "Завтра"
  */
 
@@ -240,33 +239,15 @@ function tasksFilter($tasks_list, $day)
     // Возвращаем одномерный нумерованный массив, key -> date окончания задач
     $tasks_date_end = array_column($tasks_list, 'date_task_end');
 
-    // Возвращаем одномерный нумерованный массив, key -> status task задачи
-    $status_task = array_column($tasks_list, 'status_task');
-
-    /**
-     * Выберем ключи согласно даты $day и статусом "Выполнено"
-     * Ключи те же, что и в основном массиве всех задач $tasks_list
-     */
-
     // Соберем ключи всех задач для даты $day
     $tasks_list_key_day = array_keys($tasks_date_end, $day);
 
-    // Запишем в переменную статус "Выполнено"
-    $check = true;
-
-    // Соберем ключи всех задач со статусом "Выполнено"
-    $tasks_list_key_check = array_keys($status_task, $check);
-
-    // Сольем два массива в один (key для $day + key для $check)
-    $arr_res = array_merge($tasks_list_key_day, $tasks_list_key_check);
-
     /**
-     * Соберем новый массив задач из ключей даты $day + статус $check
-     * Запишем в новый массив все данные задачи массива $tasks_list,
-     * но только для ключей в значениях $value
+     * Соберем новый массив всех задач, 
+     * дата которых равна дате поданной на вход функции
      */
 
-    foreach ($arr_res as $key => $value) {
+    foreach ($tasks_list_key_day as $key => $value) {
         $filter_task_list[$value] = $tasks_list[$value];
     }
 
@@ -278,7 +259,8 @@ function tasksFilter($tasks_list, $day)
  * Выводим задачи для фильтра "Просроченные"
  *
  * @param array $tasks_list массив всех задач
- * @return array $filter_task_list_old массив задач для фильтра "Просроченные"
+ * @return array $filter_task_list_old массив задач 
+ * с просроченными датами отоносительно текущей даты
  */
 
 function oldTasksFilter($tasks_list)
@@ -299,38 +281,20 @@ function oldTasksFilter($tasks_list)
         }
     }
 
-    // Возвращаем одномерный нумерованный массив key -> status задачи
-    $status_task = array_column($tasks_list, 'status_task');
-
-    /**
-     * Выберем ключи для просроченных дат и со статусом "Выполнено"
-     * Ключи те же, что и в основном массиве всех задач $tasks_list
-     */
-
     if ($old_day) {
         // Соберем массив из ключи всех просроченных задач
         $tasks_list_key_old = array_keys($old_day);
 
-        // Запишем в переменную статус "Выполнено"
-        $check = true;
-
-        // Соберем массив всех ключей для задач со статусом "Выполнено"
-        $tasks_list_key_check = array_keys($status_task, $check);
-
-        // Сольем два массива в один (key for $old day + key for $check)
-        $arr_res = array_merge($tasks_list_key_old, $tasks_list_key_check);
-
         /**
-         * Соберем новый массив задач из ключей только для просроченных дат + статус задачи $check
-         * Запишем в новый массив все данные задачи массива $tasks_list,
-         * но только для ключей в значениях $value
+         * Соберем новый массив всех задач, 
+         * дата которых меньше текущей даты
          */
 
-        foreach ($arr_res as $key => $value) {
+        foreach ($tasks_list_key_old as $key => $value) {
             $filter_task_list_old[$value] = $tasks_list[$value];
         }
 
-        // Вернем массив задач согласно фильтра
+        // Вернем массив просроченных задач
         return $filter_task_list_old;
     }
 }

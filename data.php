@@ -54,13 +54,13 @@ $projects = resQuerySQL($sql_projects, $connect);
  */
 
 // Все задачи (актуальные и выполненные)
-$not_completed_tasks = 't.status_task';
+$status_completed_tasks = 't.status_task';
 
 
 // Количество задач для текущего пользователя с учетом статуса задачи (для расчета общего количества страниц)
 if (!isset($_GET['show_completed']) || $_GET['show_completed'] == 0) {
     // Только актуальные задачи
-    $not_completed_tasks = 0;
+    $status_completed_tasks = 0;
 }
 
 // Условие подсчета количества задач
@@ -71,13 +71,13 @@ if ($_GET['id']) {
                     JOIN user_reg u ON u.user_id = t.user_id
                     WHERE p.proj_id = {$_GET['id']}
                     AND u.user_id = $user_id
-                    AND t.status_task = $not_completed_tasks";
+                    AND t.status_task = $status_completed_tasks";
 } else {
     // Определим общее количество задач для текущего пользователя для всех проектах
     $sql_cnt_tasks = "SELECT COUNT(*) as cnt FROM task t
                     JOIN user_reg u ON u.user_id = t.user_id
                     WHERE u.user_id = $user_id
-                    AND t.status_task = $not_completed_tasks";
+                    AND t.status_task = $status_completed_tasks";
 }
 
 $result = mysqli_query($connect, $sql_cnt_tasks);
@@ -89,14 +89,18 @@ if ($result) {
 
 /**
  *
- * * ВЫВОД ЗАДАЧ СООТВЕТСТВУЮЩИХ СВОЕМУ ПРОЕКТУ
+ * * ВЫВОД ЗАДАЧ
  */
 
-// Выборка задач из БД по значению $_GET['id']
+// Выборка задач из БД для отдельного проекта
 if (!empty($_GET['id'])) {
+
     $proj_id = $_GET['id'];
-    settype($proj_id, 'integer'); // Устанавливаем тип integer для $_GET
+
+    // Устанавливаем тип integer для $_GET
+    settype($proj_id, 'integer');
 } else {
+    // Все проекты для выборки
     $proj_id = 'p.proj_id';
 };
 
@@ -107,7 +111,7 @@ $sql_task = "SELECT p.proj_name, t.task_id, t.status_task, t.title_task, t.link_
             JOIN user_reg u ON u.user_id = t.user_id
             WHERE u.user_id = $user_id
             AND p.proj_id = $proj_id
-            AND t.status_task = $not_completed_tasks
+            AND t.status_task = $status_completed_tasks
             ORDER BY t.task_id";
 
 // Результат запроса в виде массива

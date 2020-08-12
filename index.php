@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
     }
 
-    // Значение по умолчанию для задачи
+    // Значение по умолчанию для "Показывать выполненные"
     $show_completed_tasks = 0;
 
     // Показываем выполненные задачи
@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
  *
  * * ФИЛЬТРЫ ДЛЯ ЗАДАЧ В ПРОЕКТЕ
  */
-debug($tasks_list);
+
 // Вывод фильтра для задачи "Повестка дня"
 if ($_GET['today']) {
 
@@ -101,12 +101,12 @@ if ($_GET['today']) {
 
     // Формируем массив задач на сегодня
     $tasks_list = tasksFilter($tasks_list, $today);
-    debug($tasks_list);
+
     if ($tasks_list) {
         // Количество задач, результат работы фильтра
         $filter_all_tasks = count($tasks_list);
 
-        // Перепишем общее количество задач согласно фильтра
+        // Перепишем общее количество задач согласно фильтра для пагинации
         $all_tasks =  $filter_all_tasks;
     }
 }
@@ -124,7 +124,7 @@ if ($_GET['tomorrow']) {
         // Количество задач, результат работы фильтра
         $filter_all_tasks = count($tasks_list);
 
-        // Перепишем общее количество задач согласно фильтра
+        // Перепишем общее количество задач согласно фильтра для пагинации
         $all_tasks =  $filter_all_tasks;
     }
 }
@@ -137,7 +137,7 @@ if ($_GET['old']) {
         // Количество задач, результат работы фильтра
         $filter_all_tasks = count($tasks_list);
 
-        // Перепишем общее количество задач согласно фильтра
+        // Перепишем общее количество задач согласно фильтра для пагинации
         $all_tasks =  $filter_all_tasks;
     }
 }
@@ -192,7 +192,7 @@ $data_user = [
     'tasks_list'            => $tasks_list,
     'count_tasks'           => $count_tasks,
     'valid_id'              => $valid_id,
-    'show_completed_tasks'   => $show_completed_tasks,
+    'show_completed_tasks'  => $show_completed_tasks,
     'page404'               => $page_404,
     'search'                => $search,
     'res_search'            => $res_search,
