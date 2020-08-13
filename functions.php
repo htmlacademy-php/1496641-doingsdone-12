@@ -275,7 +275,7 @@ function oldTasksFilter($tasks_list)
     foreach ($tasks_date_end as $key => $value) {
 
         // Проверим даты задач и просроченные задачи соберем в новый массив $old_day
-        if (strtotime($value) < $today) {
+        if ($value != NULL && strtotime($value) < $today) {
             // Соберем новый массив из ключей просроченных задач и дат окончания задач
             $old_day[$key] = [$value];
         }

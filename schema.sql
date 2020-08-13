@@ -36,10 +36,3 @@ CREATE TABLE task (
   CONSTRAINT project_task FOREIGN KEY (proj_id) REFERENCES project (proj_id) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT user_task FOREIGN KEY (user_id) REFERENCES user_reg (user_id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB;
--- Создаем полнотекстовый поиск таблицы task для поля title_task
-ALTER TABLE task
-ADD FULLTEXT (title_task);
--- Составляем запрос полнотекстового поиска
-SELECT *
-FROM task
-WHERE MATCH (title_task) AGAINST ('часть слова*' IN BOOLEAN MODE);

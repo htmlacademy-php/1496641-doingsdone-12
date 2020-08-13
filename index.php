@@ -3,9 +3,6 @@
 require_once 'functions.php';
 require_once 'data.php';
 
-// Добавлять в отчет все ошибки PHP
-// error_reporting(-1);
-
 // Ошибка 404
 $page_404 = include_template('404.php', []);
 

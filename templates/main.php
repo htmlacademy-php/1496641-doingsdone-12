@@ -54,10 +54,16 @@
 
             <?php
 
-            // Выводим сообщение если нет задач в проекте
-            foreach ($projects as $key => $value) {
+            // Выводим сообщения
+            foreach ($projects as $project => $value) {
+                // Выводим сообщение если нет задач в проекте
                 if (($_GET['id'] == $value['proj_id']) && !$value['count']) {
                     echo '<span style="font-size: 16px; font-weight: bold;">Нет задач для этого проекта</span>';
+                }
+
+                // Выводим сообщение если нет задач в фильтре
+                if (($_GET['id'] == $value['proj_id']) && $value['count'] && !$tasks_list) {
+                    echo '<span style="font-size: 16px; font-weight: bold;">Нет задач для этого фильтра</span>';
                 }
             }
 
