@@ -3,13 +3,16 @@
 require_once('functions.php');
 require_once('data.php');
 
-// Если пользователь зарегестрирован то редирект на главную
+// Если пользователь зарегистрирован то редирект на главную
 if ($us_data) {
     header("Location: index.php");
     exit();
 }
 
-// TODO ВАЛИДАЦИЯ ФОРМЫ РЕГИСТРАЦИИ
+/**
+ *
+ * *ВАЛИДАЦИЯ ФОРМЫ РЕГИСТРАЦИИ
+ */
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -79,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Добавим проект "Входящие" для нового пользователя
             $sql_add_proj = mysqli_query($connect, "INSERT INTO project (user_id, proj_name) VALUES ('$us_last_id', 'Входящие')");
 
-            // Выберем все данные нового ползователя
+            // Выберем все данные нового пользователя
             $sql = "SELECT * FROM user_reg WHERE user_id = '$us_last_id'";
 
             // Результат в виде массива
@@ -91,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Закрываем подключение
             mysqli_close($connect);
 
-            // Запишем в сесию данные о пользователе
+            // Запишем в сессию данные о пользователе
             $us_data = $user;
         }
 
@@ -104,7 +107,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-// TODO СОБИРАЕМ ШАБЛОН - РЕГИСТРАЦИЯ НА САЙТЕ
+/**
+ *
+ * * СОБИРАЕМ ШАБЛОН - РЕГИСТРАЦИЯ НА САЙТЕ
+ */
 
 // Данные для передачи в шаблон
 $reg_data = [
@@ -114,10 +120,10 @@ $reg_data = [
     'form' => $form,
 ];
 
-// Контентная часть, форма регистрации на сайте
+// Данные для передачи в шаблон
 $content_reg = include_template('reg.php', $reg_data);
 
-// Подключаем sidebar для страниц регестрации
+// Подключаем sidebar для страниц регистрации
 $sidebar = ' container--with-sidebar';
 
 // Шаблон страницы регистрации на сайте

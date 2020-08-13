@@ -3,7 +3,10 @@
 require_once('functions.php');
 require_once('data.php');
 
-// TODO ВАЛИДАЦИЯ ФОРМЫ ЗАДАЧА
+/**
+ *
+ * * ВАЛИДАЦИЯ ФОРМЫ ЗАДАЧА
+ */
 
 $form = $_POST;
 
@@ -47,10 +50,10 @@ if (isset($form['submit'])) {
     if (isset($_FILES['file'])) {
 
         // Присваиваем значения переменным
-        $fileName = trim($_FILES['file']['name']);
-        $fileSize = $_FILES['file']['size'];
-        $fileTmp = $_FILES['file']['tmp_name'];
-        $fileErr = $_FILES['file']['error'];
+        $fileName   = trim($_FILES['file']['name']);
+        $fileSize   = $_FILES['file']['size'];
+        $fileTmp    = $_FILES['file']['tmp_name'];
+        $fileErr    = $_FILES['file']['error'];
 
         // Определим допустимые типы файлов
         $fileTypes = array('png', 'xlsx', 'xls', 'doc', 'docx', 'pdf', 'jpg', 'csv', 'txt');
@@ -70,22 +73,16 @@ if (isset($form['submit'])) {
             // Формируем имя файла + расширение
             $newFileName .= '.' . $fileExt;
 
-            // Определим протокол соединения
-            $httpHttps = !empty($_SERVER['HTTPS']) ? "https://" : "http://";
-
-            // Формируем ссылку на файл (протокол + домен + директория + файл.расширение)
-            $linkFile = $httpHttps . $_SERVER['SERVER_NAME'] . '/' . $dir . $newFileName;
+            // Формируем ссылку на файл (директория + файл.расширение)
+            $linkFile = $dir . $newFileName;
         } elseif ($fileSize > 0) {
             $errors['file'] = 'Фокус не пройдет :-) файл не разрешен';
         }
 
         // Ошибки сервера которые могут быть
         $fileUploadErrors = [
-            // 0 => 'Ошибок не возникло, файл был успешно загружен на сервер',
             1 => 'Размер файла превысил 2Мб',
-            // 2 => 'Размер файла превысил значение MAX_FILE_SIZE, указанное в HTML-форме',
             3 => 'Загружаемый файл был получен только частично',
-            // 4 => 'Файл не был загружен',
             6 => 'Отсутствует временная папка',
             7 => 'Не удалось записать файл на диск',
             8 => 'Не допустимое расширение файла',
@@ -103,7 +100,10 @@ if (isset($form['submit'])) {
     }
 }
 
-// TODO РАБОТА С MySQL query (подготавливаем и выполняем запрос)
+/**
+ *
+ * * ДОБАВЛЕНИЕ ЗАДАЧИ В ПРОЕКТ
+ */
 
 if (!empty($form) && empty($errors)) {
 
@@ -141,12 +141,15 @@ if (!empty($form) && empty($errors)) {
     header('location: index.php');
 }
 
-// TODO СОБИРАЕМ ШАБЛОН - ДОБАВЛЕНИЕ ЗАДАЧИ
+/**
+ *
+ * * ФОРМИРУЕМ ШАБЛОН
+ */
 
 // Проверим авторизацию на сайте (наличие данных в сессии)
 if ($us_data['user_id']) {
 
-    // Контентная часть
+    // Данные для шаблона
     $page_content = include_template('add.php', [
         'projects'      => $projects,
         'count_tasks'   => $count_tasks,
@@ -159,6 +162,7 @@ if ($us_data['user_id']) {
     $layout_content = include_template('layout.php', [
         'content' =>  $page_content,
         'title'   => 'Дела в порядке',
+        'us_data' => $us_data,
     ]);
 
     print($layout_content);

@@ -16,7 +16,7 @@
         <div class="container <?= $sidebar; ?>">
             <header class="main-header">
                 <a href="/">
-                    <img src="../img/logo.png" width="153" height="42" alt="Логитип Дела в порядке">
+                    <img src="img/logo.png" width="153" height="42" alt="Логотип Дела в порядке">
                 </a>
 
                 <div class="main-header__side">
@@ -74,7 +74,7 @@
                 <span class="visually-hidden">Разработано:</span>
 
                 <a href="https://htmlacademy.ru/intensive/php">
-                    <img src="../img/htmlacademy.svg" alt="HTML Academy" width="118" height="40">
+                    <img src="img/htmlacademy.svg" alt="HTML Academy" width="118" height="40">
                 </a>
             </div>
         </div>

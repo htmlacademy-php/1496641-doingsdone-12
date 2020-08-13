@@ -26,8 +26,8 @@ function is_date_valid(string $date): bool
  * Создает подготовленное выражение на основе готового SQL запроса и переданных данных
  *
  * @param $link mysqli Ресурс соединения
- * @param $sql string SQL запрос с плейсхолдерами вместо значений
- * @param array $data Данные для вставки на место плейсхолдеров
+ * @param $sql string SQL запрос и плейсхолдер вместо значений
+ * @param array $data Данные для вставки на место плейсхолдера
  *
  * @return mysqli_stmt Подготовленное выражение
  */
@@ -95,7 +95,7 @@ function db_get_prepare_stmt($link, $sql, $data = [])
  * @param string $two Форма множественного числа для 2, 3, 4: яблока, часа, минуты
  * @param string $many Форма множественного числа для остальных чисел
  *
- * @return string Рассчитанная форма множественнго числа
+ * @return string Рассчитанная форма множественного числа
  */
 function get_noun_plural_form(int $number, string $one, string $two, string $many): string
 {

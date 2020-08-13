@@ -1,27 +1,6 @@
 <?php
 
 /**
- * Счетчик задач в проекте
- * @param array $count_task массив задач в каждом проекте
- * @param string $str_cat название задачи
- * @return string количество задач в проекте, где нет задач возвращаем 0
- */
-
-function countTask($count_task, $str_cat)
-{
-    if ($count_task) {
-        foreach ($count_task as $key => $value) {
-            foreach ($value as $k => $v) {
-                if ($value['proj_name'] === $str_cat) {
-                    return $value['count'];
-                }
-            }
-        }
-    }
-    return 0;
-}
-
-/**
  * Подключает шаблон, передает туда данные и возвращает итоговый HTML контент
  * @param string $name Путь к файлу шаблона относительно папки templates
  * @param array $data Ассоциативный массив с данными для шаблона
@@ -82,7 +61,6 @@ function resQuerySQL($sql, $connect)
     // Проверим результат извлечения данных
     if ($result) {
         $sql_table = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        // $sql_table = mysqli_fetch_array($result, MYSQLI_ASSOC);
     }
     // Возвращаем результат запроса в виде массива
     return $sql_table;
@@ -136,7 +114,7 @@ function resQueryUser($sql, $connect)
  * Выводит количество выбранных рядов для sql запроса SELECT
  * @param string $sql запрос к БД
  * @param array $connect ассоциативный массив с параметрами для подключения к БД
- * @return int $num_rows количест рядов выборки сформированный на основании запроса $sql
+ * @return int $num_rows количество рядов выборки сформированный на основании запроса $sql
  */
 
 function sqlNumRows($sql, $connect)
@@ -186,8 +164,8 @@ function is_date_valid(string $date): bool
  * Создает подготовленное выражение на основе готового SQL запроса и переданных данных
  *
  * @param $link mysqli Ресурс соединения
- * @param $sql string SQL запрос с плейсхолдерами вместо значений
- * @param array $data Данные для вставки на место плейсхолдеров
+ * @param $sql string SQL запрос с плейсхолдер вместо значений
+ * @param array $data Данные для вставки на место плейсхолдера
  *
  * @return mysqli_stmt Подготовленное выражение
  */
@@ -233,4 +211,90 @@ function db_get_prepare_stmt($link, $sql, $data = [])
     }
 
     return $stmt;
+}
+
+
+/**
+ * Debug - отладка кода, форматирование массивов при выводе
+ *
+ * @param $var - массив для вывода
+ */
+
+function debug($var)
+{
+    echo '<pre>';
+    var_dump($var);
+    echo '</pre>';
+}
+
+/**
+ * Выводим задачи для фильтров "Повестка дня" и "Завтра"
+ *
+ * @param array $tasks_list Массив всех задач
+ * @return array $filter_task_list Массив задач для фильтра "Повестка дня" и "Завтра"
+ */
+
+function tasksFilter($tasks_list, $day)
+{
+    // Возвращаем одномерный нумерованный массив, key -> date окончания задач
+    $tasks_date_end = array_column($tasks_list, 'date_task_end');
+
+    // Соберем ключи всех задач для даты $day
+    $tasks_list_key_day = array_keys($tasks_date_end, $day);
+
+    /**
+     * Соберем новый массив всех задач, 
+     * дата которых равна дате поданной на вход функции
+     */
+
+    foreach ($tasks_list_key_day as $key => $value) {
+        $filter_task_list[$value] = $tasks_list[$value];
+    }
+
+    // Вернем массив задач согласно фильтра
+    return $filter_task_list;
+}
+
+/**
+ * Выводим задачи для фильтра "Просроченные"
+ *
+ * @param array $tasks_list массив всех задач
+ * @return array $filter_task_list_old массив задач 
+ * с просроченными датами отоносительно текущей даты
+ */
+
+function oldTasksFilter($tasks_list)
+{
+    // Сегодня - юникс
+    $today = strtotime(date("Y-m-d"));
+
+    // Возвращаем одномерный нумерованный массив, key -> date окончания задач
+    $tasks_date_end = array_column($tasks_list, 'date_task_end');
+
+    // Переберем массив всех задач и выберем просроченные задачи
+    foreach ($tasks_date_end as $key => $value) {
+
+        // Проверим даты задач и просроченные задачи соберем в новый массив $old_day
+        if ($value != NULL && strtotime($value) < $today) {
+            // Соберем новый массив из ключей просроченных задач и дат окончания задач
+            $old_day[$key] = [$value];
+        }
+    }
+
+    if ($old_day) {
+        // Соберем массив из ключи всех просроченных задач
+        $tasks_list_key_old = array_keys($old_day);
+
+        /**
+         * Соберем новый массив всех задач, 
+         * дата которых меньше текущей даты
+         */
+
+        foreach ($tasks_list_key_old as $key => $value) {
+            $filter_task_list_old[$value] = $tasks_list[$value];
+        }
+
+        // Вернем массив просроченных задач
+        return $filter_task_list_old;
+    }
 }

@@ -3,19 +3,20 @@
 require_once('functions.php');
 require_once('data.php');
 
-
-// TODO СОБИРАЕМ ШАБЛОН - РЕГИСТРАЦИЯ НА САЙТЕ
+/**
+ *
+ * * СОБИРАЕМ ШАБЛОН - ГОСТЬ
+ */
 
 // Данные для передачи в шаблон
 $guest_data = [];
 
-// Контентная часть
+// Данные для шаблона
 $content_reg = include_template('guest.php', $guest_data);
 
 // Шаблон страницы
 $layout = include_template('layout.php', [
     'content'   =>  $content_reg,
-    // 'title'     => 'Document',
 ]);
 
 print($layout);

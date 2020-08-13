@@ -3,13 +3,16 @@
 require_once('functions.php');
 require_once('data.php');
 
-// Если пользователь зарегестрирован то редирект на главную
+// Если пользователь зарегистрирован то редирект на главную
 if ($us_data) {
     header("Location: index.php");
     exit();
 }
 
-// TODO ВАЛИДАЦИЯ ФОРМЫ АВТОРИЗАЦИИ
+/**
+ *
+ * * ВАЛИДАЦИЯ ФОРМЫ АВТОРИЗАЦИИ
+ */
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -52,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Результат подготовленного запроса в массив
         $user = resPreparedQuerySQL($connect, $stmt);
 
-        // Запишем в сесию данные о пользователе
+        // Запишем в сессию данные о пользователе
         $us_data = $user;
 
         // Если нет результата выборки по указанному email значит ошибка
@@ -67,10 +70,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Запишем пароль в переменную
         $us_pass = $us_data['pass'];
 
-        // Верефикация пароля
+        // Верификация пароля
         $pass = password_verify($form['password'], $us_pass);
 
-        // Проверим хэш пароля и откроемм сессию если совпадение
+        // Проверим хэш пароля и откроем сессию если совпадение
         if ($pass) {
             $_SESSION['user'] = $us_data;
             header("Location: index.php");
@@ -88,7 +91,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-// TODO СОБИРАЕМ ШАБЛОН - АВТОРИЗАЦИЯ НА САЙТЕ
+/**
+ *
+ * * СОБИРАЕМ ШАБЛОН - АВТОРИЗАЦИЯ НА САЙТЕ
+ */
 
 // Данные для передачи в шаблон
 $auth_data = [
@@ -99,7 +105,7 @@ $auth_data = [
 // Контент страницы авторизации на сайте
 $content_auth = include_template('auth.php', $auth_data);
 
-// Подключаем sidebar для страниц регестрации
+// Подключаем sidebar для страниц регистрации
 $sidebar = ' container--with-sidebar';
 
 // Шаблон страницы авторизации на сайте
