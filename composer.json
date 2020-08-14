@@ -1,0 +1,13 @@
+{
+    "name": "wolternet/1496641-doingsdone-12",
+    "description": "Website doingsdone",
+    "authors": [
+        {
+            "name": "Denis Gerc",
+            "email": "denisgerc178@gmail.com"
+        }
+    ],
+    "require": {
+        "swiftmailer/swiftmailer": "^6.2"
+    }
+}
