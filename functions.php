@@ -243,7 +243,7 @@ function tasksFilter($tasks_list, $day)
     $tasks_list_key_day = array_keys($tasks_date_end, $day);
 
     /**
-     * Соберем новый массив всех задач, 
+     * Соберем новый массив всех задач,
      * дата которых равна дате поданной на вход функции
      */
 
@@ -259,8 +259,8 @@ function tasksFilter($tasks_list, $day)
  * Выводим задачи для фильтра "Просроченные"
  *
  * @param array $tasks_list массив всех задач
- * @return array $filter_task_list_old массив задач 
- * с просроченными датами отоносительно текущей даты
+ * @return array $filter_task_list_old массив задач
+ * с просроченными датами относительно текущей даты
  */
 
 function oldTasksFilter($tasks_list)
@@ -286,7 +286,7 @@ function oldTasksFilter($tasks_list)
         $tasks_list_key_old = array_keys($old_day);
 
         /**
-         * Соберем новый массив всех задач, 
+         * Соберем новый массив всех задач,
          * дата которых меньше текущей даты
          */
 
