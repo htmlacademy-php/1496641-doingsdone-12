@@ -15,7 +15,7 @@ $transport->setPassword('b25f5ff5f49670');
 
 $mailer = new Swift_Mailer($transport);
 
-$sql = 'SELECT user_id, email, us_name FROM user_reg';
+$sql = 'SELECT * FROM user_reg';
 
 $res = mysqli_query($connect, $sql);
 
