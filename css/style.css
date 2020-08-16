@@ -140,6 +140,7 @@ a:focus {
   color: #6e45e2;
   border: 1px solid #d7dbe8;
   cursor: pointer;
+  margin-top: 15px;
 }
 
 .button--transparent:hover,
@@ -271,7 +272,7 @@ a:focus {
 }
 
 .main-navigation__list {
-  margin: 0 0 0 -8px;
+  margin: 0 0 0 0;
   padding: 0;
 
   list-style: none;
@@ -866,4 +867,9 @@ a:focus {
 .pagination-sm .page-item:last-child .page-link {
   border-top-right-radius: 0.2rem;
   border-bottom-right-radius: 0.2rem;
+}
+
+#project {
+  height: 150px;
+  margin-bottom: 15px;
 }

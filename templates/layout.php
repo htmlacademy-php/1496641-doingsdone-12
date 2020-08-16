@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/flatpickr.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="js/jquery.nicescroll.min.js"></script>
 </head>
 
 <body>
@@ -91,6 +93,15 @@
 
     <script src="flatpickr.js"></script>
     <script src="script.js"></script>
+    <script>
+        $(document).ready(
+            function() {
+                $("#project").niceScroll({
+                    cursorcolor: "#7e55f2"
+                });
+            }
+        );
+    </script>
 </body>
 
 </html>
