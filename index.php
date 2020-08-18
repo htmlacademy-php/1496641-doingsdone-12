@@ -68,10 +68,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $stmt = db_get_prepare_stmt($connect, $sql_task_true, $data);
 
         // Выполнение подготовленного запроса
-        $res = mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_execute($stmt);
 
         // После выполнения подготовленного запроса редирект
-        if ($res) {
+        if ($result) {
             header("Location: index.php");
         }
     }
@@ -187,7 +187,7 @@ $pages = range(1, $pages_count);
 $data_user = [
     'projects'              => $projects,
     'tasks_list'            => $tasks_list,
-    'count_tasks'           => $count_tasks,
+    // 'count_tasks'           => $count_tasks,
     'valid_id'              => $valid_id,
     'show_completed_tasks'  => $show_completed_tasks,
     'page404'               => $page_404,
@@ -204,7 +204,7 @@ $data_user = [
     'cur_page'              => $cur_page,
     'pages_prev'            => $pages_prev,
     'pages_next'            => $pages_next,
-    'count_task'            => $count_task,
+    // 'count_task'            => $count_task,
     'filters'               => $filters,
     'filter'                => $filter,
     'all_tasks'             => $all_tasks,

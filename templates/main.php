@@ -3,7 +3,7 @@
 
         <h2 class="content__side-heading">Проекты</h2>
 
-        <div id="project">
+        <div id="projects">
             <nav class="main-navigation">
                 <?php foreach ($projects as $key => $value) : ?>
                     <ul class="main-navigation__list">

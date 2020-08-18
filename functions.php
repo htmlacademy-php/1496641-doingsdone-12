@@ -78,15 +78,12 @@ function resPreparedQuerySQL($connect, $stmt)
     mysqli_stmt_execute($stmt);
 
     // Получим результат из подготовленного запроса
-    $res = mysqli_stmt_get_result($stmt);
-
-    // Двумерный ассоциативный массив
-    // $res = mysqli_fetch_all($res, MYSQLI_ASSOC);
+    $result = mysqli_stmt_get_result($stmt);
 
     // Одномерный ассоциативный массив
-    $res = mysqli_fetch_array($res, MYSQLI_ASSOC);
+    $result = mysqli_fetch_array($result, MYSQLI_ASSOC);
 
-    return $res;
+    return $result;
 }
 
 /**

@@ -47,10 +47,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         mysqli_stmt_execute($stmt);
 
         // Получим результат из подготовленного запроса
-        $res = mysqli_stmt_get_result($stmt);
+        $result = mysqli_stmt_get_result($stmt);
 
         // Получим количество рядов в выборке по полю email
-        $cnt_email = mysqli_num_rows($res);
+        $cnt_email = mysqli_num_rows($result);
 
         // Результат подготовленного запроса в массив
         $user = resPreparedQuerySQL($connect, $stmt);

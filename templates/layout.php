@@ -96,7 +96,7 @@
     <script>
         $(document).ready(
             function() {
-                $("#project").niceScroll({
+                $("#projects").niceScroll({
                     cursorcolor: "#7e55f2"
                 });
             }

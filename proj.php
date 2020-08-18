@@ -37,10 +37,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     mysqli_stmt_execute($stmt);
 
     // Получим результат из подготовленного запроса
-    $res = mysqli_stmt_get_result($stmt);
+    $result = mysqli_stmt_get_result($stmt);
 
     // Получим количество рядов в выборке по полю proj_name
-    $cnt_proj = mysqli_num_rows($res);
+    $cnt_proj = mysqli_num_rows($result);
 
     // Если проект существует в БД значит ошибка
     if ($cnt_proj) {

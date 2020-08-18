@@ -47,13 +47,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $data = ['email' =>  $email,];
 
         // Создаем подготовленное выражение
-        $stmt = db_get_prepare_stmt($connect, $sql_reg, $data);
+        $stmt_valid_email = db_get_prepare_stmt($connect, $sql_reg, $data);
 
         // Результат подготовленного запроса в массив
-        $res = resPreparedQuerySQL($connect, $stmt);
+        $result_valid_email = resPreparedQuerySQL($connect, $stmt_valid_email);
 
         // Если id > 0 значит email существует
-        if (((int) $res) > 0) {
+        if (((int) $result_valid_email) > 0) {
             $errors['email'] = 'Email уже зарегистрирован';
         } else {
 
@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $password = password_hash($form['password'], PASSWORD_DEFAULT);
 
             // Запрос на добавление данных в БД
-            $sql = 'INSERT INTO user_reg (date_reg, email, us_name, pass) VALUES (NOW(), ?, ?, ?)';
+            $sql_add_user = 'INSERT INTO user_reg (date_reg, email, us_name, pass) VALUES (NOW(), ?, ?, ?)';
 
             // Данные для подготовленного запроса
             $data = [
@@ -71,10 +71,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             ];
 
             // Создает подготовленное выражение на основе готового SQL запроса и переданных данных
-            $stmt = db_get_prepare_stmt($connect, $sql, $data);
+            $stmt_add_user = db_get_prepare_stmt($connect, $sql_add_user, $data);
 
             // Выполнение подготовленного запроса
-            $res = mysqli_stmt_execute($stmt);
+            $result_add_user = mysqli_stmt_execute($stmt_add_user);
 
             // Запишем последний добавленный id пользователя в переменную
             $us_last_id = mysqli_insert_id($connect);
@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $user = resQueryUser($sql, $connect);
 
             // Закрываем запрос
-            mysqli_stmt_close($stmt);
+            mysqli_stmt_close($stmt_add_user);
 
             // Закрываем подключение
             mysqli_close($connect);
@@ -99,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         // Редирект на главную если пользователь успешно добавлен в БД
-        if ($res && empty($errors)) {
+        if ($result_add_user && empty($errors)) {
             $_SESSION['user'] = $us_data;
             header("Location: index.php");
             exit();
