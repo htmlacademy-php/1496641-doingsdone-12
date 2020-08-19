@@ -147,7 +147,7 @@ if (!empty($form) && empty($errors)) {
  */
 
 // Проверим авторизацию на сайте (наличие данных в сессии)
-if ($us_data['user_id']) {
+if ($user_data['user_id']) {
 
     // Данные для шаблона
     $page_content = include_template('add.php', [
@@ -160,9 +160,9 @@ if ($us_data['user_id']) {
 
     // Шаблон страницы
     $layout_content = include_template('layout.php', [
-        'content' =>  $page_content,
-        'title'   => 'Дела в порядке',
-        'us_data' => $us_data,
+        'content'   =>  $page_content,
+        'title'     => 'Дела в порядке',
+        'user_data' => $user_data,
     ]);
 
     print($layout_content);

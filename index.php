@@ -177,7 +177,6 @@ if ($filter_all_tasks) {
 // Заполним массив номерами всех страниц
 $pages = range(1, $pages_count);
 
-
 /**
  *
  * * ФОРМИРУЕМ ШАБЛОН
@@ -187,12 +186,11 @@ $pages = range(1, $pages_count);
 $data_user = [
     'projects'              => $projects,
     'tasks_list'            => $tasks_list,
-    // 'count_tasks'           => $count_tasks,
     'valid_id'              => $valid_id,
     'show_completed_tasks'  => $show_completed_tasks,
     'page404'               => $page_404,
     'search'                => $search,
-    'res_search'            => $res_search,
+    'result_search'         => $result_search,
     'not_found'             => $not_found,
     'get_task_completed'    => $get_task_completed,
     'get_task_id'           => $get_task_id,
@@ -204,7 +202,6 @@ $data_user = [
     'cur_page'              => $cur_page,
     'pages_prev'            => $pages_prev,
     'pages_next'            => $pages_next,
-    // 'count_task'            => $count_task,
     'filters'               => $filters,
     'filter'                => $filter,
     'all_tasks'             => $all_tasks,
@@ -216,7 +213,7 @@ $data_user = [
 $user = include_template('main.php', $data_user);
 
 // Проверим гость или авторизованный пользователь
-if ($us_data['user_id']) {
+if ($user_data['user_id']) {
     $layout_tmp = 'layout.php';
     $content = $user;
 } else {
@@ -231,7 +228,7 @@ $home = 'class="body-background"';
 $layout_data = [
     'content'   => $content, // Контент зависит от регистрации
     'title'     => 'Дела в порядке',
-    'us_data'   => $us_data, // Данные о пользователе в сессии
+    'user_data' => $user_data, // Данные о пользователе в сессии
     'home'      => $home,
 ];
 

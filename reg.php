@@ -4,7 +4,7 @@ require_once('functions.php');
 require_once('data.php');
 
 // Если пользователь зарегистрирован то редирект на главную
-if ($us_data) {
+if ($user_data) {
     header("Location: index.php");
     exit();
 }
@@ -77,13 +77,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $result_add_user = mysqli_stmt_execute($stmt_add_user);
 
             // Запишем последний добавленный id пользователя в переменную
-            $us_last_id = mysqli_insert_id($connect);
+            $user_last_id = mysqli_insert_id($connect);
 
             // Добавим проект "Входящие" для нового пользователя
-            $sql_add_proj = mysqli_query($connect, "INSERT INTO project (user_id, proj_name) VALUES ('$us_last_id', 'Входящие')");
+            $sql_add_proj = mysqli_query($connect, "INSERT INTO project (user_id, proj_name) VALUES ('$user_last_id', 'Входящие')");
 
             // Выберем все данные нового пользователя
-            $sql = "SELECT * FROM user_reg WHERE user_id = '$us_last_id'";
+            $sql = "SELECT * FROM user_reg WHERE user_id = '$user_last_id'";
 
             // Результат в виде массива
             $user = resQueryUser($sql, $connect);
@@ -95,12 +95,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             mysqli_close($connect);
 
             // Запишем в сессию данные о пользователе
-            $us_data = $user;
+            $user_data = $user;
         }
 
         // Редирект на главную если пользователь успешно добавлен в БД
         if ($result_add_user && empty($errors)) {
-            $_SESSION['user'] = $us_data;
+            $_SESSION['user'] = $user_data;
             header("Location: index.php");
             exit();
         }
@@ -114,10 +114,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 // Данные для передачи в шаблон
 $reg_data = [
-    'errors' => $errors,
-    'warning' => $warning,
+    'errors'     => $errors,
+    'warning'    => $warning,
     'req_fields' => $req_fields,
-    'form' => $form,
+    'form'       => $form,
 ];
 
 // Данные для передачи в шаблон
@@ -130,7 +130,7 @@ $sidebar = ' container--with-sidebar';
 $layout_guest = include_template('layout-guest.php', [
     'content'   =>  $content_reg,
     'title'     => 'Document',
-    'sidebar'     => $sidebar,
+    'sidebar'   => $sidebar,
 ]);
 
 print($layout_guest);

@@ -2,8 +2,8 @@
 
 session_start();
 
-// Передадим все данные о пользователе из сессии в переменную $us_data
-$us_data = $_SESSION['user'];
+// Передадим все данные о пользователе из сессии в переменную $user_data
+$user_data = $_SESSION['user'];
 
 /**
  *
@@ -33,7 +33,7 @@ if (!$db) {
 };
 
 // Получим id пользователя из данных сессии
-$user_id = $us_data['user_id'];
+$user_id = $user_data['user_id'];
 
 /**
  *
@@ -56,6 +56,12 @@ $projects = resQuerySQL($sql_projects, $connect);
 // Все задачи (актуальные и выполненные)
 $status_completed_tasks = 't.status_task';
 
+// Условие для актуальных задач
+if (!isset($_GET['show_completed']) || $_GET['show_completed'] == 0) {
+    // Только актуальные задачи
+    $status_completed_tasks = 0;
+}
+
 // Выборка задач из БД для отдельного проекта
 if (!empty($_GET['id'])) {
 
@@ -68,7 +74,7 @@ if (!empty($_GET['id'])) {
     $proj_id = 'p.proj_id';
 };
 
-// Выборка всех задач для одного пользователя
+// Выборка всех задач для активного пользователя
 $sql_tasks = "SELECT p.proj_name, t.task_id, t.status_task, t.title_task, t.link_file,
             DATE_FORMAT(date_task_end, '%Y-%m-%d') AS date_task_end
             FROM project p LEFT JOIN task t ON p.proj_id = t.proj_id
@@ -92,8 +98,8 @@ $search = trim($_GET['q']) ?? '';
 // Результат поиска
 if ($search) {
 
-    $sql_q = "SELECT * FROM task WHERE (user_id = {$us_data['user_id']})
-            AND MATCH (title_task) AGAINST(? IN BOOLEAN MODE)";
+    $sql_q = "SELECT * FROM task WHERE (user_id = {$user_data['user_id']})
+            AND MATCH (title_task) AGAINST(? IN BOOLEAN MODE) AND status_task = 0";
 
     // Данные для запроса
     $data = ['search' => $search . '*'];
@@ -109,26 +115,16 @@ if ($search) {
     // Количество рядов выборки из БД по запросу пользователя
     $num_rows = mysqli_num_rows($result);
 
-    // Результат поиска в массив если есть совпадение в БД
-    $res_search = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-    // Закрываем запрос
-    mysqli_stmt_close($stmt);
-
-    // Закрываем подключение
-    mysqli_close($connect);
+    if ($num_rows) {
+        // Результат поиска в массив если есть совпадение в БД
+        $result_search = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    }
 }
 
 /**
  *
  * * ПАГИНАЦИЯ
  */
-
-// Количество задач для текущего пользователя с учетом статуса задачи (для расчета общего количества страниц)
-if (!isset($_GET['show_completed']) || $_GET['show_completed'] == 0) {
-    // Только актуальные задачи
-    $status_completed_tasks = 0;
-}
 
 // Условие подсчета количества задач
 if ($_GET['id']) {
@@ -140,16 +136,21 @@ if ($_GET['id']) {
                     AND u.user_id = $user_id
                     AND t.status_task = $status_completed_tasks";
 } else {
-    // Определим общее количество задач для текущего пользователя для всех проектах
+    // Определим общее количество задач для текущего пользователя для всех проектов
     $sql_cnt_tasks = "SELECT COUNT(*) as cnt FROM task t
                     JOIN user_reg u ON u.user_id = t.user_id
                     WHERE u.user_id = $user_id
                     AND t.status_task = $status_completed_tasks";
 }
 
-$result = mysqli_query($connect, $sql_cnt_tasks);
+$result_all_tasks = mysqli_query($connect, $sql_cnt_tasks);
 
-if ($result) {
-    // Все задачи пользователя без учета статуса задачи
-    $all_tasks = mysqli_fetch_assoc($result)['cnt'];
+if ($result_all_tasks) {
+    // Количество всех задач пользователя в зависимости от статуса задачи
+    $all_tasks = mysqli_fetch_assoc($result_all_tasks)['cnt'];
+}
+
+// Если есть выдача по поиску то посчитаем количество совпадений (задач)
+if ($result_search) {
+    $all_tasks = count($result_search);
 }

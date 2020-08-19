@@ -9,7 +9,7 @@
 
 <body>
 
-    <p>Уважаемый(ая), <?= $us_name; ?></p>
+    <p>Уважаемый(ая), <?= $user_name; ?></p>
     <p><strong>У вас запланирована(ы) задача(и) на сегодня:</strong></p>
     <ol>
         <?php foreach ($tasks_today as $task) : ?>

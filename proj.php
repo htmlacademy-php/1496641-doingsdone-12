@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Данные для запроса
         $data_proj = [
-            'user_id' => $us_data['user_id'],
+            'user_id' => $user_data['user_id'],
             'proj_name' => $form['project_name'],
         ];
 
@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
  */
 
 // Если пользователь зарегистрирован тогда показываем контент
-if ($us_data['user_id']) {
+if ($user_data['user_id']) {
 
     // Данные для передачи в шаблон
     $proj_data = [
@@ -94,10 +94,10 @@ if ($us_data['user_id']) {
 
     // Шаблон страницы авторизации на сайте
     $layout_data = [
-        'content'  =>  $content_proj,
-        'title'    => 'Document',
-        'sidebar'  => $sidebar,
-        'us_data'  => $us_data, // Данные о пользователе в сессии
+        'content'    =>  $content_proj,
+        'title'      => 'Document',
+        'sidebar'    => $sidebar,
+        'user_data'  => $user_data, // Данные о пользователе в сессии
     ];
 
     $layout = include_template('layout.php', $layout_data);

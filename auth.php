@@ -4,7 +4,7 @@ require_once('functions.php');
 require_once('data.php');
 
 // Если пользователь зарегистрирован то редирект на главную
-if ($us_data) {
+if ($user_data) {
     header("Location: index.php");
     exit();
 }
@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $user = resPreparedQuerySQL($connect, $stmt);
 
         // Запишем в сессию данные о пользователе
-        $us_data = $user;
+        $user_data = $user;
 
         // Если нет результата выборки по указанному email значит ошибка
         if (!empty($form['email']) && !$cnt_email) {
@@ -68,14 +68,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!count($errors) && !empty($form['password'])) {
 
         // Запишем пароль в переменную
-        $us_pass = $us_data['pass'];
+        $user_pass = $user_data['pass'];
 
         // Верификация пароля
-        $pass = password_verify($form['password'], $us_pass);
+        $pass = password_verify($form['password'], $user_pass);
 
         // Проверим хэш пароля и откроем сессию если совпадение
         if ($pass) {
-            $_SESSION['user'] = $us_data;
+            $_SESSION['user'] = $user_data;
             header("Location: index.php");
             exit();
         } else {

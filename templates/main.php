@@ -82,9 +82,9 @@
 
             // Если запрос присутствует в форме поиска, то выводим данные поиска
             if (!empty($search)) {
-                $tasks_list = $res_search;
+                $tasks_list = $result_search;
             }
-
+            // debug($tasks_list);
             // Вывод всех задач
             if ($tasks_list) :
 
@@ -106,6 +106,7 @@
                     if (!$show_completed_tasks && $value['status_task']) {
                         continue;
                     }
+
 
                     $task_class = '';
 
