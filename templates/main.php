@@ -58,13 +58,14 @@
 
             // Выводим сообщения
             foreach ($projects as $project => $value) {
+
                 // Выводим сообщение если нет задач в проекте
-                if (($_GET['id'] == $value['proj_id']) && !$value['count']) {
+                if ((($_GET['id'] ?? '') == $value['proj_id']) && !$value['count']) {
                     echo '<span style="font-size: 16px; font-weight: bold;">Нет задач для этого проекта</span>';
                 }
 
                 // Выводим сообщение если нет задач в фильтре
-                if (($_GET['id'] == $value['proj_id']) && $value['count'] && !$tasks_list) {
+                if ((($_GET['id'] ?? '') == $value['proj_id']) && $value['count'] && !$tasks_list) {
                     echo '<span style="font-size: 16px; font-weight: bold;">Нет задач для этого фильтра</span>';
                 }
             }
@@ -84,20 +85,21 @@
             if (!empty($search)) {
                 $tasks_list = $result_search;
             }
-            // debug($tasks_list);
+
             // Вывод всех задач
             if ($tasks_list) :
 
                 // Смещение по ключу в массиве задач
                 $offset_key = $task_one_page;
 
-                if ($_GET['page']) {
+                if ($_GET['page'] ?? '') {
                     // Вывод задач на странице с учетом пагинации
                     $output_tasks_list = array_slice($tasks_list, (($_GET['page'] - 1) * 3), $offset_key, $preserve_keys = TRUE);
                 } else {
                     // Вывод задач без пагинации
                     $output_tasks_list = array_slice($tasks_list, ($_GET['page'] * 3), $offset_key, $preserve_keys = TRUE);
                 }
+
                 // Перепишем основной массив задач с учетом пагинации
                 $tasks_list = $output_tasks_list;
 
@@ -106,7 +108,6 @@
                     if (!$show_completed_tasks && $value['status_task']) {
                         continue;
                     }
-
 
                     $task_class = '';
 

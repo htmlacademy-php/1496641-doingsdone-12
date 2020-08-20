@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $cnt_email = mysqli_num_rows($result);
 
         // Результат подготовленного запроса в массив
-        $user = resPreparedQuerySQL($connect, $stmt);
+        $user = resPreparedQuerySQL($stmt);
 
         // Запишем в сессию данные о пользователе
         $user_data = $user;

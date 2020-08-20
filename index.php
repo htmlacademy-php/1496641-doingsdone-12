@@ -3,6 +3,8 @@
 require_once 'functions.php';
 require_once 'data.php';
 
+error_reporting(E_ALL);
+
 // Ошибка 404
 $page_404 = include_template('404.php', []);
 
@@ -16,6 +18,9 @@ $not_found = '';
 if ($search && !$num_rows) {
     $not_found = '<h4>Ничего не найдено по вашему запросу</h4>';
 }
+
+// Объявим массив значений id проектов для валидации
+$valid_id = [];
 
 /**
  *
@@ -32,14 +37,14 @@ if (!empty($tasks_list)) {
     }
 }
 
-// id задачи и статус задачи
-$get_task_id = (int)$_GET['id_task']; // id задачи
+// Запишем в переменную id задачи
+$get_task_id = $_GET['id_task'] ?? '';
 
 // Значение статуса задачи по умолчанию (не выполнено)
-$get_task_completed = (int)$_GET['task_completed'] ?? 0;
+$get_task_completed = $_GET['task_completed'] ?? '0';
 
 // значение выполненных задач по умолчанию
-$show_completed_tasks = (int)$_GET['show_completed'] ?? 0;
+$show_completed_tasks = $_GET['show_completed'] ?? '0';
 
 // Проверяем значение "Показывать выполненные" на false
 // и назначаем противоположные для статуса задачи true
@@ -80,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $show_completed_tasks = 0;
 
     // Показываем выполненные задачи
-    if ($_GET['show_completed']) {
+    if ($_GET['show_completed'] ?? '') {
         $show_completed_tasks = 1;
     }
 }
@@ -90,8 +95,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
  * * ФИЛЬТРЫ ДЛЯ ЗАДАЧ В ПРОЕКТЕ
  */
 
+// Объявим переменную для количество задач согласно фильтра
+$filter_all_tasks = '';
+
 // Вывод фильтра для задачи "Повестка дня"
-if ($_GET['today']) {
+if ($_GET['today'] ?? '') {
 
     // Текущая дата
     $today = date("Y-m-d");
@@ -109,7 +117,7 @@ if ($_GET['today']) {
 }
 
 // Вывод фильтра для задачи "Завтра"
-if ($_GET['tomorrow']) {
+if ($_GET['tomorrow'] ?? '') {
 
     // Получим завтрашний день
     $tomorrow = date("Y-m-d", strtotime("+1 days"));
@@ -127,7 +135,7 @@ if ($_GET['tomorrow']) {
 }
 
 // Вывод фильтра для задач "Просроченные"
-if ($_GET['old']) {
+if ($_GET['old'] ?? '') {
     $tasks_list = oldTasksFilter($tasks_list);
 
     if ($tasks_list) {
@@ -149,7 +157,7 @@ $filters = ['all', 'today', 'tomorrow', 'old'];
 foreach ($filters as $key) {
     // При совпадении значения массива $filters с ключом массива $_GET
     // Формируем ссылку на активный фильтр
-    if ($_GET[$key]) {
+    if (isset($_GET[$key])) {
         $filter = '&' . $key . '=1';
     }
 }
@@ -176,6 +184,8 @@ if ($filter_all_tasks) {
 
 // Заполним массив номерами всех страниц
 $pages = range(1, $pages_count);
+
+
 
 /**
  *

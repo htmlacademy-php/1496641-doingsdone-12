@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt_valid_email = db_get_prepare_stmt($connect, $sql_reg, $data);
 
         // Результат подготовленного запроса в массив
-        $result_valid_email = resPreparedQuerySQL($connect, $stmt_valid_email);
+        $result_valid_email = resPreparedQuerySQL($stmt_valid_email);
 
         // Если id > 0 значит email существует
         if (((int) $result_valid_email) > 0) {

@@ -72,7 +72,7 @@ function resQuerySQL($sql, $connect)
  * @return array двумерный ассоциативный массив, результат подготовленного запроса sql
  */
 
-function resPreparedQuerySQL($connect, $stmt)
+function resPreparedQuerySQL($stmt)
 {
     // Выполнение подготовленного запроса
     mysqli_stmt_execute($stmt);
@@ -105,20 +105,6 @@ function resQueryUser($sql, $connect)
     }
     // Возвращаем результат запроса в виде массива
     return $sql_table;
-}
-
-/**
- * Выводит количество выбранных рядов для sql запроса SELECT
- * @param string $sql запрос к БД
- * @param array $connect ассоциативный массив с параметрами для подключения к БД
- * @return int $num_rows количество рядов выборки сформированный на основании запроса $sql
- */
-
-function sqlNumRows($sql, $connect)
-{
-    $result = mysqli_query($connect, $sql);
-    $num_rows = mysqli_num_rows($result);
-    return $num_rows;
 }
 
 /**

@@ -95,6 +95,9 @@ $tasks_list = resQuerySQL($sql_tasks, $connect);
 // Удалим пробелы из запроса от пользователя
 $search = trim($_GET['q']) ?? '';
 
+// Объявим массив для результата поиска
+$result_search = [];
+
 // Результат поиска
 if ($search) {
 
