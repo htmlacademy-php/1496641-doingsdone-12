@@ -30,7 +30,7 @@ if (isset($form['submit'])) {
     }
 
     // Проверим id проекта от пользователя с данными в БД
-    if (!in_array($form['project'], $projId)) {
+    if (!in_array(isset($form['project']), $projId)) {
         $errors['project'] = 'Опа! У нас хакер :-) нет такого проекта';
     } else {
         $project_id = $form['project'];
@@ -61,11 +61,11 @@ if (isset($form['submit'])) {
         // Получим расширение загруженного файла от пользователя
         $fileExt = strtolower(end(explode('.', $fileName)));
 
+        // Директория для загрузки файла
+        $dir = 'uploads/';
+
         // Проверим файл на допустимые типы расширений
         if (($fileSize > 0) && in_array($fileExt, $fileTypes)) {
-
-            // Директория для загрузки файла
-            $dir = 'uploads/';
 
             // Формируем имя файла
             $newFileName = time() . '_' . $user_id;
@@ -107,10 +107,10 @@ if (isset($form['submit'])) {
 
 if (!empty($form) && empty($errors)) {
 
+    $newFileName = '';
+
     // Перемещение файла в директорию uploads если нет ошибок
     move_uploaded_file($fileTmp, $dir . $newFileName);
-
-    // $user_id = $_SESSION['user']['user_id'];
 
     // Сформируем подготовленный SQL запрос на добавление новой задачи
     $sql_add_task = "INSERT INTO task(proj_id, user_id, title_task, link_file, date_task_end)
@@ -152,7 +152,7 @@ if ($user_data['user_id']) {
     // Данные для шаблона
     $page_content = include_template('add.php', [
         'projects'      => $projects,
-        'count_tasks'   => $count_tasks,
+        // 'count_tasks'   => $count_tasks,
         'errors'        => $errors,
         'project_id'    => $project_id,
         'form'          => $form,

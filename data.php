@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-
+error_reporting(E_ALL);
 // Передадим все данные о пользователе из сессии в переменную $user_data
 $user_data = $_SESSION['user'];
 
@@ -62,17 +62,12 @@ if (!isset($_GET['show_completed']) || $_GET['show_completed'] == 0) {
     $status_completed_tasks = 0;
 }
 
-// Выборка задач из БД для отдельного проекта
+// Все проекты для выборки
+$proj_id = 'p.proj_id';
+
 if (!empty($_GET['id'])) {
-
     $proj_id = $_GET['id'];
-
-    // Устанавливаем тип integer для $_GET
-    settype($proj_id, 'integer');
-} else {
-    // Все проекты для выборки
-    $proj_id = 'p.proj_id';
-};
+}
 
 // Выборка всех задач для активного пользователя
 $sql_tasks = "SELECT p.proj_name, t.task_id, t.status_task, t.title_task, t.link_file,
@@ -93,7 +88,7 @@ $tasks_list = resQuerySQL($sql_tasks, $connect);
  */
 
 // Удалим пробелы из запроса от пользователя
-$search = trim($_GET['q']) ?? '';
+$search = trim($_GET['q'] ?? '');
 
 // Объявим массив для результата поиска
 $result_search = [];
@@ -130,8 +125,8 @@ if ($search) {
  */
 
 // Условие подсчета количества задач
-if ($_GET['id']) {
-    // Определим общее количество задач для текущего пользователя только активного проекта
+if (isset($_GET['id'])) {
+    // Определим общее количество задач активного проекта
     $sql_cnt_tasks = "SELECT COUNT(*) as cnt FROM task t
                     RIGHT JOIN project p ON p.proj_id = t.proj_id
                     JOIN user_reg u ON u.user_id = t.user_id
@@ -139,7 +134,7 @@ if ($_GET['id']) {
                     AND u.user_id = $user_id
                     AND t.status_task = $status_completed_tasks";
 } else {
-    // Определим общее количество задач для текущего пользователя для всех проектов
+    // Определим общее количество задач всех проектов
     $sql_cnt_tasks = "SELECT COUNT(*) as cnt FROM task t
                     JOIN user_reg u ON u.user_id = t.user_id
                     WHERE u.user_id = $user_id

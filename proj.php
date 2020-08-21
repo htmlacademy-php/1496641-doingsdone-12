@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Если нет ошибок то добавим проект в БД
-    if (!$errors[$field]) {
+    if (!isset($errors[$field])) {
 
         $sql_proj = "INSERT INTO project(user_id, proj_name) VALUES (?, ?)";
 
@@ -83,7 +83,7 @@ if ($user_data['user_id']) {
 
     // Данные для передачи в шаблон
     $proj_data = [
-        'count_tasks' => $count_tasks,
+        // 'count_tasks' => $count_tasks,
         'form'        => $form,
         'errors'      => $errors,
         'projects'    => $projects,
@@ -91,6 +91,9 @@ if ($user_data['user_id']) {
 
     // Контент страницы авторизации на сайте
     $content_proj = include_template('proj.php', $proj_data);
+
+    // Подключаем sidebar для страниц регистрации
+    $sidebar = ' container--with-sidebar';
 
     // Шаблон страницы авторизации на сайте
     $layout_data = [

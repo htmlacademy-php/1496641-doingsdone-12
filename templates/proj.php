@@ -23,8 +23,8 @@
             <div class="form__row">
                 <label class="form__label" for="project_name">Название <sup>*</sup></label>
 
-                <input class="form__input <?= $errors['project_name'] ? 'form__input--error' : '' ?>" type="text" name="project_name" id="project_name" value="" placeholder="Введите название проекта">
-                <?= $errors['project_name'] ? '<p class="form__message">' . $errors['project_name'] . '</p>' : ''  ?>
+                <input class="form__input <?= isset($errors['project_name']) ? 'form__input--error' : '' ?>" type="text" name="project_name" id="project_name" value="" placeholder="Введите название проекта">
+                <?= isset($errors['project_name']) ? '<p class="form__message">' . $errors['project_name'] . '</p>' : ''  ?>
             </div>
 
             <div class="form__row form__row--controls">

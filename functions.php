@@ -230,6 +230,8 @@ function tasksFilter($tasks_list, $day)
      * дата которых равна дате поданной на вход функции
      */
 
+    $filter_task_list = [];
+
     foreach ($tasks_list_key_day as $key => $value) {
         $filter_task_list[$value] = $tasks_list[$value];
     }
@@ -253,6 +255,8 @@ function oldTasksFilter($tasks_list)
 
     // Возвращаем одномерный нумерованный массив, key -> date окончания задач
     $tasks_date_end = array_column($tasks_list, 'date_task_end');
+
+    $old_day = [];
 
     // Переберем массив всех задач и выберем просроченные задачи
     foreach ($tasks_date_end as $key => $value) {

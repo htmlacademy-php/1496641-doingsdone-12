@@ -23,15 +23,15 @@
             <div class="form__row">
                 <label class="form__label" for="name">Название <sup>*</sup></label>
 
-                <input class="form__input <?= $errors['name'] ? 'form__input--error' : '' ?>" type="text" name="name" id="name" value="<?= postValue($form['name']); ?>" placeholder="Введите название">
+                <input class="form__input <?= isset($errors['name']) ? 'form__input--error' : '' ?>" type="text" name="name" id="name" value="<?= isset($form['name']) ? postValue($form['name']) : '' ?>" placeholder="Введите название">
 
-                <?= $errors['name'] ? '<p class="form__message">' . $errors['name'] . '</p>' : ''  ?>
+                <?= isset($errors['name']) ? '<p class="form__message">' . $errors['name'] . '</p>' : ''  ?>
             </div>
 
             <div class="form__row">
                 <label class="form__label" for="project">Проект <sup>*</sup></label>
 
-                <select class="form__input form__input--select <?= $errors['project'] ? 'form__input--error' : '' ?>" name="project" id="project">
+                <select class="form__input form__input--select <?= isset($errors['project']) ? 'form__input--error' : '' ?>" name="project" id="project">
 
                     <option value="none" selected disabled hidden>Выбрать проект</option>
                     <?php foreach ($projects as $project) : ?>
@@ -40,7 +40,7 @@
 
                 </select>
 
-                <?= $errors['project'] ? '<p class="form__message">' . $errors['project'] . '</p>' : ''  ?>
+                <?= isset($errors['project']) ? '<p class="form__message">' . $errors['project'] . '</p>' : ''  ?>
             </div>
 
             <div class="form__row">
@@ -48,7 +48,7 @@
 
                 <input class="form__input form__input--date <?= $errors['date'] ? 'form__input--error' : '' ?>" type="text" name="date" id="date" value="<?= postValue($form['date']); ?>" placeholder="Введите дату в формате ГГГГ-ММ-ДД">
 
-                <?= $errors['date'] ? '<p class="form__message">' . $errors['date'] . '</p>' : ''  ?>
+                <?= isset($errors['date']) ? '<p class="form__message">' . $errors['date'] . '</p>' : ''  ?>
             </div>
 
             <div class="form__row">
@@ -61,7 +61,7 @@
                         <span>Выберите файл</span>
                     </label>
 
-                    <?= $errors['file'] ? '<p class="form__message">' . $errors['file'] . '</p>' : ''  ?>
+                    <?= isset($errors['file']) ? '<p class="form__message">' . $errors['file'] . '</p>' : ''  ?>
 
                 </div>
             </div>

@@ -3,7 +3,6 @@
 require_once 'functions.php';
 require_once 'data.php';
 
-error_reporting(E_ALL);
 
 // Ошибка 404
 $page_404 = include_template('404.php', []);
@@ -21,6 +20,7 @@ if ($search && !$num_rows) {
 
 // Объявим массив значений id проектов для валидации
 $valid_id = [];
+
 
 /**
  *
@@ -153,12 +153,19 @@ $url_domain = $_SERVER['REQUEST_URI'] == "/";
 // Запишем ключи массива $_GET для фильтров в новый массив
 $filters = ['all', 'today', 'tomorrow', 'old'];
 
-// Переберем массив $filters
-foreach ($filters as $key) {
-    // При совпадении значения массива $filters с ключом массива $_GET
-    // Формируем ссылку на активный фильтр
-    if (isset($_GET[$key])) {
-        $filter = '&' . $key . '=1';
+// Объявим переменную - ссылка на активный фильтр
+$active_filter_link = '';
+
+// Формируем url для активного фильтра
+foreach ($filters as $filter) {
+
+    /**
+     * При совпадении значения массива $filters с ключом массива $_GET
+     * формируем ссылку на активный фильтр
+     */
+
+    if (isset($_GET[$filter])) {
+        $active_filter_link = '&' . $filter . '=1';
     }
 }
 
@@ -185,6 +192,19 @@ if ($filter_all_tasks) {
 // Заполним массив номерами всех страниц
 $pages = range(1, $pages_count);
 
+// Предыдущая страница
+if ($cur_page > 1) {
+    $pages_prev = $cur_page - 1;
+} else {
+    $pages_prev = 1;
+}
+
+// Следующая страница
+if ($cur_page < $pages_count) {
+    $pages_next = $cur_page + 1;
+} else {
+    $pages_next = $pages_count;
+}
 
 
 /**
@@ -205,7 +225,7 @@ $data_user = [
     'get_task_completed'    => $get_task_completed,
     'get_task_id'           => $get_task_id,
     'check_id_task'         => $check_id_task,
-    'class_active'          => $class_active,
+    // 'class_active'          => $class_active,
     'url_domain'            => $url_domain,
     'pages_count'           => $pages_count,
     'pages'                 => $pages,
@@ -213,10 +233,12 @@ $data_user = [
     'pages_prev'            => $pages_prev,
     'pages_next'            => $pages_next,
     'filters'               => $filters,
-    'filter'                => $filter,
+    // 'filter'                => $filter,
     'all_tasks'             => $all_tasks,
     'task_one_page'         => $task_one_page,
     'filter_all_tasks'      => $filter_all_tasks,
+    'active_filter_link'    => $active_filter_link,
+    // 'project_id' => $project_id,
 ];
 
 // Контент для авторизированного пользователя
