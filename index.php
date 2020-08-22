@@ -110,9 +110,6 @@ if ($_GET['today'] ?? '') {
     if ($tasks_list) {
         // Количество задач, результат работы фильтра
         $filter_all_tasks = count($tasks_list);
-
-        // Перепишем общее количество задач согласно фильтра для пагинации
-        $all_tasks =  $filter_all_tasks;
     }
 }
 
@@ -128,9 +125,6 @@ if ($_GET['tomorrow'] ?? '') {
     if ($tasks_list) {
         // Количество задач, результат работы фильтра
         $filter_all_tasks = count($tasks_list);
-
-        // Перепишем общее количество задач согласно фильтра для пагинации
-        $all_tasks =  $filter_all_tasks;
     }
 }
 
@@ -141,9 +135,6 @@ if ($_GET['old'] ?? '') {
     if ($tasks_list) {
         // Количество задач, результат работы фильтра
         $filter_all_tasks = count($tasks_list);
-
-        // Перепишем общее количество задач согласно фильтра для пагинации
-        $all_tasks =  $filter_all_tasks;
     }
 }
 
@@ -185,6 +176,7 @@ if ($filter_all_tasks) {
     // Если активен фильтр
     $pages_count = ceil($filter_all_tasks / $task_one_page);
 } else {
+    $all_tasks = count($tasks_list);
     // Количество всех задач без учета фильтров
     $pages_count = ceil($all_tasks / $task_one_page);
 }
@@ -225,7 +217,6 @@ $data_user = [
     'get_task_completed'    => $get_task_completed,
     'get_task_id'           => $get_task_id,
     'check_id_task'         => $check_id_task,
-    // 'class_active'          => $class_active,
     'url_domain'            => $url_domain,
     'pages_count'           => $pages_count,
     'pages'                 => $pages,
@@ -233,19 +224,17 @@ $data_user = [
     'pages_prev'            => $pages_prev,
     'pages_next'            => $pages_next,
     'filters'               => $filters,
-    // 'filter'                => $filter,
     'all_tasks'             => $all_tasks,
     'task_one_page'         => $task_one_page,
     'filter_all_tasks'      => $filter_all_tasks,
     'active_filter_link'    => $active_filter_link,
-    // 'project_id' => $project_id,
 ];
 
 // Контент для авторизированного пользователя
 $user = include_template('main.php', $data_user);
 
 // Проверим гость или авторизованный пользователь
-if ($user_data['user_id']) {
+if (isset($user_data['user_id'])) {
     $layout_tmp = 'layout.php';
     $content = $user;
 } else {
@@ -253,8 +242,10 @@ if ($user_data['user_id']) {
     $content = $guest;
 }
 
+
 // Для страницы главная шаблон гость
 $home = 'class="body-background"';
+
 
 // Данные для передачи в шаблон layout
 $layout_data = [

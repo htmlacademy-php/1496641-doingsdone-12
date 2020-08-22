@@ -58,23 +58,29 @@ if (isset($form['submit'])) {
         // Определим допустимые типы файлов
         $fileTypes = array('png', 'xlsx', 'xls', 'doc', 'docx', 'pdf', 'jpg', 'csv', 'txt');
 
+        // Разобьем по разделителю имя файла от пользователя
+        $tmp = explode('.', $fileName);
+
         // Получим расширение загруженного файла от пользователя
-        $fileExt = strtolower(end(explode('.', $fileName)));
+        $file_extension  = strtolower(end($tmp));
 
         // Директория для загрузки файла
         $dir = 'uploads/';
 
-        // Проверим файл на допустимые типы расширений
-        if (($fileSize > 0) && in_array($fileExt, $fileTypes)) {
+        // Формируем имя файла
+        $newFileName = time() . '_' . $user_id;
 
-            // Формируем имя файла
-            $newFileName = time() . '_' . $user_id;
+        // Ссылка на файл
+        $linkFile = $dir;
+
+        // Проверим файл на допустимые типы расширений
+        if (($fileSize > 0) && in_array($file_extension, $fileTypes)) {
 
             // Формируем имя файла + расширение
-            $newFileName .= '.' . $fileExt;
+            $newFileName .= '.' . $file_extension;
 
             // Формируем ссылку на файл (директория + файл.расширение)
-            $linkFile = $dir . $newFileName;
+            $linkFile .= $newFileName;
         } elseif ($fileSize > 0) {
             $errors['file'] = 'Фокус не пройдет :-) файл не разрешен';
         }
@@ -106,8 +112,6 @@ if (isset($form['submit'])) {
  */
 
 if (!empty($form) && empty($errors)) {
-
-    $newFileName = '';
 
     // Перемещение файла в директорию uploads если нет ошибок
     move_uploaded_file($fileTmp, $dir . $newFileName);

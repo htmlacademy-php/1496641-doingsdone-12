@@ -58,6 +58,8 @@ function resQuerySQL($sql, $connect)
     // Получаем ресурс результата
     $result = mysqli_query($connect, $sql);
 
+    $sql_table = [];
+
     // Проверим результат извлечения данных
     if ($result) {
         $sql_table = mysqli_fetch_all($result, MYSQLI_ASSOC);

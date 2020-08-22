@@ -2,8 +2,14 @@
 
 session_start();
 error_reporting(E_ALL);
-// Передадим все данные о пользователе из сессии в переменную $user_data
-$user_data = $_SESSION['user'];
+
+// Передадим все данные о пользователе из сессии в массив $user_data
+$user_data = [];
+
+if (isset($_SESSION['user'])) {
+    $user_data = $_SESSION['user'];
+}
+
 
 /**
  *
@@ -33,7 +39,11 @@ if (!$db) {
 };
 
 // Получим id пользователя из данных сессии
-$user_id = $user_data['user_id'];
+$user_id = '';
+
+if (isset($_SESSION['user'])) {
+    $user_id = $user_data['user_id'];
+}
 
 /**
  *

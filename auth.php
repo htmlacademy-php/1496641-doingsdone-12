@@ -14,11 +14,12 @@ if ($user_data) {
  * * ВАЛИДАЦИЯ ФОРМЫ АВТОРИЗАЦИИ
  */
 
+$form = $_POST;
+$errors = [];
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    $form = $_POST;
     $required = ['email', 'password'];
-    $errors = [];
 
     // Проверим поля на пустоту
     foreach ($required as $field) {
@@ -96,6 +97,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
  * * СОБИРАЕМ ШАБЛОН - АВТОРИЗАЦИЯ НА САЙТЕ
  */
 
+// Для страницы главная шаблон гость
+$home = '';
+
 // Данные для передачи в шаблон
 $auth_data = [
     'form'      => $form,
@@ -113,6 +117,7 @@ $layout_guest = include_template('layout-guest.php', [
     'content'   =>  $content_auth,
     'title'     => 'Document',
     'sidebar'   => $sidebar,
+    'home'      => $home,
 ]);
 
 print($layout_guest);
