@@ -46,32 +46,37 @@ if (isset($form['submit'])) {
         $errors['date'] = 'Ну ты и хакер :-) формат даты гггг-мм-дд';
     }
 
-    // Работа с файлами
-    if (isset($_FILES['file'])) {
+    /**
+     *
+     * * РАБОТАЕМ С ФАЙЛОМ
+     */
 
-        // Присваиваем значения переменным
-        $fileName   = trim($_FILES['file']['name']);
-        $fileSize   = $_FILES['file']['size'];
-        $fileTmp    = $_FILES['file']['tmp_name'];
-        $fileErr    = $_FILES['file']['error'];
+    // Присваиваем значения переменным
+    $fileName   = trim($_FILES['file']['name']);
+    $fileSize   = $_FILES['file']['size'];
+    $fileTmp    = $_FILES['file']['tmp_name'];
+    $fileErr    = $_FILES['file']['error'];
 
-        // Определим допустимые типы файлов
-        $fileTypes = array('png', 'xlsx', 'xls', 'doc', 'docx', 'pdf', 'jpg', 'csv', 'txt');
+    // Определим допустимые типы файлов
+    $fileTypes = array('png', 'xlsx', 'xls', 'doc', 'docx', 'pdf', 'jpg', 'csv', 'txt');
+
+    // Директория для загрузки файла
+    $dir = 'uploads/';
+
+    // Ссылка на файл
+    $linkFile = '';
+
+    // Формируем имя файла
+    $newFileName = time() . '_' . $user_id;
+
+    // Формируем имя файла, проверка на допустимое расширение
+    if (isset($_FILES['file']) && $fileSize > 0) {
 
         // Разобьем по разделителю имя файла от пользователя
         $tmp = explode('.', $fileName);
 
         // Получим расширение загруженного файла от пользователя
         $file_extension  = strtolower(end($tmp));
-
-        // Директория для загрузки файла
-        $dir = 'uploads/';
-
-        // Формируем имя файла
-        $newFileName = time() . '_' . $user_id;
-
-        // Ссылка на файл
-        $linkFile = $dir;
 
         // Проверим файл на допустимые типы расширений
         if (($fileSize > 0) && in_array($file_extension, $fileTypes)) {
@@ -80,7 +85,7 @@ if (isset($form['submit'])) {
             $newFileName .= '.' . $file_extension;
 
             // Формируем ссылку на файл (директория + файл.расширение)
-            $linkFile .= $newFileName;
+            $linkFile = $dir . $newFileName;
         } elseif ($fileSize > 0) {
             $errors['file'] = 'Фокус не пройдет :-) файл не разрешен';
         }
@@ -125,8 +130,8 @@ if (!empty($form) && empty($errors)) {
         'proj_id'       => $form['project'],
         'user_id'       => $user_id,
         'title_task'    => $form['name'],
-        'link_file'     => (!empty($_FILES['file'])) ? $linkFile : NULL,
-        'date_task_end' => (!empty($form['date'])) ? $form['date'] : NULL,
+        'link_file'     => (isset($_FILES['file'])) ? $linkFile : '',
+        'date_task_end' => (!empty($form['date'])) ? $form['date'] : '',
     ];
 
     // Создаем подготовленное выражение
@@ -156,7 +161,6 @@ if ($user_data['user_id']) {
     // Данные для шаблона
     $page_content = include_template('add.php', [
         'projects'      => $projects,
-        // 'count_tasks'   => $count_tasks,
         'errors'        => $errors,
         'project_id'    => $project_id,
         'form'          => $form,

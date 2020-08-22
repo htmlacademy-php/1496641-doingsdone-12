@@ -176,7 +176,9 @@ if ($filter_all_tasks) {
     // Если активен фильтр
     $pages_count = ceil($filter_all_tasks / $task_one_page);
 } else {
-    $all_tasks = count($tasks_list);
+    if (isset($tasks_list)) {
+        $all_tasks = count($tasks_list);
+    }
     // Количество всех задач без учета фильтров
     $pages_count = ceil($all_tasks / $task_one_page);
 }

@@ -132,7 +132,7 @@
                         </td>
 
                         <td class="task__file">
-                            <?php if (isset($value['link_file'])) : ?>
+                            <?php if (!empty($value['link_file'])) : ?>
                                 <a class="download-link" href="<?= $value['link_file'] ?>" download=""><?= str_replace('uploads/', '', $value['link_file']) ?></a>
                             <?php endif; ?>
                         </td>

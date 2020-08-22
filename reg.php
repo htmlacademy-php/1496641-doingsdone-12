@@ -14,14 +14,14 @@ if ($user_data) {
  * *ВАЛИДАЦИЯ ФОРМЫ РЕГИСТРАЦИИ
  */
 
+$form = $_POST;
+$errors = [];
+$warning = 'Пожалуйста, исправьте ошибки в форме';
+
+// Обязательные поля для заполнения
+$req_fields = ['email', 'password', 'name'];
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
-    $form = $_POST;
-    $errors = [];
-    $warning = 'Пожалуйста, исправьте ошибки в форме';
-
-    // Обязательные поля для заполнения
-    $req_fields = ['email', 'password', 'name'];
 
     foreach ($req_fields as $field) {
         if (empty($form[$field])) {
@@ -126,11 +126,15 @@ $content_reg = include_template('reg.php', $reg_data);
 // Подключаем sidebar для страниц регистрации
 $sidebar = ' container--with-sidebar';
 
+// class по умолчанию для тега body
+$home = '';
+
 // Шаблон страницы регистрации на сайте
 $layout_guest = include_template('layout-guest.php', [
     'content'   =>  $content_reg,
     'title'     => 'Document',
     'sidebar'   => $sidebar,
+    'home'      => $home,
 ]);
 
 print($layout_guest);
