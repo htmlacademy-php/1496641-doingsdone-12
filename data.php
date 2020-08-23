@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-error_reporting(E_ALL);
+// error_reporting(E_ALL);
 
 // Передадим все данные о пользователе из сессии в массив $user_data
 $user_data = [];
@@ -28,15 +28,17 @@ $db = [
 ];
 
 // Соединимся БД
-$connect = mysqli_connect($db['host'], $db['user'], $db['password'], $db['database']);
+$connect = @mysqli_connect($db['host'], $db['user'], $db['password'], $db['database']);
 
-// Установим кодировку для обмена данными пользователь -> БД
-mysqli_set_charset($connect, "utf8");
-
-// Проверка соединения с БД
-if (!$db) {
-    die;
-};
+if (!$connect) {
+    echo '<strong>Ошибка:</strong> Невозможно установить соединение с MySQL<br>' . PHP_EOL;
+    echo '<strong>Код ошибки errno:</strong> ' . mysqli_connect_errno() . '<br>' . PHP_EOL;
+    echo '<strong>Текст ошибки error:</strong> ' . mysqli_connect_error() . '<br>' . PHP_EOL;
+    // exit;
+} else {
+    // Установим кодировку для обмена данными пользователь -> БД
+    mysqli_set_charset($connect, "utf8");
+}
 
 // Получим id пользователя из данных сессии
 $user_id = '';
@@ -106,14 +108,16 @@ $result_search = [];
 // Результат поиска
 if ($search) {
 
-    $sql_q = "SELECT * FROM task WHERE (user_id = {$user_data['user_id']})
-            AND MATCH (title_task) AGAINST(? IN BOOLEAN MODE) AND status_task = 0";
+    $sql_q = "SELECT t.user_id, t.status_task, t.title_task, t.link_file, t.date_task_end FROM task t
+            JOIN user_reg u ON t.user_id = u.user_id
+            WHERE MATCH(title_task) AGAINST(? IN BOOLEAN MODE)
+            AND u.user_id = {$user_data['user_id']} AND t.status_task = 0";
 
     // Данные для запроса
-    $data = ['search' => $search . '*'];
+    $data_search = ['search' => $search . '*'];
 
     // Создаем подготовленное выражение
-    $stmt = db_get_prepare_stmt($connect, $sql_q, $data);
+    $stmt = db_get_prepare_stmt($connect, $sql_q, $data_search);
 
     // Выполнение подготовленного запроса
     mysqli_stmt_execute($stmt);
@@ -151,14 +155,11 @@ if (isset($_GET['id'])) {
                     AND t.status_task = $status_completed_tasks";
 }
 
-$result_all_tasks = mysqli_query($connect, $sql_cnt_tasks);
-
-if ($result_all_tasks) {
-    // Количество всех задач пользователя в зависимости от статуса задачи
-    $all_tasks = mysqli_fetch_assoc($result_all_tasks)['cnt'];
+if ($connect) {
+    $result_all_tasks = mysqli_query($connect, $sql_cnt_tasks);
 }
 
-// Если есть выдача по поиску то посчитаем количество совпадений (задач)
-if ($result_search) {
-    $all_tasks = count($result_search);
+if (!empty($result_all_tasks)) {
+    // Количество всех задач пользователя в зависимости от статуса задачи
+    $all_tasks = mysqli_fetch_assoc($result_all_tasks)['cnt'];
 }

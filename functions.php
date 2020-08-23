@@ -31,6 +31,19 @@ function include_template($name, array $data = [])
  * @return string итоговый результат - количество дней до выполнения задачи
  */
 
+// function dateTask($task_end)
+// {
+//     $ts_diff = false;
+
+//     if (!empty($task_end)) {
+//         $secs_in_day = 86400; // 24 часа = 86400 секунд
+//         $now_ts = time(); //текущая метка timestamp
+//         $end_ts = strtotime($task_end); // дата выполнения задачи timestamp
+//         $ts_diff = floor(($end_ts - $now_ts) / $secs_in_day); // количество оставшихся дней до выполнения задачи
+//     }
+//     return $ts_diff;
+// }
+
 function dateTask($task_end)
 {
     if (!empty($task_end)) {
@@ -44,7 +57,6 @@ function dateTask($task_end)
     }
 }
 
-
 /**
  * Выводит результат запроса sql в виде массива
  * @param string $sql запрос к БД
@@ -55,16 +67,19 @@ function dateTask($task_end)
 
 function resQuerySQL($sql, $connect)
 {
-    // Получаем ресурс результата
-    $result = mysqli_query($connect, $sql);
 
     $sql_table = [];
 
-    // Проверим результат извлечения данных
-    if ($result) {
+    if ($connect) {
+        // Получаем ресурс результата
+        $result = mysqli_query($connect, $sql);
+    }
+
+    if (!empty($result)) {
+        // Запишем результат выборки в массив
         $sql_table = mysqli_fetch_all($result, MYSQLI_ASSOC);
     }
-    // Возвращаем результат запроса в виде массива
+
     return $sql_table;
 }
 

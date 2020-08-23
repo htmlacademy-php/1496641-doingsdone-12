@@ -110,6 +110,9 @@ if ($_GET['today'] ?? '') {
     if ($tasks_list) {
         // Количество задач, результат работы фильтра
         $filter_all_tasks = count($tasks_list);
+
+        // Перепишем общее количество задач согласно фильтра для пагинации
+        $all_tasks =  $filter_all_tasks;
     }
 }
 
@@ -125,6 +128,9 @@ if ($_GET['tomorrow'] ?? '') {
     if ($tasks_list) {
         // Количество задач, результат работы фильтра
         $filter_all_tasks = count($tasks_list);
+
+        // Перепишем общее количество задач согласно фильтра для пагинации
+        $all_tasks =  $filter_all_tasks;
     }
 }
 
@@ -135,6 +141,9 @@ if ($_GET['old'] ?? '') {
     if ($tasks_list) {
         // Количество задач, результат работы фильтра
         $filter_all_tasks = count($tasks_list);
+
+        // Перепишем общее количество задач согласно фильтра для пагинации
+        $all_tasks =  $filter_all_tasks;
     }
 }
 
@@ -171,6 +180,9 @@ $cur_page = $_GET['page'] ?? 1;
 // Количество задач на одной странице
 $task_one_page = 3;
 
+// Значение количества задач по умолчанию
+$all_tasks = 0;
+
 // Общее количество страниц
 if ($filter_all_tasks) {
     // Если активен фильтр
@@ -199,7 +211,6 @@ if ($cur_page < $pages_count) {
 } else {
     $pages_next = $pages_count;
 }
-
 
 /**
  *

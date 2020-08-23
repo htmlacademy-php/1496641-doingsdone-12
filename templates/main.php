@@ -106,7 +106,7 @@
 
                 foreach ($tasks_list as $key => $value) :
 
-                    if (!$show_completed_tasks && $value['status_task']) {
+                    if (!$show_completed_tasks && !empty($value['status_task'])) {
                         continue;
                     }
 
@@ -126,7 +126,7 @@
                     <tr class="tasks__item task <?= $value['status_task'] ? 'task--completed' : $task_class;  ?>">
                         <td class="task__select">
                             <label class="checkbox task__checkbox">
-                                <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?= $value['status_task'] ? 'checked' : ''; ?>>
+                                <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?= !empty($value['status_task']) ? 'checked' : ''; ?>>
                                 <a class="checkbox__text" href="index.php?task_completed=<?= $get_task_completed; ?>&id_task=<?= $value['task_id'] ?><?= $show_completed_tasks ? '&show_completed=1' : '' ?>"><?= htmlspecialchars($value['title_task']); ?></a>
                             </label>
                         </td>
@@ -151,7 +151,7 @@
         </table>
 
         <!-- Pagination -->
-        <?php if (($all_tasks > $task_one_page) && (!empty($tasks_list))) : ?>
+        <?php if ((empty($_GET['q'])) && ($all_tasks > $task_one_page) && (!empty($tasks_list))) : ?>
 
             <div class="tasks-pagination">
                 <nav aria-label="Page navigation">
@@ -170,7 +170,6 @@
 
                                 <a class="page-link" href="index.php?<?= isset($_GET['id']) ? 'id=' . $_GET['id'] . '&page=' . $page : 'page=' . $page ?><?= $active_filter_link; ?><?= $show_completed_tasks ? '&show_completed=1' : '' ?>"><?= $page; ?></a>
 
-                                <!-- <a class="page-link" href="index.php?<?= $_GET['id'] ? 'id=' . $_GET['id'] . '&page=' . $page : 'page=' . $page ?><?= $active_filter_link; ?><?= $show_completed_tasks ? '&show_completed=1' : '' ?>"><?= $page; ?></a> -->
                             </li>
 
                         <?php endforeach; ?>
