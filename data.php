@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-// error_reporting(E_ALL);
+error_reporting(E_ALL);
 
 // Передадим все данные о пользователе из сессии в массив $user_data
 $user_data = [];
@@ -9,7 +9,6 @@ $user_data = [];
 if (isset($_SESSION['user'])) {
     $user_data = $_SESSION['user'];
 }
-
 
 /**
  *
@@ -89,7 +88,7 @@ $sql_tasks = "SELECT p.proj_name, t.task_id, t.status_task, t.title_task, t.link
             WHERE u.user_id = $user_id
             AND p.proj_id = $proj_id
             AND t.status_task = $status_completed_tasks
-            ORDER BY t.task_id";
+            ORDER BY t.task_id DESC";
 
 // Результат запроса в виде массива
 $tasks_list = resQuerySQL($sql_tasks, $connect);

@@ -131,6 +131,8 @@ if ($_GET['tomorrow'] ?? '') {
 
         // Перепишем общее количество задач согласно фильтра для пагинации
         $all_tasks =  $filter_all_tasks;
+        debug($all_tasks);
+        debug($filter_all_tasks);
     }
 }
 
@@ -144,6 +146,7 @@ if ($_GET['old'] ?? '') {
 
         // Перепишем общее количество задач согласно фильтра для пагинации
         $all_tasks =  $filter_all_tasks;
+        debug($all_tasks);
     }
 }
 
@@ -181,7 +184,7 @@ $cur_page = $_GET['page'] ?? 1;
 $task_one_page = 3;
 
 // Значение количества задач по умолчанию
-$all_tasks = 0;
+// $all_tasks = 0;
 
 // Общее количество страниц
 if ($filter_all_tasks) {

@@ -100,12 +100,10 @@ if (isset($form['submit'])) {
         ];
 
         // Проверяем загруженный файл на ошибки сервера
-        if ($fileName && $fileErr != 0) {
-            // Запишем ошибку в массив ошибок
-            foreach ($fileUploadErrors as $errs) {
-                if ($errs = $fileErr) {
-                    $errors['file'] = $fileUploadErrors[$errs];
-                }
+        foreach ($fileUploadErrors as $errs) {
+            if ($fileName && $fileErr !== 0 && $errs === $fileErr) {
+                // Запишем ошибку в массив ошибок
+                $errors['file'] = $fileUploadErrors[$errs];
             }
         }
     }
@@ -130,8 +128,8 @@ if (!empty($form) && empty($errors)) {
         'proj_id'       => $form['project'],
         'user_id'       => $user_id,
         'title_task'    => $form['name'],
-        'link_file'     => (isset($_FILES['file'])) ? $linkFile : '',
-        'date_task_end' => (!empty($form['date'])) ? $form['date'] : '',
+        'link_file'     => (isset($_FILES['file'])) ? $linkFile : NULL,
+        'date_task_end' => (!empty($form['date'])) ? $form['date'] : NULL,
     ];
 
     // Создаем подготовленное выражение
@@ -176,5 +174,5 @@ if ($user_data['user_id']) {
     print($layout_content);
 } else {
     // Редирект пользователя на главную для регистрации
-    header('location: /');
+    header('location: index.php');
 }
