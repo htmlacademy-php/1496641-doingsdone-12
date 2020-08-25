@@ -95,6 +95,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
  * * ФИЛЬТРЫ ДЛЯ ЗАДАЧ В ПРОЕКТЕ
  */
 
+// Значение количества задач по умолчанию
+$all_tasks = '';
+
 // Объявим переменную для количество задач согласно фильтра
 $filter_all_tasks = '';
 
@@ -131,8 +134,6 @@ if ($_GET['tomorrow'] ?? '') {
 
         // Перепишем общее количество задач согласно фильтра для пагинации
         $all_tasks =  $filter_all_tasks;
-        debug($all_tasks);
-        debug($filter_all_tasks);
     }
 }
 
@@ -146,7 +147,6 @@ if ($_GET['old'] ?? '') {
 
         // Перепишем общее количество задач согласно фильтра для пагинации
         $all_tasks =  $filter_all_tasks;
-        debug($all_tasks);
     }
 }
 
@@ -178,13 +178,10 @@ foreach ($filters as $filter) {
  */
 
 // Определим текущую страницу
-$cur_page = $_GET['page'] ?? 1;
+$cur_page = intval($_GET['page'] ?? 1);
 
 // Количество задач на одной странице
 $task_one_page = 3;
-
-// Значение количества задач по умолчанию
-// $all_tasks = 0;
 
 // Общее количество страниц
 if ($filter_all_tasks) {
@@ -199,7 +196,7 @@ if ($filter_all_tasks) {
 }
 
 // Заполним массив номерами всех страниц
-$pages = range(1, $pages_count);
+$pages = range(1, intval($pages_count));
 
 // Предыдущая страница
 if ($cur_page > 1) {

@@ -7,7 +7,7 @@
             <nav class="main-navigation">
                 <?php foreach ($projects as $key => $value) : ?>
                     <ul class="main-navigation__list">
-                        <li class="main-navigation__list-item <?= $_GET['id'] == $value['proj_id'] ? 'main-navigation__list-item--active' : '' ?>">
+                        <li class="main-navigation__list-item <?= $_GET['id'] === $value['proj_id'] ? 'main-navigation__list-item--active' : '' ?>">
                             <a class="main-navigation__list-item-link" href="<?= 'index.php?id=' . $value['proj_id'] ?>"><?= htmlspecialchars($value['proj_name']) ?></a>
                             <span class="main-navigation__list-item-count"><?= $value['count']; ?></span>
                         </li>
@@ -35,7 +35,7 @@
         <div class="tasks-controls">
             <nav class="tasks-switch">
 
-                <a href="index.php?<?= isset($_GET['id']) ? 'id=' . $_GET['id'] . '&' : '' ?>all=1<?= $show_completed_tasks ? '&show_completed=1' : '' ?>" class="tasks-switch__item <?= $_GET['all'] ? 'tasks-switch__item--active' : '' ?>">Все задачи</a>
+                <a href="index.php?<?= isset($_GET['id']) ? 'id=' . $_GET['id'] . '&' : '' ?>all=1<?= $show_completed_tasks ? '&show_completed=1' : '' ?>" class="tasks-switch__item <?= isset($_GET['all']) ? 'tasks-switch__item--active' : '' ?>">Все задачи</a>
 
                 <a href="index.php?<?= isset($_GET['id']) ? 'id=' . $_GET['id'] . '&' : '' ?>today=1<?= $show_completed_tasks ? '&show_completed=1' : '' ?>" class="tasks-switch__item <?= $_GET['today'] ? 'tasks-switch__item--active' : '' ?>">Повестка дня</a>
 
@@ -61,12 +61,12 @@
             foreach ($projects as $project => $value) {
 
                 // Выводим сообщение если нет задач в проекте
-                if ((($_GET['id'] ?? '') == $value['proj_id']) && !$value['count']) {
+                if ((($_GET['id'] ?? '') === $value['proj_id']) && !$value['count']) {
                     echo '<span style="font-size: 16px; font-weight: bold;">Нет задач для этого проекта</span>';
                 }
 
                 // Выводим сообщение если нет задач в фильтре
-                if ((($_GET['id'] ?? '') == $value['proj_id']) && $value['count'] && !$tasks_list) {
+                if ((($_GET['id'] ?? '') === $value['proj_id']) && $value['count'] && !$tasks_list) {
                     echo '<span style="font-size: 16px; font-weight: bold;">Нет задач для этого фильтра</span>';
                 }
             }
@@ -166,7 +166,7 @@
 
                         <?php foreach ($pages as $page) : ?>
 
-                            <li class="page-item <?= ($page == $cur_page) ? 'active' : '' ?>">
+                            <li class="page-item <?= ($page === $cur_page) ? 'active' : '' ?>">
 
                                 <a class="page-link" href="index.php?<?= isset($_GET['id']) ? 'id=' . $_GET['id'] . '&page=' . $page : 'page=' . $page ?><?= $active_filter_link; ?><?= $show_completed_tasks ? '&show_completed=1' : '' ?>"><?= $page; ?></a>
 
