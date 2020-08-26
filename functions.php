@@ -213,20 +213,6 @@ function db_get_prepare_stmt($link, $sql, $data = [])
     return $stmt;
 }
 
-
-/**
- * Debug - отладка кода, форматирование массивов при выводе
- *
- * @param $var - массив для вывода
- */
-
-function debug($var)
-{
-    echo '<pre>';
-    var_dump($var);
-    echo '</pre>';
-}
-
 /**
  * Выводим задачи для фильтров "Повестка дня" и "Завтра"
  *
@@ -279,7 +265,7 @@ function oldTasksFilter($tasks_list)
     foreach ($tasks_date_end as $key => $value) {
 
         // Проверим даты задач и просроченные задачи соберем в новый массив $old_day
-        if ($value != NULL && strtotime($value) < $today) {
+        if ($value !== NULL && strtotime($value) < $today) {
             // Соберем новый массив из ключей просроченных задач и дат окончания задач
             $old_day[$key] = [$value];
         }
@@ -301,4 +287,23 @@ function oldTasksFilter($tasks_list)
         // Вернем массив просроченных задач
         return $filter_task_list_old;
     }
+}
+
+/**
+ * Проверяем $_GET на наличие ключа(индекса),
+ * а при отсутствии значения для ключа - устанавливаем значение по умолчанию
+ *
+ * @param $index индекс массива $_GET
+ * @param $defaultValue значения параметра $_GET по умолчанию
+ * @return значение $_GET[$index] если ключ присутствует в массиве $_GET
+ *  либо вернет значение по умолчанию для параметра массива $_GET
+ */
+
+function getParameter($index, $defaultValue)
+{
+    if (array_key_exists($index, $_GET)) {
+        $value = intval($_GET[$index]);
+        return isset($value) ? $value : $defaultValue;
+    }
+    return $defaultValue;
 }

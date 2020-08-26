@@ -27,13 +27,13 @@ $db = [
 ];
 
 // Соединимся БД
-$connect = @mysqli_connect($db['host'], $db['user'], $db['password'], $db['database']);
+$connect = mysqli_connect($db['host'], $db['user'], $db['password'], $db['database']);
 
 if (!$connect) {
     echo '<strong>Ошибка:</strong> Невозможно установить соединение с MySQL<br>' . PHP_EOL;
     echo '<strong>Код ошибки errno:</strong> ' . mysqli_connect_errno() . '<br>' . PHP_EOL;
     echo '<strong>Текст ошибки error:</strong> ' . mysqli_connect_error() . '<br>' . PHP_EOL;
-    // exit;
+    exit;
 } else {
     // Установим кодировку для обмена данными пользователь -> БД
     mysqli_set_charset($connect, "utf8");
@@ -68,7 +68,7 @@ $projects = resQuerySQL($sql_projects, $connect);
 $status_completed_tasks = 't.status_task';
 
 // Условие для актуальных задач
-if (!isset($_GET['show_completed']) || $_GET['show_completed'] == 0) {
+if (!isset($_GET['show_completed']) || $_GET['show_completed'] === 0) {
     // Только актуальные задачи
     $status_completed_tasks = 0;
 }

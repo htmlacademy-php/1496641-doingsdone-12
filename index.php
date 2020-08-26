@@ -21,7 +21,6 @@ if ($search && !$num_rows) {
 // Объявим массив значений id проектов для валидации
 $valid_id = [];
 
-
 /**
  *
  * * CHECK - ЗАДАЧА ВЫПОЛНЕНА
@@ -37,14 +36,14 @@ if (!empty($tasks_list)) {
     }
 }
 
-// Запишем в переменную id задачи
-$get_task_id = $_GET['id_task'] ?? '';
+// Значение id задачи от пользователя по умолчанию
+$get_task_id = getParameter('id_task', 0);
 
 // Значение статуса задачи по умолчанию (не выполнено)
-$get_task_completed = $_GET['task_completed'] ?? '0';
+$get_task_completed = getParameter('task_completed', 0);
 
 // значение выполненных задач по умолчанию
-$show_completed_tasks = $_GET['show_completed'] ?? '0';
+$show_completed_tasks = getParameter('show_completed', 0);
 
 // Проверяем значение "Показывать выполненные" на false
 // и назначаем противоположные для статуса задачи true
@@ -85,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $show_completed_tasks = 0;
 
     // Показываем выполненные задачи
-    if ($_GET['show_completed'] ?? '') {
+    if ($_GET['show_completed'] ?? 0) {
         $show_completed_tasks = 1;
     }
 }
@@ -96,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
  */
 
 // Значение количества задач по умолчанию
-$all_tasks = '';
+$all_tasks = 0;
 
 // Объявим переменную для количество задач согласно фильтра
 $filter_all_tasks = '';
@@ -255,10 +254,8 @@ if (isset($user_data['user_id'])) {
     $content = $guest;
 }
 
-
 // Для страницы главная шаблон гость
 $home = 'class="body-background"';
-
 
 // Данные для передачи в шаблон layout
 $layout_data = [
