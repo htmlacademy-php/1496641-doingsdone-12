@@ -5,14 +5,18 @@
 
         <div id="projects">
             <nav class="main-navigation">
+
                 <?php foreach ($projects as $key => $value) : ?>
+
                     <ul class="main-navigation__list">
-                        <li class="main-navigation__list-item <?= $_GET['id'] === $value['proj_id'] ? 'main-navigation__list-item--active' : '' ?>">
+                        <li class="main-navigation__list-item <?= $get_id === $value['proj_id'] ? 'main-navigation__list-item--active' : '' ?>">
                             <a class="main-navigation__list-item-link" href="<?= 'index.php?id=' . $value['proj_id'] ?>"><?= htmlspecialchars($value['proj_name']) ?></a>
                             <span class="main-navigation__list-item-count"><?= $value['count']; ?></span>
                         </li>
                     </ul>
+
                 <?php endforeach; ?>
+
             </nav>
         </div>
 
@@ -35,13 +39,13 @@
         <div class="tasks-controls">
             <nav class="tasks-switch">
 
-                <a href="index.php?<?= isset($_GET['id']) ? 'id=' . $_GET['id'] . '&' : '' ?>all=1<?= $show_completed_tasks ? '&show_completed=1' : '' ?>" class="tasks-switch__item <?= isset($_GET['all']) ? 'tasks-switch__item--active' : '' ?>">Все задачи</a>
+                <a href="index.php?<?= $get_id ? 'id=' . $get_id . '&' : '' ?>all=1" class="tasks-switch__item <?= $get_all ? 'tasks-switch__item--active' : '' ?>">Все задачи</a>
 
-                <a href="index.php?<?= isset($_GET['id']) ? 'id=' . $_GET['id'] . '&' : '' ?>today=1<?= $show_completed_tasks ? '&show_completed=1' : '' ?>" class="tasks-switch__item <?= $_GET['today'] ? 'tasks-switch__item--active' : '' ?>">Повестка дня</a>
+                <a href="index.php?<?= $get_id ? 'id=' . $get_id . '&' : '' ?>today=1" class="tasks-switch__item <?= $get_today ? 'tasks-switch__item--active' : '' ?>">Повестка дня</a>
 
-                <a href="index.php?<?= isset($_GET['id']) ? 'id=' . $_GET['id'] . '&' : '' ?>tomorrow=1<?= $show_completed_tasks ? '&show_completed=1' : '' ?>" class="tasks-switch__item <?= $_GET['tomorrow'] ? 'tasks-switch__item--active' : '' ?>">Завтра</a>
+                <a href="index.php?<?= $get_id ? 'id=' . $get_id . '&' : '' ?>tomorrow=1" class="tasks-switch__item <?= $get_tomorrow ? 'tasks-switch__item--active' : '' ?>">Завтра</a>
 
-                <a href="index.php?<?= isset($_GET['id']) ? 'id=' . $_GET['id'] . '&' : '' ?>old=1<?= $show_completed_tasks ? '&show_completed=1' : '' ?>" class="tasks-switch__item <?= $_GET['old'] ? 'tasks-switch__item--active' : '' ?>">Просроченные</a>
+                <a href="index.php?<?= $get_id ? 'id=' . $get_id . '&' : '' ?>old=1" class="tasks-switch__item <?= $get_old ? 'tasks-switch__item--active' : '' ?>">Просроченные</a>
 
             </nav>
 
@@ -61,12 +65,12 @@
             foreach ($projects as $project => $value) {
 
                 // Выводим сообщение если нет задач в проекте
-                if ((($_GET['id'] ?? '') === $value['proj_id']) && !$value['count']) {
+                if (($get_id === $value['proj_id']) && !$value['count']) {
                     echo '<span style="font-size: 16px; font-weight: bold;">Нет задач для этого проекта</span>';
                 }
 
                 // Выводим сообщение если нет задач в фильтре
-                if ((($_GET['id'] ?? '') === $value['proj_id']) && $value['count'] && !$tasks_list) {
+                if (($get_id === $value['proj_id']) && $value['count'] && !$tasks_list) {
                     echo '<span style="font-size: 16px; font-weight: bold;">Нет задач для этого фильтра</span>';
                 }
             }
@@ -77,7 +81,7 @@
             }
 
             // Валидация proj_id, отправка заголовка 404 если proj_id = false
-            if (!empty($_GET['id']) && !in_array($_GET['id'], $valid_id)) {
+            if (!empty($get_id) && !in_array($get_id, $valid_id)) {
                 header("HTTP/1.1 404 Not Found");
                 print($page404);
             };
@@ -121,6 +125,7 @@
                     } else {
                         $task_class = '';
                     }
+
             ?>
 
                     <tr class="tasks__item task <?= $value['status_task'] ? 'task--completed' : $task_class;  ?>">
@@ -158,7 +163,7 @@
                     <ul class="pagination">
 
                         <li class="page-item">
-                            <a class="page-link" href="index.php?<?= isset($_GET['id']) ? 'id=' . $_GET['id'] . '&page=' . $pages_prev : 'page=' . $pages_prev; ?><?= $active_filter_link; ?><?= $show_completed_tasks ? '&show_completed=1' : '' ?>" aria-label="Previous">
+                            <a class="page-link" href="index.php?<?= $get_id ? 'id=' . $get_id . '&page=' . $pages_prev : 'page=' . $pages_prev; ?><?= $active_filter_link; ?><?= $show_completed_tasks ? '&show_completed=1' : '' ?>" aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                                 <span class="sr-only">Назад</span>
                             </a>
@@ -168,7 +173,7 @@
 
                             <li class="page-item <?= ($page === $cur_page) ? 'active' : '' ?>">
 
-                                <a class="page-link" href="index.php?<?= isset($_GET['id']) ? 'id=' . $_GET['id'] . '&page=' . $page : 'page=' . $page ?><?= $active_filter_link; ?><?= $show_completed_tasks ? '&show_completed=1' : '' ?>"><?= $page; ?></a>
+                                <a class="page-link" href="index.php?<?= $get_id ? 'id=' . $get_id . '&page=' . $page : 'page=' . $page ?><?= $active_filter_link; ?><?= $show_completed_tasks ? '&show_completed=1' : '' ?>"><?= $page; ?></a>
 
                             </li>
 

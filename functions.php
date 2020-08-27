@@ -290,20 +290,22 @@ function oldTasksFilter($tasks_list)
 }
 
 /**
- * Проверяем $_GET на наличие ключа(индекса),
- * а при отсутствии значения для ключа - устанавливаем значение по умолчанию
+ * Убираем ошибки типа Notice: Undefined index
+ *
+ * Проверяем на наличие $_GET параметр,
+ * а при отсутствии - устанавливаем значение по умолчанию
  *
  * @param $index индекс массива $_GET
  * @param $defaultValue значения параметра $_GET по умолчанию
- * @return значение $_GET[$index] если ключ присутствует в массиве $_GET
- *  либо вернет значение по умолчанию для параметра массива $_GET
+ * @return вернет значение $_GET[$index], а при отсутствии его
+ * вернет значение по умолчанию для параметра $_GET
  */
 
 function getParameter($index, $defaultValue)
 {
     if (array_key_exists($index, $_GET)) {
-        $value = intval($_GET[$index]);
-        return isset($value) ? $value : $defaultValue;
+        $value = $_GET[$index];
+        return $value ? intval($value) : intval($defaultValue);
     }
-    return $defaultValue;
+    return intval($defaultValue);
 }

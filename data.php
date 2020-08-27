@@ -3,6 +3,8 @@
 session_start();
 error_reporting(E_ALL);
 
+require_once 'functions.php';
+
 // Передадим все данные о пользователе из сессии в массив $user_data
 $user_data = [];
 
@@ -59,6 +61,14 @@ $sql_projects = "SELECT p.proj_id, p.proj_name, t.status_task, COUNT(t.task_id) 
 // Выборка из БД в виде массива
 $projects = resQuerySQL($sql_projects, $connect);
 
+// Изменим тип данных в массиве $projects -> str to int
+foreach ($projects as $key => $value) {
+    $value['proj_id'] = intval($value['proj_id']);
+    $value['status_task'] = intval($value['status_task']);
+    $value['count'] = intval($value['count']);
+    [$projects[$key]] = [$value];
+}
+
 /**
  *
  * * ВЫВОД ЗАДАЧ
@@ -77,7 +87,7 @@ if (!isset($_GET['show_completed']) || $_GET['show_completed'] === 0) {
 $proj_id = 'p.proj_id';
 
 if (!empty($_GET['id'])) {
-    $proj_id = $_GET['id'];
+    $proj_id = getParameter('id', 0);
 }
 
 // Выборка всех задач для активного пользователя
@@ -92,6 +102,13 @@ $sql_tasks = "SELECT p.proj_name, t.task_id, t.status_task, t.title_task, t.link
 
 // Результат запроса в виде массива
 $tasks_list = resQuerySQL($sql_tasks, $connect);
+
+// Изменим тип данных в массиве $tasks_list -> str to int
+foreach ($tasks_list as $key => $value) {
+    $value['task_id'] = intval($value['task_id']);
+    $value['status_task'] = intval($value['status_task']);
+    [$tasks_list[$key]] = [$value];
+}
 
 /**
  *

@@ -18,6 +18,9 @@ if ($search && !$num_rows) {
     $not_found = '<h4>Ничего не найдено по вашему запросу</h4>';
 }
 
+// Значение id проекта по умолчанию
+$get_id = getParameter('id', 0);
+
 // Объявим массив значений id проектов для валидации
 $valid_id = [];
 
@@ -84,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $show_completed_tasks = 0;
 
     // Показываем выполненные задачи
-    if ($_GET['show_completed'] ?? 0) {
+    if (getParameter('show_completed', 0)) {
         $show_completed_tasks = 1;
     }
 }
@@ -100,8 +103,13 @@ $all_tasks = 0;
 // Объявим переменную для количество задач согласно фильтра
 $filter_all_tasks = '';
 
+// Значение фильтра "Все задачи"
+$get_all = getParameter('all', 0);
+
 // Вывод фильтра для задачи "Повестка дня"
-if ($_GET['today'] ?? '') {
+$get_today = getParameter('today', 0);
+
+if ($get_today) {
 
     // Текущая дата
     $today = date("Y-m-d");
@@ -119,7 +127,9 @@ if ($_GET['today'] ?? '') {
 }
 
 // Вывод фильтра для задачи "Завтра"
-if ($_GET['tomorrow'] ?? '') {
+$get_tomorrow = getParameter('tomorrow', 0);
+
+if ($get_tomorrow) {
 
     // Получим завтрашний день
     $tomorrow = date("Y-m-d", strtotime("+1 days"));
@@ -137,7 +147,10 @@ if ($_GET['tomorrow'] ?? '') {
 }
 
 // Вывод фильтра для задач "Просроченные"
-if ($_GET['old'] ?? '') {
+$get_old = getParameter('old', 0);
+
+if ($get_old) {
+
     $tasks_list = oldTasksFilter($tasks_list);
 
     if ($tasks_list) {
@@ -177,7 +190,7 @@ foreach ($filters as $filter) {
  */
 
 // Определим текущую страницу
-$cur_page = intval($_GET['page'] ?? 1);
+$cur_page = getParameter('page', 1);
 
 // Количество задач на одной странице
 $task_one_page = 3;
@@ -191,7 +204,7 @@ if ($filter_all_tasks) {
         $all_tasks = count($tasks_list);
     }
     // Количество всех задач без учета фильтров
-    $pages_count = ceil($all_tasks / $task_one_page);
+    $pages_count = intval(ceil($all_tasks / $task_one_page));
 }
 
 // Заполним массив номерами всех страниц
@@ -240,6 +253,12 @@ $data_user = [
     'task_one_page'         => $task_one_page,
     'filter_all_tasks'      => $filter_all_tasks,
     'active_filter_link'    => $active_filter_link,
+    'get_id'                => $get_id,
+    'get_all'               => $get_all,
+    'get_today'             => $get_today,
+    'get_tomorrow'          => $get_tomorrow,
+    'get_old'               => $get_old,
+
 ];
 
 // Контент для авторизированного пользователя
