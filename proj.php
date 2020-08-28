@@ -9,7 +9,11 @@ require_once('data.php');
  */
 
 $form = $_POST;
+
+// Обязательное поле для заполнения
 $required = ['project_name',];
+
+// Массив ошибок
 $errors = [];
 
 // Если форма была отправлена
@@ -83,7 +87,6 @@ if ($user_data['user_id']) {
 
     // Данные для передачи в шаблон
     $proj_data = [
-        // 'count_tasks' => $count_tasks,
         'form'        => $form,
         'errors'      => $errors,
         'projects'    => $projects,
@@ -95,7 +98,7 @@ if ($user_data['user_id']) {
     // Подключаем sidebar для страниц регистрации
     $sidebar = ' container--with-sidebar';
 
-    // Шаблон страницы авторизации на сайте
+    // Шаблон страницы добавление проекта
     $layout_data = [
         'content'    =>  $content_proj,
         'title'      => 'Document',
@@ -108,5 +111,5 @@ if ($user_data['user_id']) {
     print($layout);
 } else {
     // Если не зарегистрирован тогда редирект на главную
-    header('location: /');
+    header('location: index.php');
 }

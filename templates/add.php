@@ -5,7 +5,7 @@
             <nav class="main-navigation">
                 <?php foreach ($projects as $key => $value) : ?>
                     <ul class="main-navigation__list">
-                        <li class="main-navigation__list-item <?= $_GET['id'] == $value['proj_id'] ? 'main-navigation__list-item--active' : '' ?>">
+                        <li class="main-navigation__list-item <?= $_GET['id'] === $value['proj_id'] ? 'main-navigation__list-item--active' : '' ?>">
                             <a class="main-navigation__list-item-link" href="<?= 'index.php?id=' . $value['proj_id'] ?>"><?= htmlspecialchars($value['proj_name']) ?></a>
                             <span class="main-navigation__list-item-count"><?= $value['count']; ?></span>
                         </li>
@@ -46,7 +46,7 @@
             <div class="form__row">
                 <label class="form__label" for="date">Дата выполнения</label>
 
-                <input class="form__input form__input--date <?= $errors['date'] ? 'form__input--error' : '' ?>" type="text" name="date" id="date" value="<?= postValue($form['date']); ?>" placeholder="Введите дату в формате ГГГГ-ММ-ДД">
+                <input class="form__input form__input--date <?= isset($errors['date']) ? 'form__input--error' : '' ?>" type="text" name="date" id="date" value="<?= postValue(isset($form['date'])); ?>" placeholder="Введите дату в формате ГГГГ-ММ-ДД">
 
                 <?= isset($errors['date']) ? '<p class="form__message">' . $errors['date'] . '</p>' : ''  ?>
             </div>

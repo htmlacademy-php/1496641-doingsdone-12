@@ -94,11 +94,11 @@
             // Вывод всех задач
             if ($tasks_list) :
 
-                // Смещение по ключу в массиве задач
+                // Смещение по ключу в массиве задач (пагинация)
                 $offset_key = $task_one_page;
 
                 if ($cur_page) {
-                    // Вывод задач на странице с учетом пагинации
+                    // Вывод задач на с пагинацией
                     $output_tasks_list = array_slice($tasks_list, (($cur_page - 1) * 3), $offset_key, $preserve_keys = TRUE);
                 } else {
                     // Вывод задач без пагинации
@@ -114,12 +114,13 @@
                         continue;
                     }
 
+                    // Значение класса по умолчанию
                     $task_class = '';
 
                     // Запишем количество дней в переменную
                     $date = dateTask($value['date_task_end']);
 
-                    // Проверим дату от пользователя с текущей (огонь если текущая дата или уже прошла)
+                    // Проверим дату от пользователя с текущей (огонь если текущая дата или прошла)
                     if ($date && $date <= -1) {
                         $task_class .= 'task--important';
                     } else {
@@ -180,7 +181,7 @@
                         <?php endforeach; ?>
 
                         <li class="page-item">
-                            <a class="page-link" href="index.php?<?= isset($_GET['id']) ? 'id=' . $_GET['id'] . '&page=' . $pages_next  : 'page=' . $pages_next; ?><?= $active_filter_link; ?><?= $show_completed_tasks ? '&show_completed=1' : '' ?>" aria-label="Next">
+                            <a class="page-link" href="index.php?<?= $get_id ? 'id=' . $get_id . '&page=' . $pages_next  : 'page=' . $pages_next; ?><?= $active_filter_link; ?><?= $show_completed_tasks ? '&show_completed=1' : '' ?>" aria-label="Next">
                                 <span class="sr-only">Вперед</span>
                                 <span aria-hidden="true">&raquo;</span>
                             </a>

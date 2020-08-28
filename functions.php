@@ -292,13 +292,12 @@ function oldTasksFilter($tasks_list)
 /**
  * Убираем ошибки типа Notice: Undefined index
  *
- * Проверяем на наличие $_GET параметр,
- * а при отсутствии - устанавливаем значение по умолчанию
+ * Проверяем на наличие $_GET параметр.
+ * При отсутствии - устанавливаем значение по умолчанию
  *
  * @param $index индекс массива $_GET
  * @param $defaultValue значения параметра $_GET по умолчанию
- * @return вернет значение $_GET[$index], а при отсутствии его
- * вернет значение по умолчанию для параметра $_GET
+ * @return вернет значение $_GET[$index] либо значение по умолчанию
  */
 
 function getParameter($index, $defaultValue)
@@ -311,7 +310,11 @@ function getParameter($index, $defaultValue)
 }
 
 /**
- *  String to intager
+ *  Изменяем тип данных элементов массива string to integer
+ *
+ * @param array $array_change_type массив в котором нужно изменить тип данных
+ * @param array $array_key_to_int массив ключей для которых нужно изменить тип данных
+ * @return $array_change_type массив с измененным типом параметров (string to integer)
  */
 
 function changeTypeStrToInt($array_change_type, $array_key_to_int)

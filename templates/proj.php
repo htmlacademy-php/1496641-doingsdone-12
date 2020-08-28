@@ -5,7 +5,7 @@
             <nav class="main-navigation">
                 <?php foreach ($projects as $key => $value) : ?>
                     <ul class="main-navigation__list">
-                        <li class="main-navigation__list-item <?= $_GET['id'] == $value['proj_id'] ? 'main-navigation__list-item--active' : '' ?>">
+                        <li class="main-navigation__list-item <?= $value['proj_id'] ?>">
                             <a class="main-navigation__list-item-link" href="<?= 'index.php?id=' . $value['proj_id'] ?>"><?= htmlspecialchars($value['proj_name']) ?></a>
                             <span class="main-navigation__list-item-count"><?= $value['count']; ?></span>
                         </li>
