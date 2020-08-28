@@ -61,13 +61,11 @@ $sql_projects = "SELECT p.proj_id, p.proj_name, t.status_task, COUNT(t.task_id) 
 // Выборка из БД в виде массива
 $projects = resQuerySQL($sql_projects, $connect);
 
-// Изменим тип данных в массиве $projects -> str to int
-foreach ($projects as $key => $value) {
-    $value['proj_id'] = intval($value['proj_id']);
-    $value['status_task'] = intval($value['status_task']);
-    $value['count'] = intval($value['count']);
-    [$projects[$key]] = [$value];
-}
+// Запишем в массив ключи значения которых надо явно типизировать
+$projects_key_to_int = ['proj_id', 'status_task', 'count'];
+
+// Перезапишем выборку из БД изменив тип выбранных ключей (sring to integer)
+$projects = changeTypeStrToInt($projects, $projects_key_to_int);
 
 /**
  *
@@ -103,12 +101,11 @@ $sql_tasks = "SELECT p.proj_name, t.task_id, t.status_task, t.title_task, t.link
 // Результат запроса в виде массива
 $tasks_list = resQuerySQL($sql_tasks, $connect);
 
-// Изменим тип данных в массиве $tasks_list -> str to int
-foreach ($tasks_list as $key => $value) {
-    $value['task_id'] = intval($value['task_id']);
-    $value['status_task'] = intval($value['status_task']);
-    [$tasks_list[$key]] = [$value];
-}
+// Запишем в массив ключи значения которых надо явно типизировать
+$tasks_key_to_int = ['task_id', 'status_task'];
+
+// Перезапишем выборку из БД изменив тип выбранных ключей (sring to integer)
+$tasks_list = changeTypeStrToInt($tasks_list, $tasks_key_to_int);
 
 /**
  *

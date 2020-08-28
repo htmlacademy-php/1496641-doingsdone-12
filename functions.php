@@ -309,3 +309,23 @@ function getParameter($index, $defaultValue)
     }
     return intval($defaultValue);
 }
+
+/**
+ *  String to intager
+ */
+
+function changeTypeStrToInt($array_change_type, $array_key_to_int)
+{
+    foreach ($array_change_type as $key => $value) {
+
+        foreach ($array_key_to_int as $key_to_int => $index) {
+
+            if (array_key_exists($index, $value)) {
+                $value[$index] = intval($value[$index]);
+            }
+
+            [$array_change_type[$key]] = [$value];
+        }
+    }
+    return $array_change_type;
+}
