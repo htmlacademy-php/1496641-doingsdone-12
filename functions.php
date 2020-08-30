@@ -33,17 +33,16 @@ function include_template($name, array $data = [])
 
 function dateTask($task_end)
 {
+    $ts_diff = false;
+
     if (!empty($task_end)) {
         $secs_in_day = 86400; // 24 часа = 86400 секунд
         $now_ts = time(); //текущая метка timestamp
         $end_ts = strtotime($task_end); // дата выполнения задачи timestamp
         $ts_diff = floor(($end_ts - $now_ts) / $secs_in_day); // количество оставшихся дней до выполнения задачи
-        return $ts_diff;
-    } else {
-        return false;
     }
+    return $ts_diff;
 }
-
 
 /**
  * Выводит результат запроса sql в виде массива
@@ -55,14 +54,19 @@ function dateTask($task_end)
 
 function resQuerySQL($sql, $connect)
 {
-    // Получаем ресурс результата
-    $result = mysqli_query($connect, $sql);
 
-    // Проверим результат извлечения данных
-    if ($result) {
+    $sql_table = [];
+
+    if ($connect) {
+        // Получаем ресурс результата
+        $result = mysqli_query($connect, $sql);
+    }
+
+    if (!empty($result)) {
+        // Запишем результат выборки в массив
         $sql_table = mysqli_fetch_all($result, MYSQLI_ASSOC);
     }
-    // Возвращаем результат запроса в виде массива
+
     return $sql_table;
 }
 
@@ -72,21 +76,18 @@ function resQuerySQL($sql, $connect)
  * @return array двумерный ассоциативный массив, результат подготовленного запроса sql
  */
 
-function resPreparedQuerySQL($connect, $stmt)
+function resPreparedQuerySQL($stmt)
 {
     // Выполнение подготовленного запроса
     mysqli_stmt_execute($stmt);
 
     // Получим результат из подготовленного запроса
-    $res = mysqli_stmt_get_result($stmt);
-
-    // Двумерный ассоциативный массив
-    // $res = mysqli_fetch_all($res, MYSQLI_ASSOC);
+    $result = mysqli_stmt_get_result($stmt);
 
     // Одномерный ассоциативный массив
-    $res = mysqli_fetch_array($res, MYSQLI_ASSOC);
+    $result = mysqli_fetch_array($result, MYSQLI_ASSOC);
 
-    return $res;
+    return $result;
 }
 
 /**
@@ -108,20 +109,6 @@ function resQueryUser($sql, $connect)
     }
     // Возвращаем результат запроса в виде массива
     return $sql_table;
-}
-
-/**
- * Выводит количество выбранных рядов для sql запроса SELECT
- * @param string $sql запрос к БД
- * @param array $connect ассоциативный массив с параметрами для подключения к БД
- * @return int $num_rows количество рядов выборки сформированный на основании запроса $sql
- */
-
-function sqlNumRows($sql, $connect)
-{
-    $result = mysqli_query($connect, $sql);
-    $num_rows = mysqli_num_rows($result);
-    return $num_rows;
 }
 
 /**
@@ -213,20 +200,6 @@ function db_get_prepare_stmt($link, $sql, $data = [])
     return $stmt;
 }
 
-
-/**
- * Debug - отладка кода, форматирование массивов при выводе
- *
- * @param $var - массив для вывода
- */
-
-function debug($var)
-{
-    echo '<pre>';
-    var_dump($var);
-    echo '</pre>';
-}
-
 /**
  * Выводим задачи для фильтров "Повестка дня" и "Завтра"
  *
@@ -246,6 +219,8 @@ function tasksFilter($tasks_list, $day)
      * Соберем новый массив всех задач,
      * дата которых равна дате поданной на вход функции
      */
+
+    $filter_task_list = [];
 
     foreach ($tasks_list_key_day as $key => $value) {
         $filter_task_list[$value] = $tasks_list[$value];
@@ -271,11 +246,13 @@ function oldTasksFilter($tasks_list)
     // Возвращаем одномерный нумерованный массив, key -> date окончания задач
     $tasks_date_end = array_column($tasks_list, 'date_task_end');
 
+    $old_day = [];
+
     // Переберем массив всех задач и выберем просроченные задачи
     foreach ($tasks_date_end as $key => $value) {
 
         // Проверим даты задач и просроченные задачи соберем в новый массив $old_day
-        if ($value != NULL && strtotime($value) < $today) {
+        if ($value !== NULL && strtotime($value) < $today) {
             // Соберем новый массив из ключей просроченных задач и дат окончания задач
             $old_day[$key] = [$value];
         }
@@ -297,4 +274,48 @@ function oldTasksFilter($tasks_list)
         // Вернем массив просроченных задач
         return $filter_task_list_old;
     }
+}
+
+/**
+ * Убираем ошибки типа Notice: Undefined index
+ *
+ * Проверяем на наличие $_GET параметр.
+ * При отсутствии - устанавливаем значение по умолчанию
+ *
+ * @param $index индекс массива $_GET
+ * @param $defaultValue значения параметра $_GET по умолчанию
+ * @return вернет значение $_GET[$index] либо значение по умолчанию
+ */
+
+function getParameter($index, $defaultValue)
+{
+    if (array_key_exists($index, $_GET)) {
+        $value = $_GET[$index];
+        return $value ? intval($value) : intval($defaultValue);
+    }
+    return intval($defaultValue);
+}
+
+/**
+ *  Изменяем тип данных элементов массива string to integer
+ *
+ * @param array $array_change_type массив в котором нужно изменить тип данных
+ * @param array $array_key_to_int массив ключей для которых нужно изменить тип данных
+ * @return $array_change_type массив с измененным типом параметров (string to integer)
+ */
+
+function changeTypeStrToInt($array_change_type, $array_key_to_int)
+{
+    foreach ($array_change_type as $key => $value) {
+
+        foreach ($array_key_to_int as $key_to_int => $index) {
+
+            if (array_key_exists($index, $value)) {
+                $value[$index] = intval($value[$index]);
+            }
+
+            [$array_change_type[$key]] = [$value];
+        }
+    }
+    return $array_change_type;
 }

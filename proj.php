@@ -5,15 +5,20 @@ require_once('data.php');
 
 /**
  *
- * * ВАЛИДАЦИЯ ФОРМЫ, ДОБАВЛЕНИЕ ПРОЕКТА
+ * ВАЛИДАЦИЯ ФОРМЫ, ДОБАВЛЕНИЕ ПРОЕКТА
+ *
  */
 
 $form = $_POST;
+
+// Обязательное поле для заполнения
 $required = ['project_name',];
+
+// Массив ошибок
 $errors = [];
 
 // Если форма была отправлена
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Проверим поля на пустоту
     foreach ($required as $field) {
@@ -37,10 +42,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     mysqli_stmt_execute($stmt);
 
     // Получим результат из подготовленного запроса
-    $res = mysqli_stmt_get_result($stmt);
+    $result = mysqli_stmt_get_result($stmt);
 
     // Получим количество рядов в выборке по полю proj_name
-    $cnt_proj = mysqli_num_rows($res);
+    $cnt_proj = mysqli_num_rows($result);
 
     // Если проект существует в БД значит ошибка
     if ($cnt_proj) {
@@ -48,13 +53,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Если нет ошибок то добавим проект в БД
-    if (!$errors[$field]) {
+    if (!isset($errors[$field])) {
 
         $sql_proj = "INSERT INTO project(user_id, proj_name) VALUES (?, ?)";
 
         // Данные для запроса
         $data_proj = [
-            'user_id' => $us_data['user_id'],
+            'user_id' => $user_data['user_id'],
             'proj_name' => $form['project_name'],
         ];
 
@@ -75,15 +80,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 /**
  *
- * * СОБИРАЕМ ШАБЛОН - АВТОРИЗАЦИЯ НА САЙТЕ
+ * СОБИРАЕМ ШАБЛОН - АВТОРИЗАЦИЯ НА САЙТЕ
+ *
  */
 
 // Если пользователь зарегистрирован тогда показываем контент
-if ($us_data['user_id']) {
+if ($user_data['user_id']) {
 
     // Данные для передачи в шаблон
     $proj_data = [
-        'count_tasks' => $count_tasks,
         'form'        => $form,
         'errors'      => $errors,
         'projects'    => $projects,
@@ -92,18 +97,20 @@ if ($us_data['user_id']) {
     // Контент страницы авторизации на сайте
     $content_proj = include_template('proj.php', $proj_data);
 
-    // Шаблон страницы авторизации на сайте
+    // Подключаем sidebar для страниц регистрации
+    $sidebar = ' container--with-sidebar';
+
+    // Шаблон страницы добавление проекта
     $layout_data = [
-        'content'  =>  $content_proj,
-        'title'    => 'Document',
-        'sidebar'  => $sidebar,
-        'us_data'  => $us_data, // Данные о пользователе в сессии
+        'content'    =>  $content_proj,
+        'title'      => 'Document',
+        'sidebar'    => $sidebar,
+        'user_data'  => $user_data, // Данные о пользователе в сессии
     ];
 
     $layout = include_template('layout.php', $layout_data);
-
     print($layout);
 } else {
     // Если не зарегистрирован тогда редирект на главную
-    header('location: /');
+    header('location: index.php');
 }

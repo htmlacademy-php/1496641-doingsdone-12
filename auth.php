@@ -4,21 +4,23 @@ require_once('functions.php');
 require_once('data.php');
 
 // Если пользователь зарегистрирован то редирект на главную
-if ($us_data) {
+if ($user_data) {
     header("Location: index.php");
     exit();
 }
 
 /**
  *
- * * ВАЛИДАЦИЯ ФОРМЫ АВТОРИЗАЦИИ
+ * ВАЛИДАЦИЯ ФОРМЫ АВТОРИЗАЦИИ
+ *
  */
+
+$form = $_POST;
+$errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    $form = $_POST;
     $required = ['email', 'password'];
-    $errors = [];
 
     // Проверим поля на пустоту
     foreach ($required as $field) {
@@ -47,16 +49,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         mysqli_stmt_execute($stmt);
 
         // Получим результат из подготовленного запроса
-        $res = mysqli_stmt_get_result($stmt);
+        $result = mysqli_stmt_get_result($stmt);
 
         // Получим количество рядов в выборке по полю email
-        $cnt_email = mysqli_num_rows($res);
+        $cnt_email = mysqli_num_rows($result);
 
         // Результат подготовленного запроса в массив
-        $user = resPreparedQuerySQL($connect, $stmt);
+        $user = resPreparedQuerySQL($stmt);
 
         // Запишем в сессию данные о пользователе
-        $us_data = $user;
+        $user_data = $user;
 
         // Если нет результата выборки по указанному email значит ошибка
         if (!empty($form['email']) && !$cnt_email) {
@@ -68,14 +70,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!count($errors) && !empty($form['password'])) {
 
         // Запишем пароль в переменную
-        $us_pass = $us_data['pass'];
+        $user_pass = $user_data['pass'];
 
         // Верификация пароля
-        $pass = password_verify($form['password'], $us_pass);
+        $pass = password_verify($form['password'], $user_pass);
 
         // Проверим хэш пароля и откроем сессию если совпадение
         if ($pass) {
-            $_SESSION['user'] = $us_data;
+            $_SESSION['user'] = $user_data;
             header("Location: index.php");
             exit();
         } else {
@@ -93,8 +95,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 /**
  *
- * * СОБИРАЕМ ШАБЛОН - АВТОРИЗАЦИЯ НА САЙТЕ
+ * СОБИРАЕМ ШАБЛОН - АВТОРИЗАЦИЯ НА САЙТЕ
+ *
  */
+
+// Для страницы главная шаблон гость
+$home = '';
 
 // Данные для передачи в шаблон
 $auth_data = [
@@ -113,6 +119,7 @@ $layout_guest = include_template('layout-guest.php', [
     'content'   =>  $content_auth,
     'title'     => 'Document',
     'sidebar'   => $sidebar,
+    'home'      => $home,
 ]);
 
 print($layout_guest);

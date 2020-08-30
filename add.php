@@ -5,7 +5,8 @@ require_once('data.php');
 
 /**
  *
- * * ВАЛИДАЦИЯ ФОРМЫ ЗАДАЧА
+ * ВАЛИДАЦИЯ ФОРМЫ ЗАДАЧА
+ *
  */
 
 $form = $_POST;
@@ -30,7 +31,7 @@ if (isset($form['submit'])) {
     }
 
     // Проверим id проекта от пользователя с данными в БД
-    if (!in_array($form['project'], $projId)) {
+    if (!in_array(isset($form['project']), $projId)) {
         $errors['project'] = 'Опа! У нас хакер :-) нет такого проекта';
     } else {
         $project_id = $form['project'];
@@ -46,32 +47,44 @@ if (isset($form['submit'])) {
         $errors['date'] = 'Ну ты и хакер :-) формат даты гггг-мм-дд';
     }
 
-    // Работа с файлами
-    if (isset($_FILES['file'])) {
+    /**
+     *
+     * РАБОТАЕМ С ФАЙЛОМ
+     *
+     */
 
-        // Присваиваем значения переменным
-        $fileName   = trim($_FILES['file']['name']);
-        $fileSize   = $_FILES['file']['size'];
-        $fileTmp    = $_FILES['file']['tmp_name'];
-        $fileErr    = $_FILES['file']['error'];
+    // Присваиваем значения переменным
+    $fileName   = trim($_FILES['file']['name']);
+    $fileSize   = $_FILES['file']['size'];
+    $fileTmp    = $_FILES['file']['tmp_name'];
+    $fileErr    = $_FILES['file']['error'];
 
-        // Определим допустимые типы файлов
-        $fileTypes = array('png', 'xlsx', 'xls', 'doc', 'docx', 'pdf', 'jpg', 'csv', 'txt');
+    // Определим допустимые типы файлов
+    $fileTypes = array('png', 'xlsx', 'xls', 'doc', 'docx', 'pdf', 'jpg', 'csv', 'txt');
+
+    // Директория для загрузки файла
+    $dir = 'uploads/';
+
+    // Ссылка на файл
+    $linkFile = '';
+
+    // Формируем имя файла
+    $newFileName = time() . '_' . $user_id;
+
+    // Формируем имя файла, проверка на допустимое расширение
+    if (isset($_FILES['file']) && $fileSize > 0) {
+
+        // Разобьем по разделителю имя файла от пользователя
+        $tmp = explode('.', $fileName);
 
         // Получим расширение загруженного файла от пользователя
-        $fileExt = strtolower(end(explode('.', $fileName)));
+        $file_extension  = strtolower(end($tmp));
 
         // Проверим файл на допустимые типы расширений
-        if (($fileSize > 0) && in_array($fileExt, $fileTypes)) {
-
-            // Директория для загрузки файла
-            $dir = 'uploads/';
-
-            // Формируем имя файла
-            $newFileName = time() . '_' . $user_id;
+        if (($fileSize > 0) && in_array($file_extension, $fileTypes)) {
 
             // Формируем имя файла + расширение
-            $newFileName .= '.' . $fileExt;
+            $newFileName .= '.' . $file_extension;
 
             // Формируем ссылку на файл (директория + файл.расширение)
             $linkFile = $dir . $newFileName;
@@ -89,12 +102,10 @@ if (isset($form['submit'])) {
         ];
 
         // Проверяем загруженный файл на ошибки сервера
-        if ($fileName && $fileErr != 0) {
-            // Запишем ошибку в массив ошибок
-            foreach ($fileUploadErrors as $errs) {
-                if ($errs = $fileErr) {
-                    $errors['file'] = $fileUploadErrors[$errs];
-                }
+        foreach ($fileUploadErrors as $errs) {
+            if ($fileName && $fileErr !== 0 && $errs === $fileErr) {
+                // Запишем ошибку в массив ошибок
+                $errors['file'] = $fileUploadErrors[$errs];
             }
         }
     }
@@ -102,15 +113,14 @@ if (isset($form['submit'])) {
 
 /**
  *
- * * ДОБАВЛЕНИЕ ЗАДАЧИ В ПРОЕКТ
+ * ДОБАВЛЕНИЕ ЗАДАЧИ В ПРОЕКТ
+ *
  */
 
 if (!empty($form) && empty($errors)) {
 
     // Перемещение файла в директорию uploads если нет ошибок
     move_uploaded_file($fileTmp, $dir . $newFileName);
-
-    // $user_id = $_SESSION['user']['user_id'];
 
     // Сформируем подготовленный SQL запрос на добавление новой задачи
     $sql_add_task = "INSERT INTO task(proj_id, user_id, title_task, link_file, date_task_end)
@@ -121,7 +131,7 @@ if (!empty($form) && empty($errors)) {
         'proj_id'       => $form['project'],
         'user_id'       => $user_id,
         'title_task'    => $form['name'],
-        'link_file'     => (!empty($_FILES['file'])) ? $linkFile : NULL,
+        'link_file'     => (isset($_FILES['file'])) ? $linkFile : NULL,
         'date_task_end' => (!empty($form['date'])) ? $form['date'] : NULL,
     ];
 
@@ -143,16 +153,16 @@ if (!empty($form) && empty($errors)) {
 
 /**
  *
- * * ФОРМИРУЕМ ШАБЛОН
+ * ФОРМИРУЕМ ШАБЛОН
+ *
  */
 
 // Проверим авторизацию на сайте (наличие данных в сессии)
-if ($us_data['user_id']) {
+if ($user_data['user_id']) {
 
     // Данные для шаблона
     $page_content = include_template('add.php', [
         'projects'      => $projects,
-        'count_tasks'   => $count_tasks,
         'errors'        => $errors,
         'project_id'    => $project_id,
         'form'          => $form,
@@ -160,13 +170,13 @@ if ($us_data['user_id']) {
 
     // Шаблон страницы
     $layout_content = include_template('layout.php', [
-        'content' =>  $page_content,
-        'title'   => 'Дела в порядке',
-        'us_data' => $us_data,
+        'content'   =>  $page_content,
+        'title'     => 'Дела в порядке',
+        'user_data' => $user_data,
     ]);
 
     print($layout_content);
 } else {
     // Редирект пользователя на главную для регистрации
-    header('location: /');
+    header('location: index.php');
 }

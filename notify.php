@@ -17,17 +17,17 @@ $mailer = new Swift_Mailer($transport);
 
 $sql = 'SELECT * FROM user_reg';
 
-$res = mysqli_query($connect, $sql);
+$result_users = mysqli_query($connect, $sql);
 
-$users = mysqli_fetch_all($res, MYSQLI_ASSOC);
+$users = mysqli_fetch_all($result_users, MYSQLI_ASSOC);
 
 foreach ($users as $key => $value) {
 
     $sql = "SELECT * FROM task WHERE status_task = 0 AND date_task_end = CURDATE() AND task.user_id = " . $value['user_id'];
 
-    $res = mysqli_query($connect, $sql);
+    $result_tasks_today = mysqli_query($connect, $sql);
 
-    $tasks_today = mysqli_fetch_all($res, MYSQLI_ASSOC);
+    $tasks_today = mysqli_fetch_all($result_tasks_today, MYSQLI_ASSOC);
 
     if (!empty($tasks_today)) {
 

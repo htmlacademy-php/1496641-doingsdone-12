@@ -17,9 +17,16 @@ if ($search && !$num_rows) {
     $not_found = '<h4>Ничего не найдено по вашему запросу</h4>';
 }
 
+// Значение id проекта по умолчанию
+$get_id = getParameter('id', 0);
+
+// Объявим массив значений id проектов для валидации
+$valid_id = [];
+
 /**
  *
- * * CHECK - ЗАДАЧА ВЫПОЛНЕНА
+ * CHECK - ЗАДАЧА ВЫПОЛНЕНА
+ *
  */
 
 // Объявим массив для task_id из БД
@@ -32,14 +39,14 @@ if (!empty($tasks_list)) {
     }
 }
 
-// id задачи и статус задачи
-$get_task_id = (int)$_GET['id_task']; // id задачи
+// Значение id задачи от пользователя по умолчанию
+$get_task_id = getParameter('id_task', 0);
 
 // Значение статуса задачи по умолчанию (не выполнено)
-$get_task_completed = (int)$_GET['task_completed'] ?? 0;
+$get_task_completed = getParameter('task_completed', 0);
 
 // значение выполненных задач по умолчанию
-$show_completed_tasks = (int)$_GET['show_completed'] ?? 0;
+$show_completed_tasks = getParameter('show_completed', 0);
 
 // Проверяем значение "Показывать выполненные" на false
 // и назначаем противоположные для статуса задачи true
@@ -51,7 +58,7 @@ if (!$show_completed_tasks) {
 $check_id_task = in_array($get_task_id, $task_id);
 
 // Если проверка прошла то делаем запрос к БД на изменение статуса задачи
-if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     if ($check_id_task) {
 
@@ -68,30 +75,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $stmt = db_get_prepare_stmt($connect, $sql_task_true, $data);
 
         // Выполнение подготовленного запроса
-        $res = mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_execute($stmt);
 
         // После выполнения подготовленного запроса редирект
-        if ($res) {
+        if ($result) {
             header("Location: index.php");
         }
-    }
-
-    // Значение по умолчанию для "Показывать выполненные"
-    $show_completed_tasks = 0;
-
-    // Показываем выполненные задачи
-    if ($_GET['show_completed']) {
-        $show_completed_tasks = 1;
     }
 }
 
 /**
  *
- * * ФИЛЬТРЫ ДЛЯ ЗАДАЧ В ПРОЕКТЕ
+ * ФИЛЬТРЫ ДЛЯ ЗАДАЧ В ПРОЕКТЕ
+ *
  */
 
+// Значение количества задач по умолчанию
+$all_tasks = 0;
+
+// Объявим переменную для количество задач согласно фильтра
+$filter_all_tasks = '';
+
+// Значение фильтра "Все задачи"
+$get_all = getParameter('all', 0);
+
 // Вывод фильтра для задачи "Повестка дня"
-if ($_GET['today']) {
+$get_today = getParameter('today', 0);
+
+if ($get_today) {
 
     // Текущая дата
     $today = date("Y-m-d");
@@ -109,7 +120,9 @@ if ($_GET['today']) {
 }
 
 // Вывод фильтра для задачи "Завтра"
-if ($_GET['tomorrow']) {
+$get_tomorrow = getParameter('tomorrow', 0);
+
+if ($get_tomorrow) {
 
     // Получим завтрашний день
     $tomorrow = date("Y-m-d", strtotime("+1 days"));
@@ -127,7 +140,10 @@ if ($_GET['tomorrow']) {
 }
 
 // Вывод фильтра для задач "Просроченные"
-if ($_GET['old']) {
+$get_old = getParameter('old', 0);
+
+if ($get_old) {
+
     $tasks_list = oldTasksFilter($tasks_list);
 
     if ($tasks_list) {
@@ -145,22 +161,30 @@ $url_domain = $_SERVER['REQUEST_URI'] == "/";
 // Запишем ключи массива $_GET для фильтров в новый массив
 $filters = ['all', 'today', 'tomorrow', 'old'];
 
-// Переберем массив $filters
-foreach ($filters as $key) {
-    // При совпадении значения массива $filters с ключом массива $_GET
-    // Формируем ссылку на активный фильтр
-    if ($_GET[$key]) {
-        $filter = '&' . $key . '=1';
+// Объявим переменную - ссылка на активный фильтр
+$active_filter_link = '';
+
+// Формируем url для активного фильтра
+foreach ($filters as $filter) {
+
+    /**
+     * При совпадении значения массива $filters с ключом массива $_GET
+     * формируем ссылку на активный фильтр
+     */
+
+    if (isset($_GET[$filter])) {
+        $active_filter_link = '&' . $filter . '=1';
     }
 }
 
 /**
  *
- * * ПАГИНАЦИЯ
+ * ПАГИНАЦИЯ
+ *
  */
 
 // Определим текущую страницу
-$cur_page = $_GET['page'] ?? 1;
+$cur_page = getParameter('page', 1);
 
 // Количество задач на одной странице
 $task_one_page = 3;
@@ -170,53 +194,120 @@ if ($filter_all_tasks) {
     // Если активен фильтр
     $pages_count = ceil($filter_all_tasks / $task_one_page);
 } else {
+    if (isset($tasks_list)) {
+        $all_tasks = count($tasks_list);
+    }
     // Количество всех задач без учета фильтров
-    $pages_count = ceil($all_tasks / $task_one_page);
+    $pages_count = intval(ceil($all_tasks / $task_one_page));
 }
 
 // Заполним массив номерами всех страниц
-$pages = range(1, $pages_count);
+$pages = range(1, intval($pages_count));
 
+// Предыдущая страница
+if ($cur_page > 1) {
+    $pages_prev = $cur_page - 1;
+} else {
+    $pages_prev = 1;
+}
+
+// Следующая страница
+if ($cur_page < $pages_count) {
+    $pages_next = $cur_page + 1;
+} else {
+    $pages_next = $pages_count;
+}
 
 /**
  *
- * * ФОРМИРУЕМ ШАБЛОН
+ * ФОРМИРУЕМ ШАБЛОН ГЛАВНОЙ СТРАНИЦЫ
+ *
  */
 
 // Данные для передачи в шаблон (для авторизированного пользователя)
 $data_user = [
     'projects'              => $projects,
     'tasks_list'            => $tasks_list,
-    'count_tasks'           => $count_tasks,
     'valid_id'              => $valid_id,
     'show_completed_tasks'  => $show_completed_tasks,
     'page404'               => $page_404,
     'search'                => $search,
-    'res_search'            => $res_search,
+    'result_search'         => $result_search,
     'not_found'             => $not_found,
     'get_task_completed'    => $get_task_completed,
     'get_task_id'           => $get_task_id,
     'check_id_task'         => $check_id_task,
-    'class_active'          => $class_active,
     'url_domain'            => $url_domain,
     'pages_count'           => $pages_count,
     'pages'                 => $pages,
     'cur_page'              => $cur_page,
     'pages_prev'            => $pages_prev,
     'pages_next'            => $pages_next,
-    'count_task'            => $count_task,
     'filters'               => $filters,
-    'filter'                => $filter,
     'all_tasks'             => $all_tasks,
     'task_one_page'         => $task_one_page,
     'filter_all_tasks'      => $filter_all_tasks,
+    'active_filter_link'    => $active_filter_link,
+    'get_id'                => $get_id,
+    'get_all'               => $get_all,
+    'get_today'             => $get_today,
+    'get_tomorrow'          => $get_tomorrow,
+    'get_old'               => $get_old,
 ];
 
 // Контент для авторизированного пользователя
 $user = include_template('main.php', $data_user);
 
+/**
+ *
+ * ФИЛЬТРУЕМ ВСЕ ДАННЫЕ ОТ ПОЛЬЗОВАТЕЛЯ В $_GET
+ * ОТПРАВКА ОШИБКИ 404
+ *
+ */
+
+/**
+ *  Фильтруем параметры $_GET фильтров $get_filters
+ *  Ошибка 404 если $get_filters > 1 || < 0
+ */
+$get_filters = [$get_all, $get_today, $get_tomorrow, $get_old, $show_completed_tasks];
+
+// Отправка заголовка 404 если $get_filter !==0 || !==1
+foreach ($get_filters as $get_filter) {
+    if ($get_filter > 1 || $get_filter < 0) {
+        header("HTTP/1.1 404 Not Found");
+        $user = include_template('404.php', []);
+    }
+}
+
+/**
+ *  Фильтруем параметр $_GET['page'] для страниц пагинации
+ *  Ошибка 404 если страницы нет в массиве страниц $pages
+ */
+
+if (!in_array($cur_page, $pages)) {
+    header("HTTP/1.1 404 Not Found");
+    $user = include_template('404.php', []);
+}
+
+/**
+ *  Фильтруем параметр $_GET['id'] для id проекта
+ *  Ошибка 404 если $valid_proj_id = false
+ */
+
+// Выберем id проектов в отдельный массив
+$array_proj_id = array_column($projects, 'proj_id');
+
+// Валидация proj_id
+$valid_proj_id = in_array($get_id, $array_proj_id);
+
+// Отправка заголовка 404 если $valid_proj_id = false
+if (!$valid_proj_id && $get_id !== 0) {
+    header("HTTP/1.1 404 Not Found");
+    $user = include_template('404.php', []);
+}
+
 // Проверим гость или авторизованный пользователь
-if ($us_data['user_id']) {
+if (isset($user_data['user_id'])) {
     $layout_tmp = 'layout.php';
     $content = $user;
 } else {
@@ -231,7 +322,7 @@ $home = 'class="body-background"';
 $layout_data = [
     'content'   => $content, // Контент зависит от регистрации
     'title'     => 'Дела в порядке',
-    'us_data'   => $us_data, // Данные о пользователе в сессии
+    'user_data' => $user_data, // Данные о пользователе в сессии
     'home'      => $home,
 ];
 
