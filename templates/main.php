@@ -10,7 +10,7 @@
 
                     <ul class="main-navigation__list">
                         <li class="main-navigation__list-item <?= $get_id === $value['proj_id'] ? 'main-navigation__list-item--active' : '' ?>">
-                            <a class="main-navigation__list-item-link" href="<?= 'index.php?id=' . $value['proj_id'] ?>"><?= htmlspecialchars($value['proj_name']) ?></a>
+                            <a class="main-navigation__list-item-link" href="<?= 'index.php?id=' . $value['proj_id'] ?>"><?= htmlspecialchars($value['proj_name']); ?></a>
                             <span class="main-navigation__list-item-count"><?= $value['count']; ?></span>
                         </li>
                     </ul>
@@ -75,18 +75,7 @@
                 }
             }
 
-            // Соберем новый одномерный массив со значением id проектов
-            foreach ($projects as $key => $value) {
-                $valid_id[] = $value['proj_id'];
-            }
-
-            // Валидация proj_id, отправка заголовка 404 если proj_id = false
-            if (!empty($get_id) && !in_array($get_id, $valid_id)) {
-                header("HTTP/1.1 404 Not Found");
-                print($page404);
-            };
-
-            // Если запрос присутствует в форме поиска, то выводим данные поиска
+            // Если запрос присутствует в форме поиска, то выводим
             if (!empty($search)) {
                 $tasks_list = $result_search;
             }
@@ -98,7 +87,7 @@
                 $offset_key = $task_one_page;
 
                 if ($cur_page) {
-                    // Вывод задач на с пагинацией
+                    // Вывод задач с пагинацией
                     $output_tasks_list = array_slice($tasks_list, (($cur_page - 1) * 3), $offset_key, $preserve_keys = TRUE);
                 } else {
                     // Вывод задач без пагинации

@@ -5,7 +5,8 @@ require_once('data.php');
 
 /**
  *
- * * ВАЛИДАЦИЯ ФОРМЫ, ДОБАВЛЕНИЕ ПРОЕКТА
+ * ВАЛИДАЦИЯ ФОРМЫ, ДОБАВЛЕНИЕ ПРОЕКТА
+ *
  */
 
 $form = $_POST;
@@ -17,7 +18,7 @@ $required = ['project_name',];
 $errors = [];
 
 // Если форма была отправлена
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Проверим поля на пустоту
     foreach ($required as $field) {
@@ -79,7 +80,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 /**
  *
- * * СОБИРАЕМ ШАБЛОН - АВТОРИЗАЦИЯ НА САЙТЕ
+ * СОБИРАЕМ ШАБЛОН - АВТОРИЗАЦИЯ НА САЙТЕ
+ *
  */
 
 // Если пользователь зарегистрирован тогда показываем контент
@@ -107,7 +109,6 @@ if ($user_data['user_id']) {
     ];
 
     $layout = include_template('layout.php', $layout_data);
-
     print($layout);
 } else {
     // Если не зарегистрирован тогда редирект на главную

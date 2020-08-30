@@ -27,7 +27,7 @@
                     <div class="main-header__side-item user-menu">
                         <div class="user-menu__data">
                             <p><?= htmlspecialchars($user_data['us_name']) ?></p>
-                            <a href="/logout.php">Выйти</a>
+                            <a href="logout.php">Выйти</a>
                         </div>
                     </div>
                 </div>

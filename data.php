@@ -1,7 +1,6 @@
 <?php
 
 session_start();
-error_reporting(E_ALL);
 
 require_once 'functions.php';
 
@@ -14,7 +13,8 @@ if (isset($_SESSION['user'])) {
 
 /**
  *
- * * ПОДКЛЮЧЕНИЕ К БД MySQLi
+ * ПОДКЛЮЧЕНИЕ К БД MySQLi
+ *
  */
 
 // Устанавливаем time зону по умолчанию
@@ -31,6 +31,7 @@ $db = [
 // Соединимся БД
 $connect = mysqli_connect($db['host'], $db['user'], $db['password'], $db['database']);
 
+// Проверка соединения
 if (!$connect) {
     echo '<strong>Ошибка:</strong> Невозможно установить соединение с MySQL<br>' . PHP_EOL;
     echo '<strong>Код ошибки errno:</strong> ' . mysqli_connect_errno() . '<br>' . PHP_EOL;
@@ -50,7 +51,8 @@ if (isset($_SESSION['user'])) {
 
 /**
  *
- * * ВЫБОРКА ПРОЕКТОВ И СЧЕТЧИК ЗАДАЧ
+ * ВЫБОРКА ПРОЕКТОВ И СЧЕТЧИК ЗАДАЧ
+ *
  */
 
 $sql_projects = "SELECT p.proj_id, p.proj_name, t.status_task, COUNT(t.task_id) as count
@@ -64,12 +66,13 @@ $projects = resQuerySQL($sql_projects, $connect);
 // Запишем в массив ключи значения которых надо явно типизировать
 $projects_key_to_int = ['proj_id', 'status_task', 'count'];
 
-// Перезапишем выборку из БД изменив тип выбранных ключей (sring to integer)
+// Перезапишем выборку из БД изменив тип выбранных ключей (string to integer)
 $projects = changeTypeStrToInt($projects, $projects_key_to_int);
 
 /**
  *
- * * ВЫВОД ЗАДАЧ
+ * ВЫВОД ЗАДАЧ
+ *
  */
 
 // Все задачи (актуальные и выполненные)
@@ -104,12 +107,13 @@ $tasks_list = resQuerySQL($sql_tasks, $connect);
 // Запишем в массив ключи значения которых надо явно типизировать
 $tasks_key_to_int = ['task_id', 'status_task'];
 
-// Перезапишем выборку из БД изменив тип выбранных ключей (sring to integer)
+// Перезапишем выборку из БД изменив тип выбранных ключей (string to integer)
 $tasks_list = changeTypeStrToInt($tasks_list, $tasks_key_to_int);
 
 /**
  *
- * * ФОРМА ПОИСКА
+ * ФОРМА ПОИСКА
+ *
  */
 
 // Удалим пробелы из запроса от пользователя
@@ -148,7 +152,8 @@ if ($search) {
 
 /**
  *
- * * ПАГИНАЦИЯ
+ * ПАГИНАЦИЯ
+ *
  */
 
 // Условие подсчета количества задач

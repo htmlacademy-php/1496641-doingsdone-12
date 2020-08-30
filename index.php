@@ -3,7 +3,6 @@
 require_once 'functions.php';
 require_once 'data.php';
 
-
 // Ошибка 404
 $page_404 = include_template('404.php', []);
 
@@ -26,7 +25,8 @@ $valid_id = [];
 
 /**
  *
- * * CHECK - ЗАДАЧА ВЫПОЛНЕНА
+ * CHECK - ЗАДАЧА ВЫПОЛНЕНА
+ *
  */
 
 // Объявим массив для task_id из БД
@@ -58,7 +58,7 @@ if (!$show_completed_tasks) {
 $check_id_task = in_array($get_task_id, $task_id);
 
 // Если проверка прошла то делаем запрос к БД на изменение статуса задачи
-if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     if ($check_id_task) {
 
@@ -82,19 +82,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             header("Location: index.php");
         }
     }
-
-    // Значение по умолчанию для "Показывать выполненные"
-    $show_completed_tasks = 0;
-
-    // Показываем выполненные задачи
-    if (getParameter('show_completed', 0)) {
-        $show_completed_tasks = 1;
-    }
 }
 
 /**
  *
- * * ФИЛЬТРЫ ДЛЯ ЗАДАЧ В ПРОЕКТЕ
+ * ФИЛЬТРЫ ДЛЯ ЗАДАЧ В ПРОЕКТЕ
+ *
  */
 
 // Значение количества задач по умолчанию
@@ -186,7 +179,8 @@ foreach ($filters as $filter) {
 
 /**
  *
- * * ПАГИНАЦИЯ
+ * ПАГИНАЦИЯ
+ *
  */
 
 // Определим текущую страницу
@@ -226,7 +220,8 @@ if ($cur_page < $pages_count) {
 
 /**
  *
- * * ФОРМИРУЕМ ШАБЛОН
+ * ФОРМИРУЕМ ШАБЛОН ГЛАВНОЙ СТРАНИЦЫ
+ *
  */
 
 // Данные для передачи в шаблон (для авторизированного пользователя)
@@ -258,11 +253,58 @@ $data_user = [
     'get_today'             => $get_today,
     'get_tomorrow'          => $get_tomorrow,
     'get_old'               => $get_old,
-
 ];
 
 // Контент для авторизированного пользователя
 $user = include_template('main.php', $data_user);
+
+/**
+ *
+ * ФИЛЬТРУЕМ ВСЕ ДАННЫЕ ОТ ПОЛЬЗОВАТЕЛЯ В $_GET
+ * ОТПРАВКА ОШИБКИ 404
+ *
+ */
+
+/**
+ *  Фильтруем параметры $_GET фильтров $get_filters
+ *  Ошибка 404 если $get_filters > 1 || < 0
+ */
+$get_filters = [$get_all, $get_today, $get_tomorrow, $get_old, $show_completed_tasks];
+
+// Отправка заголовка 404 если $get_filter !==0 || !==1
+foreach ($get_filters as $get_filter) {
+    if ($get_filter > 1 || $get_filter < 0) {
+        header("HTTP/1.1 404 Not Found");
+        $user = include_template('404.php', []);
+    }
+}
+
+/**
+ *  Фильтруем параметр $_GET['page'] для страниц пагинации
+ *  Ошибка 404 если страницы нет в массиве страниц $pages
+ */
+
+if (!in_array($cur_page, $pages)) {
+    header("HTTP/1.1 404 Not Found");
+    $user = include_template('404.php', []);
+}
+
+/**
+ *  Фильтруем параметр $_GET['id'] для id проекта
+ *  Ошибка 404 если $valid_proj_id = false
+ */
+
+// Выберем id проектов в отдельный массив
+$array_proj_id = array_column($projects, 'proj_id');
+
+// Валидация proj_id
+$valid_proj_id = in_array($get_id, $array_proj_id);
+
+// Отправка заголовка 404 если $valid_proj_id = false
+if (!$valid_proj_id && $get_id !== 0) {
+    header("HTTP/1.1 404 Not Found");
+    $user = include_template('404.php', []);
+}
 
 // Проверим гость или авторизованный пользователь
 if (isset($user_data['user_id'])) {

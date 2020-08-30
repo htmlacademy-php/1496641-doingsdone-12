@@ -44,19 +44,6 @@ function dateTask($task_end)
     return $ts_diff;
 }
 
-// function dateTask($task_end)
-// {
-//     if (!empty($task_end)) {
-//         $secs_in_day = 86400; // 24 часа = 86400 секунд
-//         $now_ts = time(); //текущая метка timestamp
-//         $end_ts = strtotime($task_end); // дата выполнения задачи timestamp
-//         $ts_diff = floor(($end_ts - $now_ts) / $secs_in_day); // количество оставшихся дней до выполнения задачи
-//         return $ts_diff;
-//     } else {
-//         return false;
-//     }
-// }
-
 /**
  * Выводит результат запроса sql в виде массива
  * @param string $sql запрос к БД
